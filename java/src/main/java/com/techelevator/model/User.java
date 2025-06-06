@@ -15,6 +15,7 @@ public class User {
    @JsonIgnore
    private boolean activated;
    private Set<Authority> authorities = new HashSet<>();
+   private int family_id;
 
    public User() { }
 
@@ -24,6 +25,16 @@ public class User {
       this.password = password;
       if (authorities != null) this.setAuthorities(authorities);
       this.activated = true;
+      this.family_id = 0; // Default family_id to 0 if not set
+   }
+   
+   public User(int id, String username, String password, boolean activated, Set<Authority> authorities, int family_id) {
+      this.id = id;
+      this.username = username;
+      this.password = password;
+      this.activated = activated;
+      this.authorities = authorities != null ? authorities : new HashSet<>();
+      this.family_id = family_id;
    }
 
    public int getId() {
@@ -72,6 +83,14 @@ public class User {
          String authority = role.contains("ROLE_") ? role : "ROLE_" + role;
          this.authorities.add(new Authority(authority));
       }
+   }
+   
+   public int getFamilyId(){
+      return family_id;
+   }
+
+   public void setFamilyId(int family_id) {
+      this.family_id = family_id;
    }
 
    @Override
