@@ -14,27 +14,29 @@ public class User {
    private String password;
    @JsonIgnore
    private boolean activated;
-   private Set<Authority> authorities = new HashSet<>();
-   private int family_id;
+   
+   private int familyId;
+   private String role;
+   
 
    public User() { }
 
-   public User(int id, String username, String password, String authorities) {
+   public User(int id, String username, String password, String role) {
       this.id = id;
       this.username = username;
       this.password = password;
-      if (authorities != null) this.setAuthorities(authorities);
+      this.role = role;
       this.activated = true;
-      this.family_id = 0; // Default family_id to 0 if not set
+      this.familyId = 0; // Default family_id to 0 if not set
    }
    
-   public User(int id, String username, String password, boolean activated, Set<Authority> authorities, int family_id) {
+   public User(int id, String username, String password, boolean activated, String role,  int family_id) {
       this.id = id;
       this.username = username;
       this.password = password;
       this.activated = activated;
-      this.authorities = authorities != null ? authorities : new HashSet<>();
-      this.family_id = family_id;
+      this.role = role;
+      this.familyId = family_id;
    }
 
    public int getId() {
@@ -69,28 +71,20 @@ public class User {
       this.activated = activated;
    }
 
-   public Set<Authority> getAuthorities() {
-      return authorities;
-   }
-
-   public void setAuthorities(Set<Authority> authorities) {
-      this.authorities = authorities;
-   }
-
-   public void setAuthorities(String authorities) {
-      String[] roles = authorities.split(",");
-      for (String role : roles) {
-         String authority = role.contains("ROLE_") ? role : "ROLE_" + role;
-         this.authorities.add(new Authority(authority));
-      }
-   }
    
    public int getFamilyId(){
-      return family_id;
+      return familyId;
    }
 
    public void setFamilyId(int family_id) {
-      this.family_id = family_id;
+      this.familyId = family_id;
+   }
+   public String getRole() {
+      return role;
+   }
+
+   public void setRole(String role) {
+      this.role = role;
    }
 
    @Override
@@ -102,12 +96,12 @@ public class User {
               activated == user.activated &&
               Objects.equals(username, user.username) &&
               Objects.equals(password, user.password) &&
-              Objects.equals(authorities, user.authorities);
+              Objects.equals(role, user.role);
    }
 
    @Override
    public int hashCode() {
-      return Objects.hash(id, username, password, activated, authorities);
+      return Objects.hash(id, username, password, activated, role);
    }
 
    @Override
@@ -116,7 +110,7 @@ public class User {
               "id=" + id +
               ", username='" + username + '\'' +
               ", activated=" + activated +
-              ", authorities=" + authorities +
+              ", role=" + role +
               '}';
    }
 }
