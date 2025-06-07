@@ -11,18 +11,13 @@ export default function RegisterView() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [role, setRole] = useState('ROLE_PARENT');
+  const role ='ROLE_PARENT';
 
   // 🔄 REPLACED: Removed useExistingFamily + existingFamilyId + families
   const [newFamilyName, setNewFamilyName] = useState(''); // ✅ Always required now
 
   function handleSubmit(event) {
     event.preventDefault();
-
-    if (role === 'ROLE_CHILD') {
-      setNotification({ type: 'error', message: 'Children must be added by a parent from within the app.' });
-      return;
-    }
 
     // ✅ Check that family name is present
     if (!newFamilyName || newFamilyName.trim() === '') {
@@ -100,31 +95,19 @@ export default function RegisterView() {
           />
         </div>
 
-        <div className="form-control">
-          <label htmlFor="role">Registering As:</label>
-          <select
-            id="role"
-            value={role}
-            onChange={(event) => setRole(event.target.value)}
-          >
-            <option value="ROLE_PARENT">Parent</option>
-            <option value="ROLE_CHILD">Child</option>
-          </select>
-        </div>
+        {/* ✅ Role is now fixed to ROLE_PARENT */} 
 
-        {/*This now always shows since family name is always required */}
-        {role === 'ROLE_PARENT' && (
-          <div className="form-control">
-            <label htmlFor="familyName">Family Name:</label>
-            <input
-              type="text"
-              id="familyName"
-              value={newFamilyName}
-              required
-              onChange={(e) => setNewFamilyName(e.target.value)}
-            />
-          </div>
-        )}
+        {/* ✅ Family name is always shown */}
+        <div className="form-control">
+          <label htmlFor="familyName">Family Name:</label>
+          <input
+            type="text"
+            id="familyName"
+            value={newFamilyName}
+            required
+            onChange={(e) => setNewFamilyName(e.target.value)}
+          />
+        </div>
 
         <button type="submit" className={`btn-primary ${styles.formButton}`}>
           Register
