@@ -1,46 +1,58 @@
-import { useState } from 'react';
+import { useState } from 'react'; // 🔄 Removed useEffect
 import { Link, useNavigate } from 'react-router-dom';
 import AuthService from '../../services/AuthService';
 import Notification from '../../components/Notification/Notification';
-
 import styles from './RegisterView.module.css';
 
 export default function RegisterView() {
   const navigate = useNavigate();
 
   const [notification, setNotification] = useState(null);
-
-  // Setup state for the registration data
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [role, setRole] = useState('ROLE_PARENT');
+
+  // 🔄 REPLACED: Removed useExistingFamily + existingFamilyId + families
+  const [newFamilyName, setNewFamilyName] = useState(''); // ✅ Always required now
 
   function handleSubmit(event) {
     event.preventDefault();
 
-
-    // Validate the form data
-    if (password !== confirmPassword) {
-      // Passwords don't match, so display error notification
-      setNotification({ type: 'error', message: 'Passwords do not match.' });
-    } else {
-      // If no errors, send data to server
-      AuthService.register({
-        username,
-        password,
-        confirmPassword,
-        role: 'user',
-      })
-        .then(() => {
-          setNotification({ type: 'success', message: 'Registration successful' });
-          navigate('/login');
-        })
-        .catch((error) => {
-          // Check for a response message, but display a default if that doesn't exist
-          const message = error.response?.data?.message || 'Registration failed.';
-          setNotification({ type: 'error', message: message });
-        });
+    if (role === 'ROLE_CHILD') {
+      setNotification({ type: 'error', message: 'Children must be added by a parent from within the app.' });
+      return;
     }
+
+    // ✅ Check that family name is present
+    if (!newFamilyName || newFamilyName.trim() === '') {
+      setNotification({ type: 'error', message: 'Please enter a family name.' });
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setNotification({ type: 'error', message: 'Passwords do not match.' });
+      return;
+    }
+
+    // Simplified to just use newFamilyName (familyId removed)
+    const registerData = {
+      username,
+      password,
+      confirmPassword,
+      role,
+      newFamilyName
+    };
+
+    AuthService.register(registerData)
+      .then(() => {
+        setNotification({ type: 'success', message: 'Registration successful' });
+        navigate('/login');
+      })
+      .catch((error) => {
+        const message = error.response?.data?.message || 'Registration failed.';
+        setNotification({ type: 'error', message });
+      });
   }
 
   return (
@@ -87,6 +99,32 @@ export default function RegisterView() {
             onChange={(event) => setConfirmPassword(event.target.value)}
           />
         </div>
+
+        <div className="form-control">
+          <label htmlFor="role">Registering As:</label>
+          <select
+            id="role"
+            value={role}
+            onChange={(event) => setRole(event.target.value)}
+          >
+            <option value="ROLE_PARENT">Parent</option>
+            <option value="ROLE_CHILD">Child</option>
+          </select>
+        </div>
+
+        {/*This now always shows since family name is always required */}
+        {role === 'ROLE_PARENT' && (
+          <div className="form-control">
+            <label htmlFor="familyName">Family Name:</label>
+            <input
+              type="text"
+              id="familyName"
+              value={newFamilyName}
+              required
+              onChange={(e) => setNewFamilyName(e.target.value)}
+            />
+          </div>
+        )}
 
         <button type="submit" className={`btn-primary ${styles.formButton}`}>
           Register
