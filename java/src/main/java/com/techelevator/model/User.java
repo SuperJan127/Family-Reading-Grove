@@ -15,7 +15,7 @@ public class User {
    @JsonIgnore
    private boolean activated;
    
-   private int familyId;
+   private Integer familyId;
    private String role;
    
 
@@ -27,16 +27,16 @@ public class User {
       this.password = password;
       this.role = role;
       this.activated = true;
-      this.familyId = 0; // Default family_id to 0 if not set
+      
    }
    
-   public User(int id, String username, String password, boolean activated, String role,  int family_id) {
+   public User(int id, String username, String password, boolean activated, String role,  Integer familyId) {
       this.id = id;
       this.username = username;
       this.password = password;
       this.activated = activated;
       this.role = role;
-      this.familyId = family_id;
+      this.familyId = familyId;
    }
 
    public int getId() {
@@ -72,12 +72,12 @@ public class User {
    }
 
    
-   public int getFamilyId(){
+   public Integer getFamilyId(){
       return familyId;
    }
 
-   public void setFamilyId(int family_id) {
-      this.familyId = family_id;
+   public void setFamilyId(Integer familyId) {
+      this.familyId = familyId;
    }
    public String getRole() {
       return role;
