@@ -48,16 +48,16 @@ public class UserModelDetailsService implements UserDetailsService {
         if (!user.isActivated()) {
             throw new UserNotActivatedException("User " + lowercaseLogin + " was not activated");
         }
-
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        Set<Authority> userAuthorities = user.getAuthorities();
-        for (Authority authority : userAuthorities) {
-            grantedAuthorities.add(new SimpleGrantedAuthority(authority.getName()));
-        }
-
-        return new org.springframework.security.core.userdetails.User(user.getUsername(),
-                user.getPassword(),
-                grantedAuthorities);
+    
+        // Create a single GrantedAuthority from the user's role string
+        List<GrantedAuthority> grantedAuthorities = List.of(
+            new SimpleGrantedAuthority(user.getRole()) // e.g. "ROLE_PARENT"
+        );
+    
+        return new org.springframework.security.core.userdetails.User(
+            user.getUsername(),
+            user.getPassword(),
+            grantedAuthorities
+        );
     }
 }
-

@@ -1,7 +1,10 @@
 package com.techelevator.model;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class Family {
     private int familyId;
+    @NotBlank
     private String familyName;
 
     public Family(String familyName) {

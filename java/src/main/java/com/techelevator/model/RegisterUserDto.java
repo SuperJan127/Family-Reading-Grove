@@ -17,6 +17,16 @@ public class RegisterUserDto {
     private String confirmPassword;
     @NotEmpty(message = "Please select a role for this user.")
     private String role;
+    private int familyId;
+
+    
+    public int getFamilyId() {
+        return familyId;
+    }
+
+    public void setFamilyId(int familyId) {
+        this.familyId = familyId;
+    }
 
     public String getUsername() {
         return username;
