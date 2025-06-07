@@ -49,6 +49,7 @@ public class FamilyController {
         return family;
     }
 
+    @PreAuthorize("hasRole('ROLE_PARENT')") // Restrict access to users with the 'ROLE_PARENT' role
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED) // Indicate that a resource has been created
     public void addFamily(@Valid @RequestBody Family family) {
@@ -60,6 +61,7 @@ public class FamilyController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_PARENT')") // Restrict access to users with the 'ROLE_PARENT' role
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK) // Indicate that the request was successful
     public void updateFamily(@PathVariable int id, @Valid @RequestBody Family family) {
@@ -71,7 +73,7 @@ public class FamilyController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to update family", e);
         }
     }
-
+    @PreAuthorize("hasRole('ROLE_PARENT')") // Restrict access to users with the 'ROLE_PARENT' role
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT) // Indicate that the resource has been deleted
     public void deleteFamily(@PathVariable int id) {

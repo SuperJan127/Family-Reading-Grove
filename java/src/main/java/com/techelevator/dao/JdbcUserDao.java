@@ -71,21 +71,54 @@ public class JdbcUserDao implements UserDao {
         return user;
     }
 
-    @Override
     public User createUser(RegisterUserDto user) {
         User newUser = null;
-        String insertUserSql = "INSERT INTO users (username, password_hash, role, family_id) values (LOWER(TRIM(?)), ?, ?) RETURNING user_id";
         String password_hash = new BCryptPasswordEncoder().encode(user.getPassword());
         String ssRole = user.getRole().toUpperCase().startsWith("ROLE_") ? user.getRole().toUpperCase() : "ROLE_" + user.getRole().toUpperCase();
+    
         try {
-            int newUserId = jdbcTemplate.queryForObject(insertUserSql, int.class, user.getUsername(), password_hash, ssRole, user.getFamilyId());
+            Integer familyId = user.getFamilyId();
+    
+            // ✅ If familyId not provided, create a new family with the given name
+            if (familyId == null) {
+                String familyName = user.getNewFamilyName();
+    
+                if (familyName == null || familyName.trim().isEmpty()) {
+                    throw new DaoException("A new family name is required when no familyId is provided.");
+                }
+    
+                String insertFamilySql = "INSERT INTO families (family_name) VALUES (?) RETURNING family_id";
+                familyId = jdbcTemplate.queryForObject(insertFamilySql, Integer.class, familyName.trim());
+            }
+    
+            // ✅ Now insert the user with the resolved familyId
+            String insertUserSql = "INSERT INTO users (username, password_hash, role, family_id) VALUES (LOWER(TRIM(?)), ?, ?, ?) RETURNING user_id";
+            int newUserId = jdbcTemplate.queryForObject(
+                insertUserSql,
+                Integer.class,
+                user.getUsername(), password_hash, ssRole, familyId);
+    
             newUser = getUserById(newUserId);
+    
         } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
         } catch (DataIntegrityViolationException e) {
             throw new DaoException("Data integrity violation", e);
         }
+    
         return newUser;
+    }
+     
+    public User updateUserFamilyId(int userId, Integer familyId) {
+        String sql = "UPDATE users SET family_id = ? WHERE user_id = ?";
+        try {
+            jdbcTemplate.update(sql, familyId, userId);
+            return getUserById(userId);
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        } catch (DataIntegrityViolationException e) {
+            throw new DaoException("Data integrity violation", e);
+        }
     }
 
     private User mapRowToUser(SqlRowSet rs) {
