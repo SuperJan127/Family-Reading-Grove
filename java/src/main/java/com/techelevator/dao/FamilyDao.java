@@ -14,13 +14,13 @@ public interface FamilyDao {
     
     Family updateFamily(Family family);
     
-    Family deleteFamily(int familyId);
+    void deleteFamily(int familyId);
     
     List<Family> getFamiliesByUserId(int userId);
     
     List<Family> getFamiliesByName(String familyName);
     
-    List<User> getUsersByFamilyId(int familyId);
     
-    List<User> getUsersByFamilyName(String familyName);
+    
+    
 }
