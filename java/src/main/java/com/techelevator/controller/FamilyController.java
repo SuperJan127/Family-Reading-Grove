@@ -26,7 +26,7 @@ import com.techelevator.dao.UserDao; // Importing UserDao for user operations
 import com.techelevator.model.User; // Importing User class
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:5173")
 @PreAuthorize("isAuthenticated()")
 @RequestMapping(path = "/families")
 public class FamilyController {
@@ -90,6 +90,19 @@ public class FamilyController {
         } catch (Exception e) {
             // Handle exception (e.g., log it)
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to delete family", e);
+        }
+    }
+    @GetMapping("/{id}/members")
+    public List<User> getUsersByFamilyId(@PathVariable int id) {
+        try {
+            List<User> users = userDao.getUsersByFamilyId(id); // Fetching users by family ID
+            if (users.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No members found for this family");
+            }
+            return users;
+        } catch (Exception e) {
+            // Handle exception (e.g., log it)
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to fetch family members", e);
         }
     }
 

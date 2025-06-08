@@ -29,7 +29,7 @@ import org.springframework.http.ResponseEntity;
  * handled separately in the AuthenticationController.
  */
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:5173")
 @PreAuthorize("isAuthenticated()")
 @RequestMapping(path = "/users")
 public class UserController {
