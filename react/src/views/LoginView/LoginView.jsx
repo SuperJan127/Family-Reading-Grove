@@ -33,8 +33,17 @@ export default function LoginView({ onLogin }) {
         // Use the callback to add user to state
         onLogin(user);
 
-        // Navigate to the home page
-        navigate('/');
+        // Navigate to the page based on user role
+
+        if (user.role === 'ROLE_PARENT') {
+          navigate('/parent');
+        }
+        else if (user.role === 'ROLE_CHILD') {
+          navigate('/child');
+        } else {
+          navigate('/');
+        }
+        
       })
       .catch((error) => {
         // Check for a response message, but display a default if that doesn't exist

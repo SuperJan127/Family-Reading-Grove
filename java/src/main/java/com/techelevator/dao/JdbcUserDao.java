@@ -71,6 +71,7 @@ public class JdbcUserDao implements UserDao {
         return user;
     }
 
+    @Override
     public User createUser(RegisterUserDto user) {
         User newUser = null;
         String password_hash = new BCryptPasswordEncoder().encode(user.getPassword());
@@ -119,6 +120,22 @@ public class JdbcUserDao implements UserDao {
         } catch (DataIntegrityViolationException e) {
             throw new DaoException("Data integrity violation", e);
         }
+    }
+
+    @Override
+    public List<User> getUsersByFamilyId(int familyId) {
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT user_id, username, password_hash, role, family_id FROM users WHERE family_id = ?";
+        try {
+            SqlRowSet results = jdbcTemplate.queryForRowSet(sql, familyId);
+            while (results.next()) {
+                User user = mapRowToUser(results);
+                users.add(user);
+            }
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        }
+        return users;
     }
 
     private User mapRowToUser(SqlRowSet rs) {
