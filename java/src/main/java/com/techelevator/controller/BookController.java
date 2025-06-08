@@ -47,6 +47,8 @@ public class BookController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED) // Indicate that a resource has been created
     public void addBook(@Valid @RequestBody Book book) {
+        //  handle making sure book doesn't already exist!!!!!
+
         try {
             bookDao.addBook(book); // Adding a new book using the DAO
         } catch (Exception e) {
