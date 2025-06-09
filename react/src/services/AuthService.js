@@ -24,5 +24,9 @@ export default {
   getUserProfile(userId) {
     return axios.get(`/users/${userId}`);
   },
+
+  addFamilyMember(familyId, memberData) {
+    return axios.post(`/families/${familyId}/members`, memberData);
+  },
   
 }
