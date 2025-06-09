@@ -1,37 +1,13 @@
 .container {
-    background-color:  #ac9b76; /* Light green background */
+    background-color:  #dbd0b4; /* Light green background */
     color: #3f51b5; /* Primary blue color for text */
     padding: 20px;
     border-radius: 10px;
-    font-family: 'Rubik Doodle Shadow', cursive; /* Custom font */
+    font-family: 'Luckiest Guy', cursive; /* Custom font */
     font-size: 32px;
-    
+    text-align: center; 
 }
 
-.header {
-    color: #ff4081; /* Primary pink color for header */
-    font-size: 2em;
-    text-align: center;
-}
+.body {
 
-.button {
-    background-color: #ffeb3b; /* Primary yellow for buttons */
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-size: 1em;
-}
-
-.button:hover {
-    background-color: #ffc107; /* Darker yellow on hover */
-}
-
-.card {
-    background-color: #c8e6c9; /* Light green for cards */
-    border: 2px solid #4caf50; /* Darker green border */
-    border-radius: 10px;
-    padding: 15px;
-    margin: 10px 0;
 }
