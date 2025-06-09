@@ -65,7 +65,12 @@ export default function App() {
     <BrowserRouter>
       <div id="app">
         <UserContext.Provider value={{ user }}>
+          <header id="app-header">
+            <div id="app-info">
+            <h1>Reading Tracker</h1>
+            </div>
           <MainNav />
+          </header>
           <main id="main-content">
             <Routes>
               <Route path="/" element={<HomeView />} />
