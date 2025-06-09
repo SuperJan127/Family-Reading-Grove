@@ -8,6 +8,16 @@
     text-align: center; 
 }
 
-.body {
 
+
+.image{
+
+    width: 400px;
+    height: auto;
+    border-radius: 30px;
+}
+.imgdiv{
+    display: flex;
+    justify-content: flex-start;
+    align-content: flex-start;
 }
