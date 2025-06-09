@@ -1,10 +1,11 @@
 BEGIN TRANSACTION;
 
+DROP TABLE IF EXISTS reading_activity;
 DROP TABLE IF EXISTS books;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS families;
 
-Create table families (
+CREATE TABLE families (
 	family_id SERIAL,
 	family_name varchar(100) NOT NULL UNIQUE,
 	CONSTRAINT PK_family PRIMARY KEY (family_id)
@@ -26,5 +27,21 @@ CREATE TABLE books (
 	author varchar(255) NOT NULL,
 	isbn varchar(20) UNIQUE
 );
+
+CREATE TABLE reading_activity (
+	id SERIAL PRIMARY KEY,
+	reader_id INT NOT NULL,
+	book_id INT NOT NULL,
+	format varchar(50) NOT NULL,
+	notes TEXT,
+	start_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	end_time TIMESTAMP,
+	minutes_read INTEGER,
+	CONSTRAINT FK_reader FOREIGN KEY (reader_id) REFERENCES users(user_id) ON DELETE CASCADE,
+	CONSTRAINT FK_book FOREIGN KEY (book_id) REFERENCES books(book_id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_reading_activity_reader ON reading_activity (reader_id);
+CREATE INDEX idx_reading_activity_book ON reading_activity (book_id);
 
 COMMIT TRANSACTION;
