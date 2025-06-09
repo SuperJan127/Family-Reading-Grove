@@ -53,29 +53,35 @@ export default function ParentView() {
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <table>
         <thead>
-            <tr>
+          <tr>
             <th>Username</th>
             <th>Role</th>
-            </tr>
+          </tr>
         </thead>
         <tbody>
-            {users.length > 0 ? (
-                users.map((user) => (
-                <tr key={user.id}>
-                    <td>{user.username}</td>
-                    <td>{formatRole(user.role)}</td>
-                </tr>
-                ))
-            ) : (
-                <tr>
-                <td colSpan="2">No members found.</td>
-                </tr>
-            )}
+          {users.length > 0 ? (
+            users.map((user) => (
+              <tr key={user.id}>
+                <td>{user.username}</td>
+                <td>{formatRole(user.role)}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="2">No members found.</td>
+            </tr>
+          )}
         </tbody>
       </table><br /><br />
 
-    <NavLink to="/addMember" className="btn btn-primary">Add Family Member</NavLink>
-        
+      <div>
+        <NavLink to="/addMember" className="btn btn-primary">Add Family Member</NavLink>
+      </div>
+
+      <div>
+        <NavLink to="/addBook" className="btn btn-primary">Add Book</NavLink>
+      </div>
+
     </div>
   );
 }
