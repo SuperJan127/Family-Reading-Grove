@@ -13,6 +13,8 @@ import AddMemberView from './views/AddMemberView/AddMemberView';
 import MainNav from './components/MainNav/MainNav';
 import ProtectedRoute from './components/ProtectedRoute';
 import axios from 'axios';
+import AddBookView from './views/AddBookView/AddBookView';
+import BooksListView from './views/BooksListView/BooksListView';
 
 export default function App() {
   const [user, setUser] = useState(() => getTokenFromStorage());
@@ -63,7 +65,12 @@ export default function App() {
     <BrowserRouter>
       <div id="app">
         <UserContext.Provider value={{ user }}>
+          <header id="app-header">
+            <div id="app-info">
+            <h1>Reading Tracker</h1>
+            </div>
           <MainNav />
+          </header>
           <main id="main-content">
             <Routes>
               <Route path="/" element={<HomeView />} />
@@ -73,6 +80,10 @@ export default function App() {
               <Route path="/parent" element={<ParentView/>} />
               <Route path="/child" element={<ChildView />} />
               <Route path="/addMember" element={<AddMemberView />} />
+              <Route path="/addBook" element={<AddBookView />} />
+              <Route path="/books" element={<BooksListView />} />
+                
+                {/* Protected routes */}
               <Route
                 path="/userProfile"
                 element={

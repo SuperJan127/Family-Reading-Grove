@@ -1,0 +1,23 @@
+.container {
+    background-color:  #dbd0b4; /* Light green background */
+    color: #3f51b5; /* Primary blue color for text */
+    padding: 20px;
+    border-radius: 10px;
+    font-family: 'Luckiest Guy', cursive; /* Custom font */
+    font-size: 32px;
+    text-align: center; 
+}
+
+
+
+.image{
+
+    width: 400px;
+    height: auto;
+    border-radius: 30px;
+}
+.imgdiv{
+    display: flex;
+    justify-content: flex-start;
+    align-content: flex-start;
+}
