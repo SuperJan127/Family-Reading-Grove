@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { UserContext } from '../../context/UserContext';
 
 export default function MainNav() {
-  const user = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   return (
     <nav id="main-nav" className="nav-list">
@@ -17,6 +17,13 @@ export default function MainNav() {
               Profile
             </NavLink>
           </div>
+
+          <div className="nav-link">
+            <NavLink to="/books">
+              Book List
+            </NavLink>
+          </div>
+
           <div className="nav-link">
             <Link to="/logout">
               Logout
