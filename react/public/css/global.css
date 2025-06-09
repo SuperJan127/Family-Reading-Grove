@@ -94,6 +94,7 @@ main {
     margin: 0;
     padding: 0;
     justify-content: space-around;
+    
 }
 
 .nav-link a {
@@ -177,6 +178,8 @@ table {
 
 thead {
     margin-bottom: 0.5rem;
+    background-color: rgba(180, 180, 180, 0.4);
+    border: solid 1px black;
 }
 
 tbody {
@@ -186,15 +189,18 @@ tbody {
 th,
 td {
     padding: 0.5rem;
-    text-align: left;
+    text-align: center;
+    border: solid 1px #738a69;
+
 }
 
 tr {
     padding: 0.5rem;
+    border: solid 1px #738a69;
 }
 
 tr:nth-child(even) {
-    background-color: rgba(136, 193, 231, 0.3);
+    background-color: rgba(161, 163, 163, 0.3);
 }
 
 html,
