@@ -14,4 +14,8 @@ public interface UserDao {
     User getUserByUsername(String username);
 
     User createUser(RegisterUserDto user);
+
+    User updateUserFamilyId(int userId, Integer familyId);
+
+    List<User> getUsersByFamilyId(int familyId);
 }

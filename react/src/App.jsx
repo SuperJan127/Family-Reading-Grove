@@ -7,6 +7,9 @@ import LoginView from './views/LoginView/LoginView';
 import LogoutView from './views/LogoutView';
 import RegisterView from './views/RegisterView/RegisterView';
 import UserProfileView from './views/UserProfileView/UserProfileView';
+import ParentView from './views/ParentView/ParentView';
+import ChildView from './views/ChildView/ChildView';  
+import AddMemberView from './views/AddMemberView/AddMemberView';
 import MainNav from './components/MainNav/MainNav';
 import ProtectedRoute from './components/ProtectedRoute';
 import axios from 'axios';
@@ -59,7 +62,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <div id="app">
-        <UserContext.Provider value={user}>
+        <UserContext.Provider value={{ user }}>
           <MainNav />
           <main id="main-content">
             <Routes>
@@ -67,6 +70,9 @@ export default function App() {
               <Route path="/login" element={<LoginView onLogin={handleLogin} />} />
               <Route path="/logout" element={<LogoutView onLogout={handleLogout} />} />
               <Route path="/register" element={<RegisterView />} />
+              <Route path="/parent" element={<ParentView/>} />
+              <Route path="/child" element={<ChildView />} />
+              <Route path="/addMember" element={<AddMemberView />} />
               <Route
                 path="/userProfile"
                 element={

@@ -8,7 +8,6 @@ import jakarta.validation.constraints.NotEmpty;
     to the client from a login endpoint.
  */
 public class RegisterUserDto {
-
     @NotEmpty
     private String username;
     @NotEmpty
@@ -17,6 +16,31 @@ public class RegisterUserDto {
     private String confirmPassword;
     @NotEmpty(message = "Please select a role for this user.")
     private String role;
+
+    private Integer familyId;
+
+    // ✅ Optional field for creating a new family
+    private String newFamilyName;
+
+    // Getters and setters...
+
+    public String getNewFamilyName() {
+        return newFamilyName;
+    }
+
+    public void setNewFamilyName(String newFamilyName) {
+        this.newFamilyName = newFamilyName;
+    }
+
+
+    
+    public Integer getFamilyId() {
+        return familyId;
+    }
+
+    public void setFamilyId(Integer familyId) {
+        this.familyId = familyId;
+    }
 
     public String getUsername() {
         return username;

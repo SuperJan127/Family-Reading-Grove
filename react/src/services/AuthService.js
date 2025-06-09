@@ -11,12 +11,22 @@ export default {
     return axios.post('/login', user);
   },
 
-  register(user) {
-    return axios.post('/register', user);
+  register({ username, password, confirmPassword, role, newFamilyName }) {
+    return axios.post('/register', {
+      username,
+      password,
+      confirmPassword,
+      role,
+      newFamilyName
+    });
   },
 
   getUserProfile(userId) {
     return axios.get(`/users/${userId}`);
   },
 
+  addFamilyMember(familyId, memberData) {
+    return axios.post(`/families/${familyId}/members`, memberData);
+  },
+  
 }
