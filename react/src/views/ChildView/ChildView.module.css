@@ -1,23 +1,31 @@
 .container {
-    background-color:  #dbd0b4; /* Light green background */
-    color: #3f51b5; /* Primary blue color for text */
-    padding: 20px;
-    border-radius: 10px;
-    font-family: 'Luckiest Guy', cursive; /* Custom font */
-    font-size: 32px;
-    text-align: center; 
+    background-color: #f0a544;
+    font-size: 48px;
+    font-family: 'Luckiest Guy', cursive;
+    color: white;
+    text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.5);
 }
 
 
 
-.image{
+.image {
 
     width: 400px;
     height: auto;
     border-radius: 30px;
 }
-.imgdiv{
+
+.imgdiv {
     display: flex;
-    justify-content: flex-start;
-    align-content: flex-start;
+    align-items: flex-start;
+    justify-content: space-around;
+    gap: 2rem;
+}
+
+.table {
+    background-color: #b8d4b0;
+    border-radius: 15px;
+    border: solid 6px #738a69;
+    border-collapse: separate;
+    border-spacing: 0;
 }

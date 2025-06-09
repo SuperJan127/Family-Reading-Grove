@@ -1,0 +1,48 @@
+.table {
+    background-color: #b8d4b0;
+
+    border: solid 6px #738a69;
+    border-radius: 15px;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.h2 {
+    background-color: #f0a544;
+    font-size: 48px;
+    font-family: 'Luckiest Guy', cursive;
+    color: white;
+    text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.5);
+}
+
+.buttonPrimary {
+    padding: 0.5rem 1rem;
+    background-color: #f0a544;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
+    text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.5);
+}
+
+.buttonGroup {
+
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.tableContainer {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-around;
+    gap: 2rem;
+}
+.image {
+
+    width: 300px;
+    height: auto;
+    border-radius: 30px;
+}
