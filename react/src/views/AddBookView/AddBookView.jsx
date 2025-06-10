@@ -49,7 +49,7 @@ export default function AddBookView() {
               <form onSubmit={handleSubmit} className={styles.form}>
                 <div className={styles.formGroup}>
                   <label htmlFor="title">Title</label>
-                  <input id="title" type="text" value={title} onChange={e => setTitle(e.target.value)} required />
+                  <input id="title" type="text" value={title} onChange={e => setTitle(e.target.value)} required autoFocus />
                 </div>
       
                 <div className={styles.formGroup}>
