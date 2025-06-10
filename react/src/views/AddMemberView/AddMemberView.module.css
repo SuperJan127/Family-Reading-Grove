@@ -1,0 +1,82 @@
+.container {
+    max-width: 600px;
+    margin: 3rem auto;
+    padding: 2.5rem;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    border: 3px solid #f0a544;
+    text-align: left;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .h2 {
+    font-size: 2.4rem;
+    margin-bottom: 2rem;
+    color: #738a69;
+    text-align: center;
+    font-family: 'Luckiest Guy', cursive;
+    text-shadow: 1px 1px 4px rgba(115, 138, 105, 0.6);
+  }
+  
+  .formControl {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .formControlLabel {
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #333;
+    text-align: left;
+    width: 375px;
+  }
+  
+  .formControlInput {
+    display: flex;
+    padding: 0.6rem 1rem;
+    font-size: 1rem;
+    border: 2px solid #f0a544;
+    border-radius: 12px;
+    outline-offset: 2px;
+    transition: border-color 0.3s ease;
+    max-width: 400px;
+    width: 100%;
+    align-items: flex-start;
+    appearance: none; 
+    background-color: white;
+    font-family: inherit;
+    box-sizing: border-box;
+  }
+  
+  .formControl input:focus,
+  .formControl select:focus {
+    border-color: #738a69;
+    box-shadow: 0 0 6px rgba(115, 138, 105, 0.6);
+  }
+  
+  .btnPrimary {
+    background-color: #f0a544;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 700;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    width: 100%;
+    max-width: 250px;
+    margin: 0 auto;
+    display: block;
+    box-shadow: 0 4px 12px rgba(240, 165, 68, 0.7);
+    transition: background-color 0.3s ease;
+  }
+  
+  .btnPrimary:hover {
+    background-color: #d98c1e;
+    box-shadow: 0 6px 16px rgba(217, 140, 30, 0.9);
+  }
+  
