@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { NavLink } from 'react-router-dom';
 import AddMemberView from '../AddMemberView/AddMemberView';
+import styles from './ParentView.module.css';
 
 export default function ParentView() {
   const [users, setUsers] = useState([]);
@@ -48,11 +49,52 @@ export default function ParentView() {
   }, []);
 
   return (
-    <div>
-      <h2>Family Members</h2>
+    <>
+      <h2 className={styles.h2}>Family Activity</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>}
-      <table>
+      <div className={styles.tableContainer}>
+      <img src="src/img/FamilyActivity.png" alt="Family Actvity" className={styles.image} />
+      
+      
+      <table className={styles.table}>
+                    <thead>
+                        <tr>
+                            <th colSpan="3">Reading Tracking</th>
+                        </tr>
+                        <tr>
+                            <th>Book Title</th>
+                            <th>Author</th>
+                            <th>Minutes Read</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>The Great Gatsby</td>
+                            <td>F. Scott Fitzgerald</td>
+                            <td>30</td>
+                        </tr>
+                        <tr>
+                            <td>To Kill a Mockingbird</td>
+                            <td>Harper Lee</td>
+                            <td>45</td>
+                        </tr>
+                        <tr>
+                            <td>1984</td>
+                            <td>George Orwell</td>
+                            <td>60</td>
+                        </tr>
+                        <tr>
+                            <td>Pride and Prejudice</td>
+                            <td>Jane Austen</td>
+                            <td>25</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table className={styles.table}>
         <thead>
+          <tr>
+            <th colSpan="2">Family Members</th>
+          </tr>
           <tr>
             <th>Username</th>
             <th>Role</th>
@@ -71,18 +113,20 @@ export default function ParentView() {
               <td colSpan="2">No members found.</td>
             </tr>
           )}
+          
         </tbody>
-      </table><br /><br />
+      </table>
+                </div><br /><br />
 
-      <div>
-        <NavLink to="/addMember" className="btn btn-primary">Add Family Member</NavLink>
+      <div className={styles.buttonGroup}>
+        <NavLink to="/addMember" className={styles.buttonPrimary}>Add Family Member</NavLink>
+      
+           
+    
+        <NavLink to="/addBook" className={styles.buttonPrimary}>Add Book</NavLink>
       </div>
 
-      <div>
-        <NavLink to="/addBook" className="btn btn-primary">Add Book</NavLink>
-      </div>
-
-    </div>
+    </>
   );
 }
 

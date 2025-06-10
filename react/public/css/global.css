@@ -5,7 +5,7 @@ body {
 }
 
 h1 {
-    font-size: 2rem;
+    font-size: 56px;
 }
 
 h2 {
@@ -65,6 +65,13 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: #f0a544;
+    font-size: 60px;
+    font-family: 'Luckiest Guy', cursive;
+    color: white;
+    text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.5);
+    height: 100px;
+    border-bottom: #ffffff 5px solid;
 }
 
 .app-logo {
@@ -94,6 +101,8 @@ main {
     margin: 0;
     padding: 0;
     justify-content: space-around;
+    background-color: #f0a544;
+    
 }
 
 .nav-link a {
@@ -177,6 +186,8 @@ table {
 
 thead {
     margin-bottom: 0.5rem;
+    background-color: rgba(180, 180, 180, 0.4);
+    border: solid 1px black;
 }
 
 tbody {
@@ -186,15 +197,18 @@ tbody {
 th,
 td {
     padding: 0.5rem;
-    text-align: left;
+    text-align: center;
+    border: solid 1px #738a69;
+
 }
 
 tr {
     padding: 0.5rem;
+    border: solid 1px #738a69;
 }
 
 tr:nth-child(even) {
-    background-color: rgba(136, 193, 231, 0.3);
+    background-color: rgba(161, 163, 163, 0.3);
 }
 
 html,

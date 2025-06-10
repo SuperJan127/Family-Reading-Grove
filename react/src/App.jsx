@@ -15,6 +15,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import axios from 'axios';
 import AddBookView from './views/AddBookView/AddBookView';
 import BooksListView from './views/BooksListView/BooksListView';
+import styles from './App.module.css';
 
 export default function App() {
   const [user, setUser] = useState(() => getTokenFromStorage());
@@ -65,7 +66,7 @@ export default function App() {
     <BrowserRouter>
       <div id="app">
         <UserContext.Provider value={{ user }}>
-          <header id="app-header">
+          <header id="app-header" className={styles.header}>
             <div id="app-info">
             <h1>Reading Tracker</h1>
             </div>
