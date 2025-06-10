@@ -1,18 +1,35 @@
-.table {
-    background-color: #b8d4b0;
-
-    border: solid 6px #738a69;
-    border-radius: 15px;
-    border-collapse: separate;
-    border-spacing: 0;
-}
-
-.h2 {
+.container {
     background-color: #f0a544;
     font-size: 48px;
     font-family: 'Luckiest Guy', cursive;
     color: white;
     text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.5);
+}
+
+.image {
+    width: 300px;
+    height: auto;
+    border-radius: 30px;
+}
+
+.imgdiv {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-around;
+    gap: 2rem;
+}
+
+.table {
+    background-color: #b8d4b0;
+    border-radius: 15px;
+    border: solid 6px #738a69;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.tableButton {
+    display: flex;
+    flex-direction: column;
 }
 
 .buttonPrimary {
@@ -26,30 +43,9 @@
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
     text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.5);
 }
-
 .buttonPrimary:hover {
     background-color: #d89a3b;
     transform: scale(1.05);
     transition: background-color 0.3s ease, transform 0.3s ease;
     cursor: pointer;
-}
-
-.buttonGroup {
-
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-}
-
-.tableContainer {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-around;
-    gap: 2rem;
-}
-.image {
-
-    width: 300px;
-    height: auto;
-    border-radius: 30px;
 }

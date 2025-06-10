@@ -1,6 +1,6 @@
 
 import styles from './ChildView.module.css';
-
+import { NavLink } from 'react-router-dom';
 
 
 export default function ChildView() {
@@ -11,6 +11,7 @@ export default function ChildView() {
             </div><br />
             <div className={styles.imgdiv}>
                 <img src="src/img/BookNook4.png" alt="Book Nook" className={styles.image} />
+                <div className={styles.buttonContainer}>
                 <table className={styles.table}>
                     <thead>
                         <tr>
@@ -45,9 +46,14 @@ export default function ChildView() {
                         </tr>
                     </tbody>
                 </table>
+                
+            <NavLink to="/addBook" className={styles.buttonPrimary}>Add Book</NavLink>
             </div>
-        </>
 
+            </div>
+
+           
+        </>
     )
 }
 //TODO : Add Book buton
