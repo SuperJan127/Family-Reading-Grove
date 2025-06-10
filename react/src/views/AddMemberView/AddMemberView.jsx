@@ -72,7 +72,7 @@ export default function AddMemberView() {
             id="username" className={styles.formControlInput}
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            required
+            required autoFocus
           />
         </div>
 
