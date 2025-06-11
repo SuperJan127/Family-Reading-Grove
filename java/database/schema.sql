@@ -29,21 +29,19 @@ CREATE TABLE books (
 	isbn varchar(20) UNIQUE
 );
 
+
 CREATE TABLE reading_activity (
-	id SERIAL PRIMARY KEY,
-	reader_id INT NOT NULL,
-	book_id INT NOT NULL,
-	format varchar(50) NOT NULL,
-	notes TEXT,
-	start_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	end_time TIMESTAMP,
-	minutes_read INTEGER,
+    id SERIAL PRIMARY KEY,             
+    reader_id INTEGER NOT NULL,        
+    book_id INTEGER NOT NULL,          
+    format VARCHAR(50) NOT NULL,       
+    minutes INTEGER NOT NULL CHECK (minutes >= 0),  
+    notes TEXT,    
 	CONSTRAINT FK_reader FOREIGN KEY (reader_id) REFERENCES users(user_id) ON DELETE CASCADE,
-	CONSTRAINT FK_book FOREIGN KEY (book_id) REFERENCES books(book_id) ON DELETE CASCADE
+	CONSTRAINT FK_book FOREIGN KEY (book_id) REFERENCES books(book_id) ON DELETE CASCADE                  
 );
 
-CREATE INDEX idx_reading_activity_reader ON reading_activity (reader_id);
-CREATE INDEX idx_reading_activity_book ON reading_activity (book_id);
+
 
 Create table prizes(
 	prize_id SERIAL PRIMARY KEY,
