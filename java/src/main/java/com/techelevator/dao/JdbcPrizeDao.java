@@ -8,11 +8,13 @@ import com.techelevator.model.Prize;
 import java.sql.ResultSet; 
 import java.sql.SQLException; 
 import java.util.List; 
+import org.springframework.stereotype.Component;
 
 /**
  * JdbcPrizeDao is a Data Access Object (DAO) that provides methods to interact with the prizes database.
  * It implements the PrizeDao interface and uses JdbcTemplate for database operations.
  */
+@Component
 public class JdbcPrizeDao implements PrizeDao {
 
     private final JdbcTemplate jdbcTemplate;
