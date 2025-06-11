@@ -61,13 +61,13 @@ export default function LoginView({ onLogin }) {
       <form onSubmit={handleSubmit}>
 
         <div className={styles.formControl}>
-          <label htmlFor="username">Username:</label>
+          <label htmlFor="username"  className={styles.formControlLabel}>Username:</label>
           <input type="text" id="username" value={username} size="50" required autoFocus autoComplete="username"
               onChange={ event => setUsername(event.target.value)} />
         </div>
 
         <div className={styles.formControl}>
-          <label htmlFor="password">Password:</label>
+          <label htmlFor="password" className={styles.formControlLabel}>Password:</label>
           <input type="password" id="password" value={password} size="50" required
               onChange={ event => setPassword(event.target.value)} />
         </div>

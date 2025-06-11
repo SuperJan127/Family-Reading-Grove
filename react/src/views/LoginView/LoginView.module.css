@@ -40,11 +40,15 @@
     width: 380px;
     margin: 0.5rem 0;   /* space between form controls */
   }
-  
-  .formControl label {
-    font-weight: bold;
+
+  .formControlLabel {
+    align-items: flex-start;
     margin-bottom: 0.5rem;
-    color: #444;
+    margin-top: 1rem;
+    font-weight: 600;
+    color: #333;
+    text-align: left;
+    width: 375px;
   }
   
   .formControl input {
