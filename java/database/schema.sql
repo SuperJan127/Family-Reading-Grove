@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS reading_activity;
 DROP TABLE IF EXISTS books;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS families;
+DROP TABLE IF EXISTS prizes;
 
 CREATE TABLE families (
 	family_id SERIAL,
@@ -43,5 +44,16 @@ CREATE TABLE reading_activity (
 
 CREATE INDEX idx_reading_activity_reader ON reading_activity (reader_id);
 CREATE INDEX idx_reading_activity_book ON reading_activity (book_id);
+
+Create table prizes(
+	prize_id SERIAL PRIMARY KEY,
+	prize_name varchar(100) NOT NULL UNIQUE,
+	description varchar (255) NOT NULL,
+	minutes_required INTEGER NOT NULL,
+	prizes_available INTEGER NOT NULL DEFAULT 0,
+	start_date date NOT NULL,
+	end_date date NOT NULL,
+	user_group varchar(50) NOT NULL
+);
 
 COMMIT TRANSACTION;

@@ -4,26 +4,24 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.access.prepost.PreAuthorize;
-
 import java.security.Principal;
-import java.util.List; // Importing List
-import com.techelevator.model.Family; // Assuming Family is a model class representing a family
+import java.util.List;
+import com.techelevator.model.Family;
 import com.techelevator.model.RegisterUserDto;
-import com.techelevator.dao.JdbcFamilyDao; // Importing JdbcFamilyDao
+import com.techelevator.dao.JdbcFamilyDao;
 import com.techelevator.exception.DaoException;
-
-import org.springframework.web.bind.annotation.GetMapping; // Importing GetMapping
-import org.springframework.web.bind.annotation.PathVariable; // Importing PathVariable
-import org.springframework.web.server.ResponseStatusException; // Importing ResponseStatusException
-import org.springframework.http.HttpStatus; // Importing HttpStatus
-import org.springframework.web.bind.annotation.PostMapping; // Importing PostMapping
-import org.springframework.web.bind.annotation.PutMapping; // Importing PutMapping
-import org.springframework.web.bind.annotation.DeleteMapping; // Importing DeleteMapping
-import org.springframework.web.bind.annotation.RequestBody; // Importing RequestBody
-import org.springframework.web.bind.annotation.ResponseStatus; // Importing ResponseStatus
-import jakarta.validation.Valid; // Importing Valid for validation annotations
-import com.techelevator.dao.UserDao; // Importing UserDao for user operations
-import com.techelevator.model.User; // Importing User class
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import jakarta.validation.Valid;
+import com.techelevator.dao.UserDao;
+import com.techelevator.model.User;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
@@ -32,18 +30,19 @@ import com.techelevator.model.User; // Importing User class
 public class FamilyController {
 
     private final JdbcFamilyDao jdbcFamilyDao;
-    private final UserDao userDao; // ✅ Added this
+    private final UserDao userDao; 
 
     public FamilyController(JdbcFamilyDao jdbcFamilyDao, UserDao userDao) {
         this.jdbcFamilyDao = jdbcFamilyDao;
-        this.userDao = userDao; // ✅ Set it here
+        this.userDao = userDao; 
     }
+
     @GetMapping
     public List<Family> getAllFamilies() {
         try {
-            return jdbcFamilyDao.getAllFamilies(); // Fetching the list of families from the DAO
+            return jdbcFamilyDao.getAllFamilies(); 
         } catch (Exception e) {
-            // Handle exception (e.g., log it)
+            
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to fetch families", e);
         }
     }
@@ -58,19 +57,19 @@ public class FamilyController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED) // Indicate that a resource has been created
+    @ResponseStatus(HttpStatus.CREATED) 
     public void addFamily(@Valid @RequestBody Family family) {
         try {
-            jdbcFamilyDao.addFamily(family); // Adding a new family using the DAO
+            jdbcFamilyDao.addFamily(family); 
         } catch (Exception e) {
-            // Handle exception (e.g., log it)
+            
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to add family", e);
         }
     }
 
-    @PreAuthorize("hasRole('ROLE_PARENT')") // Restrict access to users with the 'ROLE_PARENT' role
+    @PreAuthorize("hasRole('ROLE_PARENT')") 
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK) // Indicate that the request was successful
+    @ResponseStatus(HttpStatus.OK) 
     public void updateFamily(@PathVariable int id, @Valid @RequestBody Family family) {
         try {
             family.setFamilyId(id); // Set the ID for the family to update
@@ -92,6 +91,7 @@ public class FamilyController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to delete family", e);
         }
     }
+
     @GetMapping("/{id}/members")
     public List<User> getUsersByFamilyId(@PathVariable int id) {
         try {
