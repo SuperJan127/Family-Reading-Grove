@@ -8,13 +8,14 @@ import LogoutView from './views/LogoutView';
 import RegisterView from './views/RegisterView/RegisterView';
 import UserProfileView from './views/UserProfileView/UserProfileView';
 import ParentView from './views/ParentView/ParentView';
-import ChildView from './views/ChildView/ChildView';  
+import ChildView from './views/ChildView/ChildView';
 import AddMemberView from './views/AddMemberView/AddMemberView';
 import MainNav from './components/MainNav/MainNav';
 import ProtectedRoute from './components/ProtectedRoute';
 import axios from 'axios';
 import AddBookView from './views/AddBookView/AddBookView';
 import BooksListView from './views/BooksListView/BooksListView';
+import AddReadingActivityView from './views/AddReadingActivityView/AddReadingActivityView';
 import styles from './App.module.css';
 
 export default function App() {
@@ -68,9 +69,9 @@ export default function App() {
         <UserContext.Provider value={{ user }}>
           <header id="app-header" className={styles.header}>
             <div id="app-info">
-            <h1>Reading Tracker</h1>
+              <h1>Reading Tracker</h1>
             </div>
-          <MainNav />
+            <MainNav />
           </header>
           <main id="main-content">
             <Routes>
@@ -78,13 +79,14 @@ export default function App() {
               <Route path="/login" element={<LoginView onLogin={handleLogin} />} />
               <Route path="/logout" element={<LogoutView onLogout={handleLogout} />} />
               <Route path="/register" element={<RegisterView />} />
-              <Route path="/parent" element={<ParentView/>} />
+              <Route path="/parent" element={<ParentView />} />
               <Route path="/child" element={<ChildView />} />
               <Route path="/addMember" element={<AddMemberView />} />
               <Route path="/addBook" element={<AddBookView />} />
               <Route path="/books" element={<BooksListView />} />
-                
-                {/* Protected routes */}
+              <Route path="/addReading" element={<AddReadingActivityView />} />
+
+              {/* Protected routes */}
               <Route
                 path="/userProfile"
                 element={
