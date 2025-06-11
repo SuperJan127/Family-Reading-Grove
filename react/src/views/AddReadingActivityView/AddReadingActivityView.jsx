@@ -3,6 +3,7 @@ import { useContext, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../context/UserContext";
+import styles from "./AddReadingActivityView.module.css";
 
 export default function AddReadingActivityView() {
   const { user } = useContext(UserContext);
@@ -45,27 +46,29 @@ export default function AddReadingActivityView() {
   };
 
   return (
-    <div>
-      <h2>Record Reading Activity</h2>
+    <div className={styles.container}>
+      <h2 className={styles.h2}>Record Reading Activity</h2>
 
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="bookId">Book ID</label><br />
+      <div className={styles.formControl}>
+          <label htmlFor="bookId" className={styles.formControlLabel}>Book ID:</label><br />
           <input
             id="bookId"
             type="number"
+            className={styles.formControlInput}
             value={bookId}
             onChange={e => setBookId(e.target.value)}
             required
           />
         </div>
 
-        <div>
-          <label htmlFor="format">Format</label><br />
+        <div className={styles.formControl}>
+          <label htmlFor="format" className={styles.formControlLabel}>Format:</label><br />
           <select
             id="format"
+            className={styles.formControlInput}
             value={format}
             onChange={e => setFormat(e.target.value)}
             required
@@ -79,29 +82,35 @@ export default function AddReadingActivityView() {
           </select>
         </div>
 
-        <div>
-          <label htmlFor="minutes">Minutes Spent</label><br />
+        <div className={styles.formControl}>
+          <label htmlFor="minutes" className={styles.formControlLabel}>Minutes Spent:</label><br />
           <input
             id="minutes"
             type="number"
             min="0"
+            className={styles.formControlInput}
             value={minutes}
             onChange={e => setMinutes(e.target.value)}
             required
           />
         </div>
 
-        <div>
-          <label htmlFor="notes">Notes (optional)</label><br />
+        <div className={styles.formControl}>
+          <label htmlFor="notes" className={styles.formControlLabel}>Notes: (optional)</label><br />
           <textarea
             id="notes"
             rows="3"
+            className={styles.formControlInput}
             value={notes}
             onChange={e => setNotes(e.target.value)}
           />
         </div>
 
-        <button type="submit" disabled={loading}>
+        <button
+          type="submit"
+          className={styles.btnPrimary}
+          disabled={loading}
+        >
           {loading ? "Recording…" : "Record Activity"}
         </button>
       </form>
