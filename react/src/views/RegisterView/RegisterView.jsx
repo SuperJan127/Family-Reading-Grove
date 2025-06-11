@@ -1,4 +1,4 @@
-import { useState } from 'react'; // 🔄 Removed useEffect
+import { useState } from 'react';
 
 import { Link, useNavigate } from 'react-router-dom';
 import AuthService from '../../services/AuthService';
@@ -12,9 +12,8 @@ export default function RegisterView() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const role ='ROLE_PARENT';
+  const role = 'ROLE_PARENT';
 
-  // 🔄 REPLACED: Removed useExistingFamily + existingFamilyId + families
   const [newFamilyName, setNewFamilyName] = useState(''); // ✅ Always required now
 
   function handleSubmit(event) {
@@ -52,17 +51,18 @@ export default function RegisterView() {
   }
 
   return (
-    <div id="view-register">
-      <h2>Register</h2>
+    <div className={styles.container}>
+      <h2 className={styles.h2}>Register</h2>
 
       <Notification notification={notification} clearNotification={() => setNotification(null)} />
 
       <form onSubmit={handleSubmit}>
-        <div className="form-control">
-          <label htmlFor="username">Username:</label>
+        <div className={styles.formControl}>
+          <label htmlFor="username" className={styles.formControlLabel}>Username:</label>
           <input
             type="text"
             id="username"
+            className={styles.formControlInput}
             value={username}
             size="50"
             required
@@ -72,11 +72,12 @@ export default function RegisterView() {
           />
         </div>
 
-        <div className="form-control">
-          <label htmlFor="password">Password:</label>
+        <div className={styles.formControl}>
+          <label htmlFor="password" className={styles.formControlLabel}>Password:</label>
           <input
             type="password"
             id="password"
+            className={styles.formControlInput}
             value={password}
             size="50"
             required
@@ -84,11 +85,12 @@ export default function RegisterView() {
           />
         </div>
 
-        <div className="form-control">
-          <label htmlFor="confirmPassword">Confirm Password:</label>
+        <div className={styles.formControl}>
+          <label htmlFor="confirmPassword" className={styles.formControlLabel}>Confirm Password:</label>
           <input
             type="password"
             id="confirmPassword"
+            className={styles.formControlInput}
             value={confirmPassword}
             size="50"
             required
@@ -96,24 +98,32 @@ export default function RegisterView() {
           />
         </div>
 
-        {/* ✅ Role is now fixed to ROLE_PARENT */} 
 
-        {/* ✅ Family name is always shown */}
-        <div className="form-control">
-          <label htmlFor="familyName">Family Name:</label>
+        <div className={styles.formControl}>
+          <label htmlFor="familyName" className={styles.formControlLabel}>Family Name:</label>
           <input
             type="text"
             id="familyName"
+            className={styles.formControlInput}
             value={newFamilyName}
             required
             onChange={(e) => setNewFamilyName(e.target.value)}
           />
         </div>
 
-        <button type="submit" className={`btn-primary ${styles.formButton}`}>
+        <button type="submit" className={styles.btnPrimary}>
           Register
         </button>
-        <Link to="/login">Have an account? Log-in</Link>
+
+        <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+          <button
+            type="button"
+            className={styles.btnPrimary}
+            onClick={() => navigate('/login')}
+          >
+            Have an account? Log in
+          </button>
+        </div>
       </form>
     </div>
   );

@@ -69,7 +69,7 @@ export default function App() {
         <UserContext.Provider value={{ user }}>
           <header id="app-header" className={styles.header}>
             <div id="app-info">
-              <h1>Reading Tracker</h1>
+              <h1>Family Reading Grove</h1>
             </div>
             <MainNav />
           </header>

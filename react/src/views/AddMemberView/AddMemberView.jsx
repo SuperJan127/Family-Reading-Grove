@@ -61,7 +61,7 @@ export default function AddMemberView() {
   };
 
   return (
-    <div>
+    <div className={styles.container}>
       <h2 className={styles.h2}>Add Family Member</h2>
       <Notification notification={notification} clearNotification={() => setNotification(null)} />
 
