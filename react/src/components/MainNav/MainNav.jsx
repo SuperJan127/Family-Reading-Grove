@@ -25,11 +25,7 @@ export default function MainNav() {
       </div>
       {user ? (
         <>
-          <div className="nav-link">
-            <NavLink to="/userProfile">
-              Profile
-            </NavLink>
-          </div>
+        
 
           <div className="nav-link">
             <NavLink to="/addReading">

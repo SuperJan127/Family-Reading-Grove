@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../context/UserContext";
+import styles from "./AddBookView.module.css"; // Assuming you have a CSS module for styles
 
 export default function AddBookView() {
     const [title, setTitle] = useState("");
@@ -18,15 +19,16 @@ export default function AddBookView() {
         setLoading(true); // Optionally, you can add a loading state
         try {
             await axios.post("/books", { title, author, isbn });
+            navigate("/books"); // Redirect to the books list after successful addition
 
-            if (user?.role === "ROLE_PARENT") {
-                navigate("/parent");
-            } else if (user?.role === "ROLE_CHILD") {
-                navigate("/child");
-            } else {
-                // fallback
-                navigate("/");
-            }
+            // if (user?.role === "ROLE_PARENT") {
+            //     navigate("/parent");
+            // } else if (user?.role === "ROLE_CHILD") {
+            //     navigate("/child");
+            // } else {
+            //     // fallback
+            //     navigate("/");
+            // }
 
         } catch (err) {
             setError(err.response?.data?.message || "Failed to add book. Please try again.");
@@ -37,37 +39,39 @@ export default function AddBookView() {
 
 
     return (
-
-        <div>
-            <h2>Add a New Book</h2>
-
-            {error && <p style={{ color: "red" }}>{error}</p>}
-
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="title">Title</label><br />
-                    <input id="title" type="text" value={title} onChange={e => setTitle(e.target.value)}
-                        required
-                    />
+        <div className={styles.container}>
+          <div className={styles.contentWrapper}>
+            <div className={styles.formSection}>
+              <h2 className={styles.heading}>Add a New Book</h2>
+      
+              {error && <p className={styles.error}>{error}</p>}
+      
+              <form onSubmit={handleSubmit} className={styles.form}>
+                <div className={styles.formGroup}>
+                  <label htmlFor="title">Title</label>
+                  <input id="title" type="text" value={title} onChange={e => setTitle(e.target.value)} required autoFocus />
                 </div>
-
-                <div>
-                    <label htmlFor="author">Author</label><br />
-                    <input id="author" type="text" value={author} onChange={e => setAuthor(e.target.value)}
-                        required
-                    />
+      
+                <div className={styles.formGroup}>
+                  <label htmlFor="author">Author</label>
+                  <input id="author" type="text" value={author} onChange={e => setAuthor(e.target.value)} required />
                 </div>
-
-                <div>
-                    <label htmlFor="isbn">ISBN</label><br />
-                    <input id="isbn" type="text" value={isbn} onChange={e => setIsbn(e.target.value)}
-                        required
-                    />
+      
+                <div className={styles.formGroup}>
+                  <label htmlFor="isbn">ISBN</label>
+                  <input id="isbn" type="text" value={isbn} onChange={e => setIsbn(e.target.value)} required />
                 </div>
-                <button type="submit" disabled={loading}>
-                    {loading ? "Adding..." : "Add Book"}
+      
+                <button type="submit" className={styles.buttonPrimary} disabled={loading}>
+                  {loading ? "Adding..." : "Add Book"}
                 </button>
-            </form>
+              </form>
+            </div>
+      
+            <div className={styles.imageSection}>
+              <img src="src/img/MythicalBook.png" alt="Mythical Book" className={styles.image} />
+            </div>
+          </div>
         </div>
-    );
+      );
 }  

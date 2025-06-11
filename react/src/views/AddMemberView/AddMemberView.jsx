@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import AuthService from '../../services/AuthService';
 import Notification from '../../components/Notification/Notification';
 import { UserContext } from '../../context/UserContext';
+import styles from './AddMemberView.module.css'; // Assuming you have a CSS module for styles
 
 export default function AddMemberView() {
   const { user } = useContext(UserContext);
@@ -61,46 +62,46 @@ export default function AddMemberView() {
 
   return (
     <div>
-      <h2>Add Family Member</h2>
+      <h2 className={styles.h2}>Add Family Member</h2>
       <Notification notification={notification} clearNotification={() => setNotification(null)} />
 
       <form onSubmit={handleSubmit}>
-        <div className="form-control">
-          <label htmlFor="username">Username:</label>
+        <div className={styles.formControl}>
+          <label htmlFor="username" className={styles.formControlLabel}>Username:</label>
           <input
-            id="username"
+            id="username" className={styles.formControlInput}
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            required
+            required autoFocus
           />
         </div>
 
-        <div className="form-control">
-          <label htmlFor="password">Password:</label>
+        <div className={styles.formControl}>
+          <label htmlFor="password" className={styles.formControlLabel}>Password:</label>
           <input
             type="password"
-            id="password"
+            id="password" className={styles.formControlInput}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
 
-        <div className="form-control">
-          <label htmlFor="confirmPassword">Confirm Password:</label>
+        <div className={styles.formControl}>
+          <label htmlFor="confirmPassword" className={styles.formControlLabel}>Confirm Password:</label>
           <input
             type="password"
-            id="confirmPassword"
+            id="confirmPassword" className={styles.formControlInput}
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
         </div>
 
-        <div className="form-control">
-          <label htmlFor="role">Role:</label>
+        <div className={styles.formControl}>
+          <label htmlFor="role" className={styles.formControlLabel}>Role:</label>
           <select
-            id="role"
+            id="role" className={styles.formControlInput}
             value={role}
             onChange={(e) => setRole(e.target.value)}
           >
@@ -109,7 +110,7 @@ export default function AddMemberView() {
           </select>
         </div>
 
-        <button type="submit" className="btn-primary">Add Member</button>
+        <button type="submit" className={styles.btnPrimary}>Add Member</button>
       </form>
     </div>
   );
