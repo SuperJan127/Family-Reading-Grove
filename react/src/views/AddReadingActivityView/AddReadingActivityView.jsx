@@ -53,7 +53,7 @@ export default function AddReadingActivityView() {
 
       <form onSubmit={handleSubmit}>
       <div className={styles.formControl}>
-          <label htmlFor="bookId" className={styles.formControlLabel}>Book ID:</label><br />
+          <label htmlFor="bookId" className={styles.formControlLabel}>Book ID:</label>
           <input
             id="bookId"
             type="number"
@@ -65,7 +65,7 @@ export default function AddReadingActivityView() {
         </div>
 
         <div className={styles.formControl}>
-          <label htmlFor="format" className={styles.formControlLabel}>Format:</label><br />
+          <label htmlFor="format" className={styles.formControlLabel}>Format:</label>
           <select
             id="format"
             className={styles.formControlInput}
@@ -83,7 +83,7 @@ export default function AddReadingActivityView() {
         </div>
 
         <div className={styles.formControl}>
-          <label htmlFor="minutes" className={styles.formControlLabel}>Minutes Spent:</label><br />
+          <label htmlFor="minutes" className={styles.formControlLabel}>Minutes Spent:</label>
           <input
             id="minutes"
             type="number"
@@ -96,7 +96,7 @@ export default function AddReadingActivityView() {
         </div>
 
         <div className={styles.formControl}>
-          <label htmlFor="notes" className={styles.formControlLabel}>Notes: (optional)</label><br />
+          <label htmlFor="notes" className={styles.formControlLabel}>Notes: (optional)</label>
           <textarea
             id="notes"
             rows="3"

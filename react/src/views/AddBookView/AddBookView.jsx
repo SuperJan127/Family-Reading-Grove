@@ -48,17 +48,17 @@ export default function AddBookView() {
       
               <form onSubmit={handleSubmit} className={styles.form}>
                 <div className={styles.formGroup}>
-                  <label htmlFor="title">Title</label>
+                  <label htmlFor="title" className={styles.formControlLabel}>Title:</label>
                   <input id="title" type="text" value={title} onChange={e => setTitle(e.target.value)} required autoFocus />
                 </div>
       
                 <div className={styles.formGroup}>
-                  <label htmlFor="author">Author</label>
+                  <label htmlFor="author" className={styles.formControlLabel}>Author:</label>
                   <input id="author" type="text" value={author} onChange={e => setAuthor(e.target.value)} required />
                 </div>
       
                 <div className={styles.formGroup}>
-                  <label htmlFor="isbn">ISBN</label>
+                  <label htmlFor="isbn" className={styles.formControlLabel}>ISBN:</label>
                   <input id="isbn" type="text" value={isbn} onChange={e => setIsbn(e.target.value)} required />
                 </div>
       
