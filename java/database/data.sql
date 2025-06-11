@@ -12,6 +12,8 @@ Insert into books (title, author, isbn) VALUES ('Effective Java', 'Joshua Bloch'
 Insert into books (title, author, isbn) VALUES ('Clean Code', 'Robert C. Martin', '978-0132350884');
 Insert into books (title, author, isbn) VALUES ('Java Concurrency in Practice', 'Brian Goetz', '978-0321349606');
 
+INSERT INTO reading_activity (reader_id, book_id, format, minutes, notes) VALUES (1, 1, 'EBOOK', 120, 'Great book on Java best practices');
+INSERT INTO reading_activity (reader_id, book_id, format, minutes, notes) VALUES (2, 2, 'PAPERBACK', 90, 'Learned a lot about clean coding principles');
 
 
 COMMIT TRANSACTION;
