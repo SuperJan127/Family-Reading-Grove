@@ -22,7 +22,7 @@
   .bookRow {
     display: flex;
     align-items: center;
-    justify-content: flex-start; /* Optionally we can center */
+    justify-content: center; /* Optionally we can change this */
     gap: 0.5rem; /* Space between icon and text */
     margin: 0.25rem 0;
     text-align: center;
@@ -64,7 +64,7 @@
   width: 20px;
   height: 20px;
   transform: scale(1.5); /* Increase size */
-  accent-color: #f0a544; /* Optional: Matches your theme color */
+  accent-color: #f0a544;  /* Change checkbox color */
   cursor: pointer;
 }
   
