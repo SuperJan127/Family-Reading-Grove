@@ -5,30 +5,53 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.techelevator.dao.BookDao;
 import com.techelevator.dao.UserBookDao;
+import com.techelevator.model.Book;
 import com.techelevator.model.UserBook;
 
 @Service
 public class UserBookServiceImpl implements UserBookService {
 
     private final UserBookDao userBookDao;
+    private final BookDao bookDao;
 
-    public UserBookServiceImpl(UserBookDao userBookDao) {
+    public UserBookServiceImpl(UserBookDao userBookDao, BookDao bookDao) {
         this.userBookDao = userBookDao;
+        this.bookDao = bookDao;
     }
 
     @Override
     public void addUserBook(int userId, UserBook userBook) {
-        userBook.setUserId(userId);
+        Book book = userBook.getBook(); // this is the nested book
 
-        if (!userBookDao.isBookInUserCollection(userId, userBook.getBookId())) {
-            if (userBook.getDateStarted() == null) {
-                userBook.setDateStarted(LocalDate.now());
-            }
-            userBookDao.addUserBook(userId, userBook.getBookId());
-        } else {
-            throw new IllegalStateException("User already linked to this book.");
+        if (book == null) {
+            throw new IllegalArgumentException("Book is required");
         }
+
+        // Look up the book in the DB
+        Book existingBook = bookDao.getBookByIsbn(book.getIsbn());
+        int bookId;
+
+        if (existingBook != null) {
+            bookId = existingBook.getBookId();
+        } else {
+            bookDao.addBook(book); // insert new book
+            existingBook = bookDao.getBookByIsbn(book.getIsbn());
+
+            if (existingBook == null) {
+                throw new IllegalStateException("Book insert failed");
+            }
+
+            bookId = existingBook.getBookId();
+        }
+
+        userBookDao.addUserBook(
+                userId,
+                bookId,
+                userBook.isCurrentlyReading(),
+                userBook.getDateStarted(),
+                userBook.getDateFinished());
     }
 
     @Override

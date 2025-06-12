@@ -8,6 +8,7 @@ public class UserBook {
     private boolean currentlyReading;
     private LocalDate dateStarted;
     private LocalDate dateFinished;
+    private Book book;
 
     public UserBook(int userId, int bookId, boolean currentlyReading, LocalDate dateStarted, LocalDate dateFinished) {
         this.userId = userId;
@@ -58,5 +59,13 @@ public class UserBook {
 
     public void setDateFinished(LocalDate dateFinished) {
         this.dateFinished = dateFinished;
+    }
+
+    public Book getBook() {
+        return book;
+    }
+    
+    public void setBook(Book book) {
+        this.book = book;
     }
 }
