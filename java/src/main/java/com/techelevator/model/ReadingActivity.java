@@ -13,7 +13,7 @@ public class ReadingActivity {
     private Format format;
     private int minutes;
     private String notes;
-    private LocalDate date;       // added: date of activity
+    
 
     // getters & setters
 
@@ -80,11 +80,6 @@ public class ReadingActivity {
         this.notes = notes;
     }
 
-    public LocalDate getDate() {
-        return date;
-    }
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
+
 }
 

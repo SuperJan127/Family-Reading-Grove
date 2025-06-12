@@ -36,7 +36,7 @@ export default function ParentView() {
 
     const headers = { Authorization : `Bearer ${token}` };
     const memberRequest = axios.get(`/families/${familyId}/members`, { headers });
-    const historyRequest = axios.get(`/families/${familyId}/reading-history`, { headers });
+    const historyRequest = axios.get(`/families/${familyId}/reading-activities`, { headers });
 
     Promise.all([memberRequest, historyRequest])
       .then(([memberResponse, historyResponse]) => {
@@ -57,6 +57,7 @@ export default function ParentView() {
     <>
       <h2 className={styles.h2}>Family Activity</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>}
+
       <div className={styles.tableContainer}>
         <img src="src/img/FamilyActivity.png" alt="Family Actvity" className={styles.image} />
 
@@ -64,9 +65,10 @@ export default function ParentView() {
         <table className={styles.table}>
           <thead>
             <tr>
-              <th colSpan="3">Reading Tracking</th>
+              <th colSpan="4">Reading Tracking</th>
             </tr>
             <tr>
+              <th>Reader</th>
               <th>Book Title</th>
               <th>Author</th>
               <th>Minutes Read</th>
@@ -75,11 +77,11 @@ export default function ParentView() {
           <tbody>
             {loadingHistory ? (
               <tr>
-                <td colSpan="3">Loading Reading History...</td>
+                <td colSpan="4">Loading Reading History...</td>
               </tr>
             ) : historyError ? (
               <tr>
-                <td colSpan="3" style={{ color: 'red' }}>{historyError}</td>
+                <td colSpan="4" style={{ color: 'red' }}>{historyError}</td>
               </tr>
             ) : readingHistory.length > 0 ? (
               readingHistory.map((entry) => (
@@ -87,11 +89,12 @@ export default function ParentView() {
                   <td>{entry.title}</td>
                   <td>{entry.author}</td>
                   <td>{entry.minutes}</td>
+                  <td>{entry.minutes}</td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="3">No reading history yet.</td>
+                <td colSpan="4">No reading history yet.</td>
               </tr>
             )}
           </tbody>

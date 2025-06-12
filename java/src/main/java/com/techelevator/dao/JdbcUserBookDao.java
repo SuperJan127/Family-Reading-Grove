@@ -3,6 +3,8 @@ package com.techelevator.dao;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.jdbc.core.RowMapper;
+
 
 import com.techelevator.model.Book;
 import com.techelevator.model.UserBook;
@@ -42,7 +44,8 @@ public class JdbcUserBookDao implements UserBookDao {
                 JOIN books b ON ub.book_id = b.book_id
                 WHERE ub.user_id = ?
                            """;
-        return jdbcTemplate.query(sql, new Object[] { userId }, (rs, rowNum) -> mapRowToUserBook(rs, rowNum));
+        // return jdbcTemplate.query(sql, new Object[] { userId }, (rs, rowNum) -> mapRowToUserBook(rs, rowNum));
+        return jdbcTemplate.query(sql, (rs, rowNum) -> mapRowToUserBook(rs, rowNum), userId);
     }
 
     @Override
@@ -75,6 +78,7 @@ public class JdbcUserBookDao implements UserBookDao {
     private RowMapper<UserBook> mapRowToUserBook() {
         return (rs, rowNum) -> {
             UserBook ub = new UserBook();
+            ub.setId(rs.getInt("id"));
             ub.setUserId(rs.getInt("user_id"));
             ub.setBookId(rs.getInt("book_id"));
             ub.setCurrentlyReading(rs.getBoolean("currently_reading"));
@@ -83,6 +87,7 @@ public class JdbcUserBookDao implements UserBookDao {
             return ub;
         };
     }
+
     private UserBook mapRowToUserBook(ResultSet rs, int rowNum) throws SQLException {
         UserBook userBook = new UserBook();
     

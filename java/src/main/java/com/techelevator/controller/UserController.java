@@ -1,9 +1,15 @@
 package com.techelevator.controller;
 
 import com.techelevator.dao.UserDao;
+import com.techelevator.dao.ReadingActivityDao;
+import com.techelevator.dao.UserBookDao;
+import com.techelevator.model.UserReadingSummaryDto;
+
 import com.techelevator.exception.DaoException;
 import com.techelevator.model.FamilyIdDto;
 import com.techelevator.model.User;
+import com.techelevator.model.UserBook;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,9 +41,13 @@ import org.springframework.http.ResponseEntity;
 public class UserController {
 
     private UserDao userDao;
+    private UserBookDao userBookDao;
+    private ReadingActivityDao readingActivityDao;
 
-    public UserController(UserDao userDao) {
+    public UserController(UserDao userDao, UserBookDao userBookDao, ReadingActivityDao readingActivityDao) {
         this.userDao = userDao;
+        this.userBookDao = userBookDao;
+        this.readingActivityDao = readingActivityDao;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -75,4 +85,19 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
+
+    /**
+     * GET /users/{userId}/summary
+     * Returns completed-book count, total minutes read,
+     * and current reading list for the given user.
+     */
+    @GetMapping("/{userId}/summary")
+    public UserReadingSummaryDto getUserSummary(@PathVariable int userId) {
+        int completedBooks = userBookDao.countCompletedBooksByUserId(userId);
+        int totalMinutes = readingActivityDao.getTotalMinutesByUserId(userId);
+        List<UserBook> current = userBookDao.getCurrentBooksByUserId(userId);
+
+        return new UserReadingSummaryDto(completedBooks, totalMinutes, current);
+    }
+
 }
