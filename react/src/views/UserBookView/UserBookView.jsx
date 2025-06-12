@@ -41,14 +41,14 @@ export default function UserBookView() {
         const userBookPayload = {
             userId: user.id,
             book: {
-              title: newBook.title,
-              author: newBook.author,
-              isbn: newBook.isbn
+                title: newBook.title,
+                author: newBook.author,
+                isbn: newBook.isbn
             },
             currentlyReading: newBook.currentlyReading,
             dateStarted: newBook.dateStarted || null,
             dateFinished: newBook.dateFinished || null
-          };
+        };
 
         axios.post(`/users/${user.id}/books/add`, userBookPayload)
             .then(() => axios.get(`/users/${user.id}/books`))
@@ -67,82 +67,88 @@ export default function UserBookView() {
 
 
     return (
-        <div>
-            <h2>{user.username}'s Books</h2>
+        <div className={styles.container}>
+            <h2 className={styles.h2}>{user.username}'s Books</h2>
             {userBooks.length > 0 ? (
                 <ul className={styles.bookList}>
                     {userBooks.map((userBook) => (
                         <li key={userBook.book.bookId} className={styles.bookItem}>
-                        <div><strong>{userBook.book.title}</strong> by {userBook.book.author}</div>
-                        <div>📘 Currently Reading: {userBook.currentlyReading ? "Yes" : "No"}</div>
-                        <div>📅 Start Date: {userBook.dateStarted || "N/A"}</div>
-                        <div>✅ Date Finished: {userBook.dateFinished || "N/A"}</div>
-                      </li>
+                            <div className={styles.bookRow}><strong>{userBook.book.title}</strong> by {userBook.book.author}</div>
+                            <div className={styles.bookRow}>📘 Currently Reading: {userBook.currentlyReading ? "Yes" : "No"}</div>
+                            <div className={styles.bookRow}>📅 Start Date: {userBook.dateStarted || "N/A"}</div>
+                            <div className={styles.bookRow}> ✅ Date Finished: {userBook.dateFinished || "N/A"}</div>
+                        </li>
                     ))}
                 </ul>
             ) : (
                 <p>No books found.</p>
             )}
-            <button onClick={() => setShowForm(prev => !prev)}>
+            <button className={styles.btnPrimary} onClick={() => setShowForm(prev => !prev)}>
                 {showForm ? "Cancel" : "Add a Book"}
             </button><br /><br /><br />
             {showForm && (
                 <form onSubmit={handleAddBook} className={styles.addBookForm}>
-                    <label>
-                        Title:
+                    <div className={styles.formControl}>
+                        <label className={styles.formControlLabel}>Title:</label>
                         <input
                             type="text"
+                            className={styles.formControlInput}
                             value={newBook.title}
                             onChange={(e) => setNewBook({ ...newBook, title: e.target.value })}
                             required
                             autoFocus
                         />
-                    </label>
-                    <label>
-                        Author:
+                    </div>
+                    <div className={styles.formControl}>
+                        <label className={styles.formControlLabel}>Author:</label>
                         <input
                             type="text"
+                            className={styles.formControlInput}
                             value={newBook.author}
                             onChange={(e) => setNewBook({ ...newBook, author: e.target.value })}
                             required
                         />
-                    </label>
-                    <label>
-                        ISBN:
+                    </div>
+                    <div className={styles.formControl}>
+                        <label className={styles.formControlLabel}>ISBN:</label>
                         <input
                             type="text"
+                            className={styles.formControlInput}
                             value={newBook.isbn}
                             onChange={(e) => setNewBook({ ...newBook, isbn: e.target.value })}
                             required
                         />
-                    </label>
-                    <label>
-                        Start Date:
+                    </div>
+                    <div className={styles.formControl}>
+                        <label className={styles.formControlLabel}>Start Date:</label>
                         <input
                             type="date"
+                            className={styles.formControlInput}
                             value={newBook.dateStarted}
                             onChange={(e) => setNewBook({ ...newBook, dateStarted: e.target.value })}
                         />
-                    </label>
+                    </div>
 
-                    <label>
-                        Date Finished:
+                    <div className={styles.formControl}>
+                        <label className={styles.formControlLabel}>Date Finished:</label>
                         <input
                             type="date"
+                            className={styles.formControlInput}
                             value={newBook.dateFinished}
                             onChange={(e) => setNewBook({ ...newBook, dateFinished: e.target.value })}
                         />
-                    </label>
+                    </div>
 
-                    <label>
-                        Currently Reading:
+                    <div className={styles.formControl}>
+                        <label className={styles.formControlLabel}>Currently Reading:</label>
                         <input
                             type="checkbox"
+                            className={styles.checkbox}
                             checked={newBook.currentlyReading}
                             onChange={(e) => setNewBook({ ...newBook, currentlyReading: e.target.checked })}
                         />
-                    </label>
-                    <button type="submit">Add Book</button>
+                    </div>
+                    <button type="submit" className={styles.btnPrimary}>Add Book</button>
                 </form>
             )}
 
