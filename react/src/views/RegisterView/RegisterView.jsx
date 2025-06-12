@@ -67,7 +67,7 @@ export default function RegisterView() {
             size="50"
             required
             autoFocus
-            autoComplete="username"
+            autoComplete="username" 
             onChange={(event) => setUsername(event.target.value)}
           />
         </div>
