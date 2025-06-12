@@ -26,7 +26,7 @@ public class UserBookController {
         this.userBookService = userBookService;
     }
 
-    @PostMapping
+    @PostMapping(path = "/add")
     public ResponseEntity<?> addUserBook(@PathVariable int userId, @RequestBody UserBook userBook) {
         try {
             userBookService.addUserBook(userId, userBook);
@@ -36,7 +36,7 @@ public class UserBookController {
         }
     }
 
-    @GetMapping
+    @GetMapping(path = "")
     public List<UserBook> getUserBooks(@PathVariable int userId) {
         return userBookService.getBooksByUserId(userId);
     }
