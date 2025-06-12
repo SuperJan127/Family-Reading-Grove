@@ -1,5 +1,6 @@
 package com.techelevator.dao;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.techelevator.model.UserBook;
@@ -11,7 +12,7 @@ public interface UserBookDao {
      * @param userId the ID of the user
      * @param bookId the ID of the book to add
      */
-    void addUserBook(int userId, int bookId);
+    void addUserBook(int userId, int bookId, boolean currentlyReading, LocalDate dateStarted, LocalDate dateFinished);
 
     /**
      * Retrieves a list of books in a user's collection.

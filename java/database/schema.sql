@@ -61,7 +61,7 @@ CREATE TABLE user_book (
     book_id int NOT NULL,
     currently_reading BOOLEAN DEFAULT TRUE,
     date_started DATE DEFAULT CURRENT_DATE,
-	date_completed DATE DEFAULT CURRENT_DATE,
+	date_completed DATE DEFAULT null,
 
     CONSTRAINT fk_users FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
     CONSTRAINT fk_books FOREIGN KEY (book_id) REFERENCES books(book_id) ON DELETE CASCADE,
