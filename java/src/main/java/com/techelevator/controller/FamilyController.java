@@ -144,4 +144,17 @@ public class FamilyController {
         }
     }
 
+
+    /**
+     * Endpoint to update a family member's role.
+     * Only parents can update roles of children.
+     */
+    @GetMapping("/{id}/reading-activities")
+    public List<ReadingActivity> getFamilyReadingActivities(@PathVariable int id) {
+        try {
+            return readingActivityDao.getActivitiesByFamilyId(id); 
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to fetch reading activities", e);
+        }
+    }
 }
