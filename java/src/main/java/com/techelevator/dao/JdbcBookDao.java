@@ -74,6 +74,23 @@ public class JdbcBookDao implements BookDao {
         }
     }
 
+    @Override
+    public Book getBookByIsbn(String isbn) {
+        // Logic to retrieve a book by its ISBN from the database
+        try {
+            String sql = "SELECT book_id, title, author, isbn FROM books WHERE isbn = ?";
+            SqlRowSet rs = jdbcTemplate.queryForRowSet(sql, isbn);
+            if (rs.next()) {
+                return mapRowToBook(rs); // Map the row to a Book object
+            }
+            return null; // Return null if no book is found with the given ISBN
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Database connection error", e);
+        } catch (DataIntegrityViolationException e) {
+            throw new DaoException("Data integrity violation", e);
+        }
+    }
+    
     private Book mapRowToBook(SqlRowSet rs) {
         Book book = new Book();
         book.setBookId(rs.getInt("book_id"));
