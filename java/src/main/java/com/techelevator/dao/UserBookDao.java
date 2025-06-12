@@ -55,5 +55,4 @@ public interface UserBookDao {
      */
     int countCompletedBooksByUserId(int userId);
 
-
 }

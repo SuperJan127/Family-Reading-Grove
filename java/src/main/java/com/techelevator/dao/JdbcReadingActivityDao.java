@@ -63,27 +63,36 @@ public class JdbcReadingActivityDao implements ReadingActivityDao {
     @Override
     public List<ReadingActivity> getActivitiesByFamilyId(int familyId) {
         final String sql = ""
-                + "SELECT ra.id, ra.reader_id, u.username AS reader_username, "
-                + "ra.book_id, b.title AS book_title, b.author AS book_author, "
-                + "ra.format, ra.minutes, ra.notes, ra.date AS activity_date "
-                + "FROM reading_activity ra "
-                + "JOIN users u ON ra.reader_id = u.user_id "
-                + "JOIN books b ON ra.book_id = b.book_id "
-                + "WHERE u.family_id = ? "
-                + "ORDER BY ra.date DESC"
-                + "ORDER BY ra.id";
-        return jdbcTemplate.query(sql, mapRowToReadingActivityWithDetails(), familyId);
+                + "SELECT ra.id, "
+                + "       ra.reader_id, "
+                + "       u.username AS reader_username, "
+                + "       ra.book_id, "
+                + "       b.title    AS book_title, "
+                + "       b.author   AS book_author, "
+                + "       ra.format, "
+                + "       ra.minutes, "
+                + "       ra.notes "
+                + "  FROM reading_activity ra "
+                + "  JOIN users u ON ra.reader_id = u.user_id "
+                + "  JOIN books b ON ra.book_id    = b.book_id "
+                + " WHERE u.family_id = ? "
+                + " ORDER BY ra.id DESC"; // newest first; drop DESC if we want oldest first
+
+        return jdbcTemplate.query(
+                sql,
+                mapRowToReadingActivityWithDetails(),
+                familyId);
     }
 
-     /**
+    /**
      * Calculate the total minutes read by a specific user.
      */
     @Override
     public int getTotalMinutesByUserId(int userId) {
         final String sql = ""
-            + "SELECT COALESCE(SUM(minutes), 0) AS total_minutes "
-            + "FROM reading_activity "
-            + "WHERE reader_id = ?";
+                + "SELECT COALESCE(SUM(minutes), 0) AS total_minutes "
+                + "FROM reading_activity "
+                + "WHERE reader_id = ?";
         Integer total = jdbcTemplate.queryForObject(sql, Integer.class, userId);
         return (total != null ? total : 0);
     }
@@ -100,7 +109,7 @@ public class JdbcReadingActivityDao implements ReadingActivityDao {
             ra.setFormat(Format.valueOf(rs.getString("format")));
             ra.setMinutes(rs.getInt("minutes"));
             ra.setNotes(rs.getString("notes"));
-            ra.setDate(rs.getDate("date").toLocalDate());
+            
             return ra;
         };
     }
@@ -120,7 +129,7 @@ public class JdbcReadingActivityDao implements ReadingActivityDao {
             ra.setFormat(Format.valueOf(rs.getString("format")));
             ra.setMinutes(rs.getInt("minutes"));
             ra.setNotes(rs.getString("notes"));
-            ra.setDate(rs.getDate("activity_date").toLocalDate());
+            
             return ra;
         };
     }
