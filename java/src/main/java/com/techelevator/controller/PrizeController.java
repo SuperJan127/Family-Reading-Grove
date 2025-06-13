@@ -82,4 +82,14 @@ public class PrizeController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to delete prize", e);
         }
     }
+
+    @GetMapping(path = "/family/{familyId}")
+    public List<Prize> getPrizesByFamilyId(@PathVariable("familyId") int familyId) {
+        try {
+            return jdbcPrizeDao.getPrizesByFamilyId(familyId);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to fetch prizes for family", e);
+        }
+    }
+
 }

@@ -2,11 +2,17 @@
 package com.techelevator.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
 import com.techelevator.exception.DaoException;
-import com.techelevator.model.Prize; 
+import com.techelevator.model.Prize;
+
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet; 
-import java.sql.SQLException; 
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List; 
 import org.springframework.stereotype.Component;
 
@@ -69,13 +75,27 @@ public class JdbcPrizeDao implements PrizeDao {
      */
     @Override
     public void addPrize(Prize prize) {
-        String sql = "INSERT INTO prizes (prize_name, description, minutes_required, prizes_available, start_date, end_date, user_group) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO prizes (prize_name, description, minutes_required, prizes_available, start_date, end_date, user_group, family_id) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING prize_id";
+    
         try {
-            jdbcTemplate.update(sql, prize.getPrizeName(), prize.getDescription(), prize.getMinutesRequired(),
-                                prize.getPrizesAvailable(), prize.getStartDate(), prize.getEndDate(), prize.getUserGroup());
+            Integer newId = jdbcTemplate.queryForObject(
+                sql,
+                Integer.class,
+                prize.getPrizeName(),
+                prize.getDescription(),
+                prize.getMinutesRequired(),
+                prize.getPrizesAvailable(),
+                Date.valueOf(prize.getStartDate()),
+                Date.valueOf(prize.getEndDate()),
+                prize.getUserGroup(),
+                prize.getFamilyId()
+            );
+    
+            prize.setPrizeId(newId);
+    
         } catch (Exception e) {
-           throw new DaoException("Error adding prize: " + prize.getPrizeName(), e);
+            throw new DaoException("Error adding prize: " + prize.getPrizeName(), e);
         }
     }
 
@@ -87,20 +107,27 @@ public class JdbcPrizeDao implements PrizeDao {
      * @return the updated Prize object
      * @throws DaoException if an error occurs while updating the prize
      */
-    @Override   
-    public Prize updatePrizeById(int prizeId, Prize prize) {
-        String sql = "UPDATE prizes SET prize_name = ?, description = ?, minutes_required = ?, prizes_available = ?, " +
-                     "start_date = ?, end_date = ?, user_group = ? WHERE prize_id = ?";
-        try {
-            jdbcTemplate.update(sql, prize.getPrizeName(), prize.getDescription(), prize.getMinutesRequired(),
-                                prize.getPrizesAvailable(), prize.getStartDate(), prize.getEndDate(), 
-                                prize.getUserGroup(), prizeId);
-            return getPrizeById(prizeId); // Return the updated prize
-        } catch (Exception e) {
-            throw new DaoException("Error updating prize with ID: " + prizeId, e); 
-        }
-    }
+    @Override
+public Prize updatePrizeById(int prizeId, Prize prize) {
+    String sql = "UPDATE prizes SET prize_name = ?, description = ?, minutes_required = ?, prizes_available = ?, " +
+                 "start_date = ?, end_date = ?, user_group = ? WHERE prize_id = ?";
 
+    try {
+        jdbcTemplate.update(sql,
+            prize.getPrizeName(),
+            prize.getDescription(),
+            prize.getMinutesRequired(),
+            prize.getPrizesAvailable(),
+            Date.valueOf(prize.getStartDate()),
+            Date.valueOf(prize.getEndDate()),
+            prize.getUserGroup(),
+            prizeId
+        );
+        return getPrizeById(prizeId);
+    } catch (Exception e) {
+        throw new DaoException("Error updating prize with ID: " + prizeId, e);
+    }
+}
     /**
      * Deletes a prize by its ID.
      *
@@ -137,7 +164,18 @@ public class JdbcPrizeDao implements PrizeDao {
         prize.setStartDate(rs.getDate("start_date").toLocalDate());
         prize.setEndDate(rs.getDate("end_date").toLocalDate());
         prize.setUserGroup(rs.getString("user_group"));
+        prize.setFamilyId(rs.getInt("family_id"));
     
         return prize;
+    }
+
+    @Override
+    public List<Prize> getPrizesByFamilyId(int familyId) {
+        String sql = "SELECT * FROM prizes WHERE family_id = ?";
+        try {
+            return jdbcTemplate.query(sql, this::mapRowToPrize, familyId);
+        } catch (Exception e) {
+            throw new DaoException("Error retrieving prizes for family ID: " + familyId, e);
+        }
     }
 }
