@@ -86,9 +86,9 @@ export default function ParentView() {
             ) : readingHistory.length > 0 ? (
               readingHistory.map((entry) => (
                 <tr key={entry.id}>
+                  <td>{entry.user}</td>
                   <td>{entry.title}</td>
                   <td>{entry.author}</td>
-                  <td>{entry.minutes}</td>
                   <td>{entry.minutes}</td>
                 </tr>
               ))
