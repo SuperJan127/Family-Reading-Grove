@@ -6,8 +6,6 @@
     text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.5);
 }
 
-
-
 .image {
 
     width: 400px;
@@ -23,11 +21,70 @@
 }
 
 .table {
+    width: 90%;
     background-color: #b8d4b0;
     border-radius: 15px;
     border: solid 6px #738a69;
     border-collapse: separate;
     border-spacing: 0;
+}
+
+.table thead {
+    background-color: #d2e8ca;
+}
+
+/* Header cells */
+.table th {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #333;
+    padding: 1rem;
+    text-align: center;
+}
+
+/* Make Book Title column wider */
+.table th:nth-child(1),
+.table td:nth-child(1) {
+    width: 50%;
+}
+
+/* Author column */
+.table th:nth-child(2),
+.table td:nth-child(2) {
+    width: 30%;
+}
+
+/* Minutes Read column smaller */
+.table th:nth-child(3),
+.table td:nth-child(3) {
+    width: 20%;
+}
+
+/* Data cells */
+.table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 1rem;
+    word-wrap: break-word;
+}
+
+/* Bold the Book Title column */
+.table td:nth-child(1) {
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+/* Optional: fixed width on the first column */
+.table th:first-child,
+.table td:first-child {
+    width: 90px;
+}
+
+/* Optional: emphasize bold content in table cells */
+.table td strong {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #333;
 }
 
 .buttonPrimary {
@@ -41,9 +98,19 @@
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
     text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.5);
 }
+
 .buttonPrimary:hover {
     background-color: #d89a3b;
     transform: scale(1.05);
     transition: background-color 0.3s ease, transform 0.3s ease;
     cursor: pointer;
+}
+
+.buttonContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    /* this gives space between table and button */
+    align-items: center;
+    flex: 1;
 }

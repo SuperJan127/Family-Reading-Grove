@@ -37,7 +37,7 @@ export default function BooksListView() {
       <img
         src={valid ? src : "/img/MythicalBook.png"}
         alt={alt}
-        style={{ width: "50px" }}
+        style={{  width: "80px", height: "auto", borderRadius: "6px" }}
       />
     );
   }
@@ -70,7 +70,7 @@ export default function BooksListView() {
                       <td>
                       <BookCover isbn={book.isbn} alt={`Cover for ${book.title}`} />
                       </td>
-                      <td>{book.title}</td>
+                      <td><strong>{book.title}</strong></td>
                       <td>{book.author}</td>
                       <td>{book.isbn}</td>
                     </tr>

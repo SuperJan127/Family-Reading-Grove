@@ -88,9 +88,18 @@ export default function App() {
               <Route path="/books" element={<BooksListView />} />
               <Route path="/addReading" element={<AddReadingActivityView />} />
               <Route path="/userBooks" element={<UserBookView />} />
-              <Route path="/addPrize" element={<AddPrizeView />} />
 
               {/* Protected routes */}
+
+              <Route
+                path="/addPrize"
+                element={
+                  <ProtectedRoute requiredRole="ROLE_PARENT">
+                    <AddPrizeView />
+                  </ProtectedRoute>
+                }
+              />
+
               <Route
                 path="/userProfile"
                 element={
