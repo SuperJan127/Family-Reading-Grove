@@ -2,20 +2,25 @@ import { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { NavLink } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
-// Reuse the ParentView stylesheet so your classes line up 1:1
+// Use the same styles as ParentView for consistent look
 import styles from '../ParentView/ParentView.module.css';
+// Import your custom hook
+import useCompletedCount from '../../hooks/useCompletedCount';
 
 export default function ChildView() {
     const { user } = useContext(UserContext);
 
+    // Family reading history state
     const [error, setError] = useState('');
     const [readingHistory, setReadingHistory] = useState([]);
     const [loadingHistory, setLoadingHistory] = useState(true);
     const [historyError, setHistoryError] = useState('');
 
-    const [completedCount, setCompletedCount] = useState(null);
-    const [countError, setCountError] = useState('');
+    // Completed‐books count from our hook
+    const { count: completedCount, errorMessage: countError } =
+        useCompletedCount(user.id);
 
+    // Fetch family reading history
     useEffect(() => {
         const token = localStorage.getItem('token');
         const familyId = user.familyId;
@@ -30,47 +35,43 @@ export default function ChildView() {
 
         axios
             .get(`/families/${familyId}/reading-activities`, { headers })
-            .then((resp) => {
-                setReadingHistory(resp.data);
-            })
-            .catch((err) => {
-                console.error(err);
-                setHistoryError('Failed to load reading history.');
-            })
-            .finally(() => {
-                setLoadingHistory(false);
-            });
+            .then((resp) => setReadingHistory(resp.data))
+            .catch(() => setHistoryError('Failed to load reading history.'))
+            .finally(() => setLoadingHistory(false));
     }, [user.familyId]);
 
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        const headers = { Authorization: `Bearer ${token}` };
-
-        axios
-            .get(`/users/${user.id}/books/completed-count`, { headers })
-            .then((resp) => {
-                setCompletedCount(resp.data.count);
-            })
-            .catch((err) => {
-                console.error(err);
-                setCountError('Could not load completed‐books count.');
-            });
-    }, [user.id]);
 
     return (
         <>
             <h2 className={styles.h2}>Family Activity</h2>
             {error && <p style={{ color: 'red' }}>{error}</p>}
 
-            {/* Completed books count */}
-            {countError && <p style={{ color: 'red' }}>{countError}</p>}
-            {completedCount !== null && (
-                <p>
-                    You have completed{' '}
-                    <strong>{completedCount}</strong>{' '}
-                    {completedCount === 1 ? 'book' : 'books'}.
-                </p>
-            )}
+            {/* Books Completed Table */}
+            <table className={styles.table}>
+                <thead>
+                    <tr>
+                        <th>Books Completed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {countError ? (
+                        <tr>
+                            <td style={{ color: 'red' }}>{countError}</td>
+                        </tr>
+                    ) : completedCount === null ? (
+                        <tr>
+                            <td>Loading…</td>
+                        </tr>
+                    ) : (
+                        <tr>
+                            <td>
+                                <strong>{completedCount}</strong>
+                            </td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
+
 
             <div className={styles.tableContainer}>
                 <img
