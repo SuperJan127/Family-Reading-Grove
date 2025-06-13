@@ -62,7 +62,31 @@ export default function UserBookView() {
                 setError("Failed to add book.");
             });
     };
-    console.log('userBooks', userBooks);
+
+    function BookCover({ isbn, alt }) {
+        const [src, setSrc] = useState("");
+        const [valid, setValid] = useState(true);
+
+        useEffect(() => {
+            const url = `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;
+            fetch(url).then(res => {
+                if (res.ok && res.headers.get("content-type").startsWith("image/")) {
+                    setSrc(url);
+                } else {
+                    setValid(false);
+                }
+            }).catch(() => setValid(false));
+        }, [isbn]);
+
+        return (
+            <img
+                src={valid ? src : "/img/MythicalBook.png"}
+                alt={alt}
+                style={{ width: "50px" }}
+            />
+        );
+    }
+
     if (!user) return <p>Loading user...</p>;
 
 
@@ -72,7 +96,11 @@ export default function UserBookView() {
             {userBooks.length > 0 ? (
                 <ul className={styles.bookList}>
                     {userBooks.map((userBook) => (
+                        
+                      
                         <li key={userBook.book.bookId} className={styles.bookItem}>
+                            <BookCover isbn={userBook.book.isbn} alt={`Cover for ${userBook.book.title}`} />
+                      
                             <div className={styles.bookRow}><strong>{userBook.book.title}</strong> by {userBook.book.author}</div>
                             <div className={styles.bookRow}>📘 Currently Reading: {userBook.currentlyReading ? "Yes" : "No"}</div>
                             <div className={styles.bookRow}>📅 Start Date: {userBook.dateStarted || "N/A"}</div>
