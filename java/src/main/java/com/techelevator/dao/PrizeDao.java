@@ -47,4 +47,6 @@ public interface PrizeDao {
      */
     Void deletePrizeById(int prizeId);
 
+    List<Prize> getPrizesByFamilyId(int familyId);
+
 }
