@@ -5,6 +5,7 @@ import AddMemberView from '../AddMemberView/AddMemberView';
 import styles from './ParentView.module.css';
 import { UserContext } from '../../context/UserContext';
 
+import useCompletedCount from '../../hooks/useCompletedCount';
 
 
 export default function ParentView() {
@@ -16,6 +17,11 @@ export default function ParentView() {
   const [readingHistory, setReadingHistory] = useState([]);
   const [loadingHistory, setLoadingHistory] = useState(true);
   const [historyError, setHistoryError] = useState('');
+
+  const {
+    count: completedCount,
+    errorMessage: countError
+  } = useCompletedCount(currentUser?.id);
 
   function formatRole(role) {
     switch (role) {
@@ -65,6 +71,32 @@ export default function ParentView() {
 
       <div className={styles.tableContainer}>
         <img src="src/img/FamilyActivity.png" alt="Family Actvity" className={styles.image} />
+
+        {/* Books Completed summary table */}
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>Books Completed</th>
+            </tr>
+          </thead>
+          <tbody>
+            {countError ? (
+              <tr>
+                <td style={{ color: 'red' }}>{countError}</td>
+              </tr>
+            ) : completedCount === null ? (
+              <tr>
+                <td>Loading…</td>
+              </tr>
+            ) : (
+              <tr>
+                <td>
+                  <strong>{completedCount}</strong>
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
 
 
         <table className={styles.table}>
@@ -137,7 +169,7 @@ export default function ParentView() {
       <div className={styles.buttonGroup}>
         <NavLink to="/addMember" className={styles.buttonPrimary}>Add Family Member</NavLink>
 
-        {isParent && (                                         
+        {isParent && (
           <NavLink to="/addPrize" className={styles.buttonPrimary}>Add Prize</NavLink>
         )}
 
