@@ -13,9 +13,10 @@ public class Prize {
     private LocalDate startDate;
     private LocalDate endDate;
     private String userGroup;
+    private int familyId;
 
     public Prize(int prizeId, String prizeName, String description, int minutesRequired, int prizesAvailable,
-            LocalDate startDate, LocalDate endDate, String userGroup) {
+            LocalDate startDate, LocalDate endDate, String userGroup, int familyId) {
         this.prizeId = prizeId;
         this.prizeName = prizeName;
         this.description = description;
@@ -24,6 +25,8 @@ public class Prize {
         this.startDate = startDate;
         this.endDate = endDate;
         this.userGroup = userGroup;
+        this.familyId = familyId;
+
     }
 
     public Prize() {
@@ -94,4 +97,11 @@ public class Prize {
         this.userGroup = userGroup;
     }
 
+    public int getFamilyId() {
+        return familyId;
+    }
+
+    public void setFamilyId(int familyId) {
+        this.familyId = familyId;
+    }
 }
