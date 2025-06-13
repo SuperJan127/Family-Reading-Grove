@@ -20,6 +20,7 @@
 }
 
 .table {
+    width: 100%;
     background-color: #b8d4b0;
     border-radius: 15px;
     border: solid 6px #738a69;
@@ -27,10 +28,49 @@
     border-spacing: 0;
 }
 
+.table th {
+    font-size: 1.25rem;      /* Larger text */
+    font-weight: bold;      /* Bold text */
+    color: #333;            /* Darker text for contrast */
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .table thead {
+    background-color: #d2e8ca; /* Lighter background for header */
+  }
+
+.table td strong {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.table td:first-child,
+.table th:first-child {
+  width: 90px;
+}
+
+.table th,
+.table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 1rem;
+    word-wrap: break-word;
+}
+
 .tableButton {
     display: flex;
     flex-direction: column;
+    width: 60%;
 }
+
+.buttonGroup {
+    display: flex;
+    justify-content: center; /* Keeps buttons centered */
+    gap: 1rem;                /* Adds space between them */
+    margin-top: 1rem;
+  }
 
 .buttonPrimary {
     padding: 0.5rem 1rem;
@@ -43,6 +83,7 @@
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
     text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.5);
 }
+
 .buttonPrimary:hover {
     background-color: #d89a3b;
     transform: scale(1.05);

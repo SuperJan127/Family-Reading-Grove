@@ -1,14 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { NavLink } from 'react-router-dom';
 import AddMemberView from '../AddMemberView/AddMemberView';
 import styles from './ParentView.module.css';
+import { UserContext } from '../../context/UserContext';
 
 
 
 export default function ParentView() {
   const [users, setUsers] = useState([]);
   const [error, setError] = useState('');
+  const { user: currentUser } = useContext(UserContext);
+  const isParent = currentUser?.role === 'ROLE_PARENT';
 
   const [readingHistory, setReadingHistory] = useState([]);
   const [loadingHistory, setLoadingHistory] = useState(true);
@@ -36,7 +39,7 @@ export default function ParentView() {
       return;
     }
 
-    const headers = { Authorization : `Bearer ${token}` };
+    const headers = { Authorization: `Bearer ${token}` };
     const memberRequest = axios.get(`/families/${familyId}/members`, { headers });
     const historyRequest = axios.get(`/families/${familyId}/reading-activities`, { headers });
 
@@ -134,6 +137,9 @@ export default function ParentView() {
       <div className={styles.buttonGroup}>
         <NavLink to="/addMember" className={styles.buttonPrimary}>Add Family Member</NavLink>
 
+        {isParent && (                                         
+          <NavLink to="/addPrize" className={styles.buttonPrimary}>Add Prize</NavLink>
+        )}
 
 
         <NavLink to="/addBook" className={styles.buttonPrimary}>Add Book</NavLink>
