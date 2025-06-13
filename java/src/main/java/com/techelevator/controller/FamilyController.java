@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import jakarta.validation.Valid;
 import com.techelevator.dao.UserDao;
 import com.techelevator.model.User;
+import com.techelevator.dao.ReadingActivityDao;
+import com.techelevator.model.ReadingActivity;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
@@ -31,10 +33,12 @@ public class FamilyController {
 
     private final JdbcFamilyDao jdbcFamilyDao;
     private final UserDao userDao; 
+    private final ReadingActivityDao readingActivityDao;
 
-    public FamilyController(JdbcFamilyDao jdbcFamilyDao, UserDao userDao) {
+    public FamilyController(JdbcFamilyDao jdbcFamilyDao, UserDao userDao, ReadingActivityDao readingActivityDao) {
         this.jdbcFamilyDao = jdbcFamilyDao;
-        this.userDao = userDao; 
+        this.userDao = userDao;
+        this.readingActivityDao = readingActivityDao; // Initialize the ReadingActivityDao 
     }
 
     @GetMapping
@@ -144,4 +148,17 @@ public class FamilyController {
         }
     }
 
+
+    /**
+     * Endpoint to update a family member's role.
+     * Only parents can update roles of children.
+     */
+    @GetMapping("/{id}/reading-activities")
+    public List<ReadingActivity> getFamilyReadingActivities(@PathVariable int id) {
+        try {
+            return readingActivityDao.getActivitiesByFamilyId(id); 
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to fetch reading activities", e);
+        }
+    }
 }

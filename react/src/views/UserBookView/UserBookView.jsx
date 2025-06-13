@@ -82,7 +82,7 @@ export default function UserBookView() {
             <img
                 src={valid ? src : "/img/MythicalBook.png"}
                 alt={alt}
-                style={{ width: "50px" }}
+                style={{  width: "80px", height: "auto", borderRadius: "6px" }}
             />
         );
     }
@@ -100,11 +100,13 @@ export default function UserBookView() {
                       
                         <li key={userBook.book.bookId} className={styles.bookItem}>
                             <BookCover isbn={userBook.book.isbn} alt={`Cover for ${userBook.book.title}`} />
+                            <div className={styles.bookDetails}>
                       
                             <div className={styles.bookRow}><strong>{userBook.book.title}</strong> by {userBook.book.author}</div>
                             <div className={styles.bookRow}>📘 Currently Reading: {userBook.currentlyReading ? "Yes" : "No"}</div>
                             <div className={styles.bookRow}>📅 Start Date: {userBook.dateStarted || "N/A"}</div>
                             <div className={styles.bookRow}> ✅ Date Finished: {userBook.dateFinished || "N/A"}</div>
+                            </div>
                         </li>
                     ))}
                 </ul>
