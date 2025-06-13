@@ -18,6 +18,7 @@ import BooksListView from './views/BooksListView/BooksListView';
 import AddReadingActivityView from './views/AddReadingActivityView/AddReadingActivityView';
 import styles from './App.module.css';
 import UserBookView from './views/UserBookView/UserBookView';
+import AddPrizeView from './views/AddPrizeView/AddPrizeView';
 
 export default function App() {
   const [user, setUser] = useState(() => getTokenFromStorage());
@@ -87,6 +88,7 @@ export default function App() {
               <Route path="/books" element={<BooksListView />} />
               <Route path="/addReading" element={<AddReadingActivityView />} />
               <Route path="/userBooks" element={<UserBookView />} />
+              <Route path="/addPrize" element={<AddPrizeView />} />
 
               {/* Protected routes */}
               <Route

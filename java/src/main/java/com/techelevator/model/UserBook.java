@@ -9,6 +9,7 @@ public class UserBook {
     private LocalDate dateStarted;
     private LocalDate dateFinished;
     private Book book;
+    private int id;
 
     public UserBook(int userId, int bookId, boolean currentlyReading, LocalDate dateStarted, LocalDate dateFinished) {
         this.userId = userId;
@@ -67,5 +68,13 @@ public class UserBook {
     
     public void setBook(Book book) {
         this.book = book;
+    }
+
+    public int getId() {
+        return id;
+    }
+    
+    public void setId(int id) {
+        this.id = id;
     }
 }

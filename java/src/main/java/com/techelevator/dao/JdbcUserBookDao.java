@@ -3,6 +3,8 @@ package com.techelevator.dao;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.jdbc.core.RowMapper;
+
 
 import com.techelevator.model.Book;
 import com.techelevator.model.UserBook;
@@ -42,7 +44,8 @@ public class JdbcUserBookDao implements UserBookDao {
                 JOIN books b ON ub.book_id = b.book_id
                 WHERE ub.user_id = ?
                            """;
-        return jdbcTemplate.query(sql, new Object[] { userId }, (rs, rowNum) -> mapRowToUserBook(rs, rowNum));
+        // return jdbcTemplate.query(sql, new Object[] { userId }, (rs, rowNum) -> mapRowToUserBook(rs, rowNum));
+        return jdbcTemplate.query(sql, (rs, rowNum) -> mapRowToUserBook(rs, rowNum), userId);
     }
 
     @Override
@@ -56,6 +59,33 @@ public class JdbcUserBookDao implements UserBookDao {
     public void removeUserBook(int userId, int bookId) {
         String sql = "DELETE FROM user_book WHERE user_id = ? AND book_id = ?";
         jdbcTemplate.update(sql, userId, bookId);
+    }
+
+    @Override
+    public List<UserBook> getCurrentBooksByUserId(int userId) {
+        String sql = "SELECT id, user_id, book_id, currently_reading, date_started, date_completed " +
+                     "FROM user_book WHERE user_id = ? AND currently_reading = TRUE";
+        return jdbcTemplate.query(sql, mapRowToUserBook(), userId);
+    }
+
+    @Override
+    public int countCompletedBooksByUserId(int userId) {
+        String sql = "SELECT COUNT(*) FROM user_book WHERE user_id = ? AND currently_reading = FALSE";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, userId);
+        return count != null ? count : 0;
+    }
+
+    private RowMapper<UserBook> mapRowToUserBook() {
+        return (rs, rowNum) -> {
+            UserBook ub = new UserBook();
+            ub.setId(rs.getInt("id"));
+            ub.setUserId(rs.getInt("user_id"));
+            ub.setBookId(rs.getInt("book_id"));
+            ub.setCurrentlyReading(rs.getBoolean("currently_reading"));
+            ub.setDateStarted(rs.getDate("date_started").toLocalDate());
+            ub.setDateFinished(rs.getDate("date_completed").toLocalDate());
+            return ub;
+        };
     }
 
     private UserBook mapRowToUserBook(ResultSet rs, int rowNum) throws SQLException {
