@@ -39,4 +39,20 @@ public interface UserBookDao {
      */
     void removeUserBook(int userId, int bookId);
 
+    /**
+     * Retrieves only the books a user is actively reading.
+     *
+     * @param userId the ID of the user
+     * @return a list of UserBook objects where currentlyReading == true
+     */
+    List<UserBook> getCurrentBooksByUserId(int userId);
+
+    /**
+     * Counts how many books a user has completed.
+     *
+     * @param userId the ID of the user
+     * @return number of completed books
+     */
+    int countCompletedBooksByUserId(int userId);
+
 }
