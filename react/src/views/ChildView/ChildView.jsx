@@ -18,7 +18,7 @@ export default function ChildView() {
                             <th colSpan="3">Reading Tracking</th>
                         </tr>
                         <tr>
-                            <th>Book Title</th>
+                            <th>Title</th>
                             <th>Author</th>
                             <th>Minutes Read</th>
                         </tr>
