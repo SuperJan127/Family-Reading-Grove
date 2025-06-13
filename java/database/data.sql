@@ -18,8 +18,8 @@ VALUES
 ('Extra Screen Time', 'An additional hour of screen time.', 150, 3, '2023-01-01', '2023-12-31', 'CHILD'),
 ('Family Game Night', 'A family game night with snacks.', 200, 1, '2023-01-01', '2023-12-31', 'BOTH');
 
-INSERT INTO reading_activity (reader_id, book_id, format, minutes, notes) VALUES (4, 1, 'EBOOK', 120, 'Great book on Java best practices');
-INSERT INTO reading_activity (reader_id, book_id, format, minutes, notes) VALUES (3, 2, 'PAPERBACK', 90, 'Learned a lot about clean coding principles');
+INSERT INTO reading_activity (reader_id, book_id, format, minutes, notes) VALUES (4, 1, 'DIGITAL', 120, 'Great book on Java best practices');
+INSERT INTO reading_activity (reader_id, book_id, format, minutes, notes) VALUES (3, 2, 'PAPER', 90, 'Learned a lot about clean coding principles');
 
 INSERT INTO user_book (user_id, book_id) VALUES (4, 1);
 INSERT INTO user_book (user_id, book_id) VALUES (3, 2);

@@ -8,6 +8,10 @@ export default function ParentView() {
   const [users, setUsers] = useState([]);
   const [error, setError] = useState('');
 
+  const [readingHistory, setReadingHistory] = useState([]);
+  const [loadingHistory, setLoadingHistory] = useState(true);
+  const [historyError, setHistoryError] = useState('');
+
   function formatRole(role) {
     switch (role) {
       case 'ROLE_PARENT':
@@ -26,25 +30,26 @@ export default function ParentView() {
 
     if (!familyId) {
       setError('Family ID not found.');
+      setLoadingHistory(false);
       return;
     }
 
-    axios
-      .get(`/families/${familyId}/members`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      .then((response) => {
-        setUsers(response.data);
+    const headers = { Authorization : `Bearer ${token}` };
+    const memberRequest = axios.get(`/families/${familyId}/members`, { headers });
+    const historyRequest = axios.get(`/families/${familyId}/reading-activities`, { headers });
+
+    Promise.all([memberRequest, historyRequest])
+      .then(([memberResponse, historyResponse]) => {
+        setUsers(memberResponse.data);
+        setReadingHistory(historyResponse.data);
       })
       .catch((err) => {
         console.error(err);
-        if (err.response?.status === 404) {
-          setError('No members found for your family.');
-        } else {
-          setError('Failed to load family members.');
-        }
+        setError('Failed to load family data.');
+        setHistoryError('Failed to load reading history.');
+      })
+      .finally(() => {
+        setLoadingHistory(false);
       });
   }, []);
 
@@ -52,77 +57,83 @@ export default function ParentView() {
     <>
       <h2 className={styles.h2}>Family Activity</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>}
+
       <div className={styles.tableContainer}>
-      <img src="src/img/FamilyActivity.png" alt="Family Actvity" className={styles.image} />
-      
-      
-      <table className={styles.table}>
-                    <thead>
-                        <tr>
-                            <th colSpan="3">Reading Tracking</th>
-                        </tr>
-                        <tr>
-                            <th>Book Title</th>
-                            <th>Author</th>
-                            <th>Minutes Read</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>The Great Gatsby</td>
-                            <td>F. Scott Fitzgerald</td>
-                            <td>30</td>
-                        </tr>
-                        <tr>
-                            <td>To Kill a Mockingbird</td>
-                            <td>Harper Lee</td>
-                            <td>45</td>
-                        </tr>
-                        <tr>
-                            <td>1984</td>
-                            <td>George Orwell</td>
-                            <td>60</td>
-                        </tr>
-                        <tr>
-                            <td>Pride and Prejudice</td>
-                            <td>Jane Austen</td>
-                            <td>25</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <table className={styles.table}>
-        <thead>
-          <tr>
-            <th colSpan="2">Family Members</th>
-          </tr>
-          <tr>
-            <th>Username</th>
-            <th>Role</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.length > 0 ? (
-            users.map((user) => (
-              <tr key={user.id}>
-                <td>{user.username}</td>
-                <td>{formatRole(user.role)}</td>
-              </tr>
-            ))
-          ) : (
+        <img src="src/img/FamilyActivity.png" alt="Family Actvity" className={styles.image} />
+
+
+        <table className={styles.table}>
+          <thead>
             <tr>
-              <td colSpan="2">No members found.</td>
+              <th colSpan="4">Reading Tracking</th>
             </tr>
-          )}
-          
-        </tbody>
-      </table>
-                </div><br /><br />
+            <tr>
+              <th>Reader</th>
+              <th>Book Title</th>
+              <th>Author</th>
+              <th>Minutes Read</th>
+            </tr>
+          </thead>
+          <tbody>
+            {loadingHistory ? (
+              <tr>
+                <td colSpan="4">Loading Reading History...</td>
+              </tr>
+            ) : historyError ? (
+              <tr>
+                <td colSpan="4" style={{ color: 'red' }}>{historyError}</td>
+              </tr>
+            ) : readingHistory.length > 0 ? (
+              readingHistory.map((entry) => (
+                <tr key={entry.id}>
+                  <td>{entry.user}</td>
+                  <td>{entry.title}</td>
+                  <td>{entry.author}</td>
+                  <td>{entry.minutes}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="4">No reading history yet.</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+
+
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th colSpan="2">Family Members</th>
+            </tr>
+            <tr>
+              <th>Username</th>
+              <th>Role</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.length > 0 ? (
+              users.map((user) => (
+                <tr key={user.id}>
+                  <td>{user.username}</td>
+                  <td>{formatRole(user.role)}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="2">No members found.</td>
+              </tr>
+            )}
+
+          </tbody>
+        </table>
+      </div><br /><br />
 
       <div className={styles.buttonGroup}>
         <NavLink to="/addMember" className={styles.buttonPrimary}>Add Family Member</NavLink>
-      
-           
-    
+
+
+
         <NavLink to="/addBook" className={styles.buttonPrimary}>Add Book</NavLink>
       </div>
 

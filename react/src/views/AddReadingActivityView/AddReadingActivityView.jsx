@@ -1,5 +1,5 @@
 // src/views/AddReadingActivityView/AddReadingActivityView.jsx
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../context/UserContext";
@@ -15,6 +15,17 @@ export default function AddReadingActivityView() {
   const [notes, setNotes] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const [books, setBooks] = useState([]); // Assuming you might want to fetch books later
+
+  useEffect(() => {
+    axios
+      .get(`/users/${user.id}/books`)
+      .then((r) => setBooks(r.data))
+      .catch((e) =>
+        console.error("Failed to load this user's books", e)
+      );
+  }, [user.id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -52,17 +63,29 @@ export default function AddReadingActivityView() {
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       <form onSubmit={handleSubmit}>
-      <div className={styles.formControl}>
-          <label htmlFor="bookId" className={styles.formControlLabel}>Book ID:</label>
-          <input
-            id="bookId"
-            type="number"
+
+        <div className={styles.formControl}>
+          <label htmlFor="book" className={styles.formControlLabel}>
+            Book:
+          </label>
+          <select
+            id="book"
             className={styles.formControlInput}
             value={bookId}
             onChange={e => setBookId(e.target.value)}
             required
-          />
+          >
+            <option value="" disabled>
+              — Select a title —
+            </option>
+            {books.map(book => (
+              <option key={book.id} value={book.id}>
+                {book.title}
+              </option>
+            ))}
+          </select>
         </div>
+
 
         <div className={styles.formControl}>
           <label htmlFor="format" className={styles.formControlLabel}>Format:</label>
@@ -113,6 +136,7 @@ export default function AddReadingActivityView() {
         >
           {loading ? "Recording…" : "Record Activity"}
         </button>
+
       </form>
     </div>
   );
