@@ -5,6 +5,8 @@ import AddMemberView from '../AddMemberView/AddMemberView';
 import styles from './ParentView.module.css';
 import { UserContext } from '../../context/UserContext';
 
+
+
 export default function ParentView() {
   const [users, setUsers] = useState([]);
   const [error, setError] = useState('');
@@ -89,7 +91,7 @@ export default function ParentView() {
             ) : readingHistory.length > 0 ? (
               readingHistory.map((entry) => (
                 <tr key={entry.id}>
-                  <td>{entry.user}</td>
+                  <td>{entry.username}</td>   {/* reader’s username */}
                   <td>{entry.title}</td>
                   <td>{entry.author}</td>
                   <td>{entry.minutes}</td>

@@ -9,4 +9,6 @@ public interface UserBookService {
     void addUserBook(int userId, UserBook userBook);
 
     List<UserBook> getBooksByUserId(int userId);
+
+    int countCompletedBooksByUserId(int userId);
 }
