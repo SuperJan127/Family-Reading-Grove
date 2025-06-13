@@ -1,0 +1,42 @@
+package com.techelevator.dao;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import com.techelevator.model.UserBook;
+
+public interface UserBookDao {
+    /**
+     * Adds a book to a user's collection.
+     *
+     * @param userId the ID of the user
+     * @param bookId the ID of the book to add
+     */
+    void addUserBook(int userId, int bookId, boolean currentlyReading, LocalDate dateStarted, LocalDate dateFinished);
+
+    /**
+     * Retrieves a list of books in a user's collection.
+     *
+     * @param userId the ID of the user
+     * @return a list of UserBook objects representing the user's collection
+     */
+    List<UserBook> getUserBooks(int userId);
+
+    /**
+     * Checks if a book is in a user's collection.
+     *
+     * @param userId the ID of the user
+     * @param bookId the ID of the book to check
+     * @return true if the book is in the user's collection, false otherwise
+     */
+    boolean isBookInUserCollection(int userId, int bookId);
+
+    /**
+     * Removes a book from a user's collection.
+     *
+     * @param userId the ID of the user
+     * @param bookId the ID of the book to remove
+     */
+    void removeUserBook(int userId, int bookId);
+
+}

@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS books;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS families;
 DROP TABLE IF EXISTS prizes;
+DROP TABLE IF EXISTS user_book;
 
 CREATE TABLE families (
 	family_id SERIAL,
@@ -52,6 +53,19 @@ Create table prizes(
 	start_date date NOT NULL,
 	end_date date NOT NULL,
 	user_group varchar(50) NOT NULL
+);
+
+CREATE TABLE user_book (
+    id SERIAL PRIMARY KEY,
+    user_id int NOT NULL,
+    book_id int NOT NULL,
+    currently_reading BOOLEAN DEFAULT TRUE,
+    date_started DATE DEFAULT CURRENT_DATE,
+	date_completed DATE DEFAULT null,
+
+    CONSTRAINT fk_users FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    CONSTRAINT fk_books FOREIGN KEY (book_id) REFERENCES books(book_id) ON DELETE CASCADE,
+    CONSTRAINT unique_user_book UNIQUE (user_id, book_id)
 );
 
 COMMIT TRANSACTION;

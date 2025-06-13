@@ -12,6 +12,8 @@ public interface BookDao {
      */
     Book getBookById(int bookId);
 
+    Book getBookByIsbn(String isbn);
+
     /**
      * 
      * @return a list of all books
