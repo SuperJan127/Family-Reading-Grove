@@ -63,4 +63,9 @@ public class UserBookServiceImpl implements UserBookService {
     public int countCompletedBooksByUserId(int userId) {
         return userBookDao.countCompletedBooksByUserId(userId);
     }
+
+    @Override
+public void updateUserBook(int userId, int bookId, boolean currentlyReading, LocalDate dateFinished, String notes, int rating) {
+    userBookDao.updateUserBook(userId, bookId, currentlyReading, dateFinished, notes, rating);
+}
 }

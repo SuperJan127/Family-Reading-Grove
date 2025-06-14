@@ -3,6 +3,7 @@ package com.techelevator.dao;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.techelevator.model.User;
 import com.techelevator.model.UserBook;
 
 public interface UserBookDao {
@@ -54,5 +55,7 @@ public interface UserBookDao {
      * @return number of completed books
      */
     int countCompletedBooksByUserId(int userId);
+
+    void updateUserBook(int user_id, int book_id, boolean currentlyReading, LocalDate dateFinished, String notes, int rating);
 
 }
