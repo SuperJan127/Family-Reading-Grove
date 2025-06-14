@@ -52,7 +52,9 @@ Create table prizes(
 	prizes_available INTEGER NOT NULL DEFAULT 0,
 	start_date date NOT NULL,
 	end_date date NOT NULL,
-	user_group varchar(50) NOT NULL
+	user_group varchar(50) NOT NULL,
+	family_id int,
+	CONSTRAINT FK_family_prize FOREIGN KEY (family_id) REFERENCES families(family_id) ON DELETE SET NULL
 );
 
 CREATE TABLE user_book (

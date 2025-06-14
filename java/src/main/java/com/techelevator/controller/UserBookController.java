@@ -1,6 +1,8 @@
 package com.techelevator.controller;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,4 +42,14 @@ public class UserBookController {
     public List<UserBook> getUserBooks(@PathVariable int userId) {
         return userBookService.getBooksByUserId(userId);
     }
+
+     /**
+    * GET /users/{userId}/books/completed-count
+    * Return how many books this user has finished.
+    */
+   @GetMapping("/completed-count")
+   public Map<String,Integer> getCompletedCount(@PathVariable int userId) {
+       int count = userBookService.countCompletedBooksByUserId(userId);
+       return Collections.singletonMap("count", count);
+   }
 }

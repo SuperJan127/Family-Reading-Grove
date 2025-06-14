@@ -35,7 +35,7 @@ export default function MainNav() {
 
           <div className="nav-link">
             <NavLink to="/books">
-              Book List
+              Books
             </NavLink>
           </div>
 

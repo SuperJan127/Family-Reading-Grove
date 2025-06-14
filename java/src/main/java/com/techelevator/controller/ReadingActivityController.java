@@ -26,6 +26,7 @@ public class ReadingActivityController {
 
     /**
      * GET /reading-activities
+     * 
      * @return all recorded reading activities
      */
     @GetMapping
@@ -36,13 +37,13 @@ public class ReadingActivityController {
             throw new UnsupportedOperationException("Fetching all activities not supported");
         } catch (Exception e) {
             throw new ResponseStatusException(
-                HttpStatus.INTERNAL_SERVER_ERROR, "Unable to fetch activities", e
-            );
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Unable to fetch activities", e);
         }
     }
 
     /**
      * GET /reading-activities/reader/{readerId}
+     * 
      * @param readerId the user whose history to fetch
      * @return that reader’s history
      */
@@ -52,14 +53,14 @@ public class ReadingActivityController {
             return activityDao.getReadingHistory(readerId);
         } catch (Exception e) {
             throw new ResponseStatusException(
-                HttpStatus.INTERNAL_SERVER_ERROR, "Unable to fetch reading history", e
-            );
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Unable to fetch reading history", e);
         }
     }
 
     /**
      * POST /reading-activities
-     * Accepts a JSON body matching ReadingActivity (readerId, bookId, format, minutes, notes)
+     * Accepts a JSON body matching ReadingActivity (readerId, bookId, format,
+     * minutes, notes)
      * and persists it.
      */
     @PostMapping
@@ -69,9 +70,25 @@ public class ReadingActivityController {
             activityDao.recordReadingTime(activity);
         } catch (Exception e) {
             throw new ResponseStatusException(
-                HttpStatus.INTERNAL_SERVER_ERROR, "Unable to record reading activity", e
-            );
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Unable to record reading activity", e);
         }
     }
-}
 
+    /**
+     * GET /reading-activities/family/{familyId}
+     * 
+     * @return all reading activities for that family
+     */
+    @GetMapping("/family/{familyId}")
+    public List<ReadingActivity> getByFamily(@PathVariable int familyId) {
+        try {
+            return activityDao.getActivitiesByFamilyId(familyId);
+        } catch (Exception e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Unable to fetch family reading history",
+                    e);
+        }
+    }
+
+}

@@ -1,16 +1,27 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { NavLink } from 'react-router-dom';
 import AddMemberView from '../AddMemberView/AddMemberView';
 import styles from './ParentView.module.css';
+import { UserContext } from '../../context/UserContext';
+
+import useCompletedCount from '../../hooks/useCompletedCount';
+
 
 export default function ParentView() {
   const [users, setUsers] = useState([]);
   const [error, setError] = useState('');
+  const { user: currentUser } = useContext(UserContext);
+  const isParent = currentUser?.role === 'ROLE_PARENT';
 
   const [readingHistory, setReadingHistory] = useState([]);
   const [loadingHistory, setLoadingHistory] = useState(true);
   const [historyError, setHistoryError] = useState('');
+
+  const {
+    count: completedCount,
+    errorMessage: countError
+  } = useCompletedCount(currentUser?.id);
 
   function formatRole(role) {
     switch (role) {
@@ -34,7 +45,7 @@ export default function ParentView() {
       return;
     }
 
-    const headers = { Authorization : `Bearer ${token}` };
+    const headers = { Authorization: `Bearer ${token}` };
     const memberRequest = axios.get(`/families/${familyId}/members`, { headers });
     const historyRequest = axios.get(`/families/${familyId}/reading-activities`, { headers });
 
@@ -61,6 +72,32 @@ export default function ParentView() {
       <div className={styles.tableContainer}>
         <img src="src/img/FamilyActivity.png" alt="Family Actvity" className={styles.image} />
 
+        {/* Books Completed summary table */}
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>Books Completed</th>
+            </tr>
+          </thead>
+          <tbody>
+            {countError ? (
+              <tr>
+                <td style={{ color: 'red' }}>{countError}</td>
+              </tr>
+            ) : completedCount === null ? (
+              <tr>
+                <td>Loading…</td>
+              </tr>
+            ) : (
+              <tr>
+                <td>
+                  <strong>{completedCount}</strong>
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+
 
         <table className={styles.table}>
           <thead>
@@ -86,9 +123,9 @@ export default function ParentView() {
             ) : readingHistory.length > 0 ? (
               readingHistory.map((entry) => (
                 <tr key={entry.id}>
+                  <td>{entry.username}</td>   {/* reader’s username */}
                   <td>{entry.title}</td>
                   <td>{entry.author}</td>
-                  <td>{entry.minutes}</td>
                   <td>{entry.minutes}</td>
                 </tr>
               ))
@@ -132,6 +169,9 @@ export default function ParentView() {
       <div className={styles.buttonGroup}>
         <NavLink to="/addMember" className={styles.buttonPrimary}>Add Family Member</NavLink>
 
+        {isParent && (
+          <NavLink to="/addPrize" className={styles.buttonPrimary}>Add Prize</NavLink>
+        )}
 
 
         <NavLink to="/addBook" className={styles.buttonPrimary}>Add Book</NavLink>

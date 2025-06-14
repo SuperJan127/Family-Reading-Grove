@@ -58,4 +58,9 @@ public class UserBookServiceImpl implements UserBookService {
     public List<UserBook> getBooksByUserId(int userId) {
         return userBookDao.getUserBooks(userId);
     }
+
+    @Override
+    public int countCompletedBooksByUserId(int userId) {
+        return userBookDao.countCompletedBooksByUserId(userId);
+    }
 }

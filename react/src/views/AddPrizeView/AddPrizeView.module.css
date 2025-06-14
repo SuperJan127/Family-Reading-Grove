@@ -1,0 +1,103 @@
+.container {
+    padding: 2rem;
+    background-color: #b8d4b0;
+    border-radius: 15px;
+    border: solid 6px #738a69;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 2rem auto;
+  }
+  
+  .h2 {
+    background-color: #f0a544;
+    font-size: 36px;
+    font-family: 'Luckiest Guy', cursive;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    text-align: center;
+    text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.5);
+    margin-bottom: 2rem;
+  }
+  
+  .bookList {
+    list-style-type: none;
+    padding: 0;
+    margin: 0 0 2rem 0;
+  }
+  
+  .bookItem {
+    background-color: #ffffff;
+    border: 2px solid #738a69;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  }
+  
+  .bookRow {
+    font-size: 1rem;
+    margin: 0.25rem 0;
+  }
+  
+  .bookRow strong {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #333;
+  }
+  
+  .btnPrimary {
+    padding: 0.5rem 1.5rem;
+    background-color: #f0a544;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+    text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
+    display: block;
+    margin: 0 auto;
+  }
+  
+  .btnPrimary:hover {
+    background-color: #d89a3b;
+    transform: scale(1.05);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .addBookForm {
+    background-color: #ffffff;
+    border-radius: 12px;
+    border: 2px solid #738a69;
+    padding: 2rem;
+    margin-top: 2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .formControl {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; 
+    margin-bottom: 1rem;
+    width: 100%;
+  }
+  
+  .formControlLabel {
+    font-weight: bold;
+    margin-bottom: 0.3rem;
+    font-size: 1rem;
+    color: #333;
+    text-align: left; 
+    width: 100%;
+  }
+  
+  .formControlInput {
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    width: 100%;
+    text-align: left;
+  }
