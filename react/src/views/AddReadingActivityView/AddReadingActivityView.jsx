@@ -79,8 +79,8 @@ export default function AddReadingActivityView() {
               — Select a title —
             </option>
             {books.map(book => (
-              <option key={book.id} value={book.id}>
-                {book.title}
+              <option key={book.bookId} value={book.bookId}>
+                {book.book.title}
               </option>
             ))}
           </select>
