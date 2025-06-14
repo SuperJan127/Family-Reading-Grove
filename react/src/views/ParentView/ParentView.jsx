@@ -73,6 +73,7 @@ export default function ParentView() {
         <img src="src/img/FamilyActivity.png" alt="Family Actvity" className={styles.image} />
 
         {/* Books Completed summary table */}
+        <div className={styles.smallTableWrapper}>
         <table className={styles.table}>
           <thead>
             <tr>
@@ -97,18 +98,20 @@ export default function ParentView() {
             )}
           </tbody>
         </table>
+        </div>
 
-
+        <div className={styles.largeTableWrapper}>
         <table className={styles.table}>
           <thead>
             <tr>
-              <th colSpan="4">Reading Tracking</th>
+              <th colSpan="5">Reading Tracking</th>
             </tr>
             <tr>
               <th>Reader</th>
               <th>Book Title</th>
               <th>Author</th>
               <th>Minutes Read</th>
+              <th>Notes</th>
             </tr>
           </thead>
           <tbody>
@@ -127,6 +130,7 @@ export default function ParentView() {
                   <td>{entry.title}</td>
                   <td>{entry.author}</td>
                   <td>{entry.minutes}</td>
+                  <td>{entry.notes}</td>
                 </tr>
               ))
             ) : (
@@ -136,44 +140,48 @@ export default function ParentView() {
             )}
           </tbody>
         </table>
+        </div>
 
 
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th colSpan="2">Family Members</th>
-            </tr>
-            <tr>
-              <th>Username</th>
-              <th>Role</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.length > 0 ? (
-              users.map((user) => (
-                <tr key={user.id}>
-                  <td>{user.username}</td>
-                  <td>{formatRole(user.role)}</td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="2">No members found.</td>
-              </tr>
-            )}
+        <div className={styles.memberSection}>
+  <table className={styles.familyTable}>
+    <thead>
+      <tr>
+        <th colSpan="2">Family Members</th>
+      </tr>
+      <tr>
+        <th>Username</th>
+        <th>Role</th>
+      </tr>
+    </thead>
+    <tbody>
+      {users.length > 0 ? (
+        users.map((user) => (
+          <tr key={user.id}>
+            <td>{user.username}</td>
+            <td>{formatRole(user.role)}</td>
+          </tr>
+        ))
+      ) : (
+        <tr>
+          <td colSpan="2">No members found.</td>
+        </tr>
+      )}
+    </tbody>
+  </table>
 
-          </tbody>
-        </table>
-      </div><br /><br />
+  {isParent && (
+    <div className={styles.singleButtonWrapper}>
+      <NavLink to="/addMember" className={styles.buttonPrimary}>Add Family Member</NavLink>
+    </div>
+  )}
+</div>
+
+      </div> {/* end of .tableContainer */}
+      <br /><br />
 
       <div className={styles.buttonGroup}>
-        <NavLink to="/addMember" className={styles.buttonPrimary}>Add Family Member</NavLink>
-
-        {isParent && (
-          <NavLink to="/addPrize" className={styles.buttonPrimary}>Add Prize</NavLink>
-        )}
-
-
+        <NavLink to="/addPrize" className={styles.buttonPrimary}>View Prizes</NavLink>
         <NavLink to="/addBook" className={styles.buttonPrimary}>Add Book</NavLink>
       </div>
 
