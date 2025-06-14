@@ -73,6 +73,7 @@ export default function ParentView() {
         <img src="src/img/FamilyActivity.png" alt="Family Actvity" className={styles.image} />
 
         {/* Books Completed summary table */}
+        <div className={styles.smallTableWrapper}>
         <table className={styles.table}>
           <thead>
             <tr>
@@ -97,18 +98,20 @@ export default function ParentView() {
             )}
           </tbody>
         </table>
+        </div>
 
-
+        <div className={styles.largeTableWrapper}>
         <table className={styles.table}>
           <thead>
             <tr>
-              <th colSpan="4">Reading Tracking</th>
+              <th colSpan="5">Reading Tracking</th>
             </tr>
             <tr>
               <th>Reader</th>
               <th>Book Title</th>
               <th>Author</th>
               <th>Minutes Read</th>
+              <th>Notes</th>
             </tr>
           </thead>
           <tbody>
@@ -127,6 +130,7 @@ export default function ParentView() {
                   <td>{entry.title}</td>
                   <td>{entry.author}</td>
                   <td>{entry.minutes}</td>
+                  <td>{entry.notes}</td>
                 </tr>
               ))
             ) : (
@@ -136,10 +140,11 @@ export default function ParentView() {
             )}
           </tbody>
         </table>
+        </div>
 
 
         <div className={styles.memberSection}>
-  <table className={styles.table}>
+  <table className={styles.familyTable}>
     <thead>
       <tr>
         <th colSpan="2">Family Members</th>
