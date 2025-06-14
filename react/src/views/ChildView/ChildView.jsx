@@ -126,7 +126,7 @@ export default function ChildView() {
                     Add Book
                 </NavLink>
 
-                <NavLink to="/addPrize" className={styles.buttonPrimary}>
+                <NavLink to="/prizes" className={styles.buttonPrimary}>
                     View Prizes
                 </NavLink>
             </div>
@@ -134,4 +134,3 @@ export default function ChildView() {
     );
 }
 
-//TODO : Add Book buton

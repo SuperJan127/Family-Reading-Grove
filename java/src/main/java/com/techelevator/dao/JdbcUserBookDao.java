@@ -5,7 +5,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.jdbc.core.RowMapper;
 
-
 import com.techelevator.model.Book;
 import com.techelevator.model.UserBook;
 import java.sql.ResultSet;
@@ -22,30 +21,22 @@ public class JdbcUserBookDao implements UserBookDao {
     }
 
     @Override
-    public void addUserBook(int userId, int bookId, boolean currentlyReading, LocalDate dateStarted,
-            LocalDate dateFinished) {
-        String sql = "INSERT INTO user_book (user_id, book_id, currently_reading, date_started, date_completed) " +
-                "VALUES (?, ?, ?, ?, ?)";
+    public void addUserBook(int userId, int bookId, boolean currentlyReading, LocalDate dateStarted, LocalDate dateFinished) {
+        String sql = "INSERT INTO user_book (user_id, book_id, currently_reading, date_started, date_completed) VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql, userId, bookId, currentlyReading, dateStarted, dateFinished);
     }
 
     @Override
     public List<UserBook> getUserBooks(int userId) {
         String sql = """
-                       SELECT ub.user_id,
-                       ub.book_id,
-                       ub.currently_reading,
-                       ub.date_started,
-                       ub.date_completed,
-                       b.title,
-                       b.author,
-                       b.isbn
-                FROM user_book ub
-                JOIN books b ON ub.book_id = b.book_id
-                WHERE ub.user_id = ?
-                           """;
-        // return jdbcTemplate.query(sql, new Object[] { userId }, (rs, rowNum) -> mapRowToUserBook(rs, rowNum));
-        return jdbcTemplate.query(sql, (rs, rowNum) -> mapRowToUserBook(rs, rowNum), userId);
+            SELECT ub.user_id, ub.book_id, ub.currently_reading, ub.date_started, ub.date_completed,
+                   ub.notes, ub.rating,
+                   b.title, b.author, b.isbn
+            FROM user_book ub
+            JOIN books b ON ub.book_id = b.book_id
+            WHERE ub.user_id = ?
+        """;
+        return jdbcTemplate.query(sql, mapRowToUserBook(), userId);
     }
 
     @Override
@@ -63,8 +54,12 @@ public class JdbcUserBookDao implements UserBookDao {
 
     @Override
     public List<UserBook> getCurrentBooksByUserId(int userId) {
-        String sql = "SELECT id, user_id, book_id, currently_reading, date_started, date_completed " +
-                     "FROM user_book WHERE user_id = ? AND currently_reading = TRUE";
+        String sql = "SELECT ub.user_id, ub.book_id, ub.currently_reading, ub.date_started, ub.date_completed,\n" + //
+                        "                             ub.notes, ub.rating,\n" + //
+                        "                             b.title, b.author, b.isbn\n" + //
+                        "                      FROM user_book ub\n" + //
+                        "                      JOIN books b ON ub.book_id = b.book_id\n" + //
+                        "                      WHERE ub.user_id = ? AND currently_reading = TRUE";
         return jdbcTemplate.query(sql, mapRowToUserBook(), userId);
     }
 
@@ -75,47 +70,36 @@ public class JdbcUserBookDao implements UserBookDao {
         return count != null ? count : 0;
     }
 
+    @Override
+    public void updateUserBook(int userId, int bookId, boolean currentlyReading, LocalDate dateFinished, String notes, int rating) {
+        String sql = "UPDATE user_book SET currently_reading = ?, date_completed = ?, notes = ?, rating = ? WHERE user_id = ? AND book_id = ?";
+        jdbcTemplate.update(sql, currentlyReading, dateFinished, notes, rating, userId, bookId);
+        
+    }
+
     private RowMapper<UserBook> mapRowToUserBook() {
         return (rs, rowNum) -> {
-            UserBook ub = new UserBook();
-            ub.setId(rs.getInt("id"));
-            ub.setUserId(rs.getInt("user_id"));
-            ub.setBookId(rs.getInt("book_id"));
-            ub.setCurrentlyReading(rs.getBoolean("currently_reading"));
-            ub.setDateStarted(rs.getDate("date_started").toLocalDate());
-            ub.setDateFinished(rs.getDate("date_completed").toLocalDate());
-            return ub;
+            UserBook userBook = new UserBook();
+            userBook.setUserId(rs.getInt("user_id"));
+            userBook.setBookId(rs.getInt("book_id"));
+            userBook.setCurrentlyReading(rs.getBoolean("currently_reading"));
+            if (rs.getDate("date_started") != null) {
+                userBook.setDateStarted(rs.getDate("date_started").toLocalDate());
+            }
+            if (rs.getDate("date_completed") != null) {
+                userBook.setDateFinished(rs.getDate("date_completed").toLocalDate());
+            }
+            userBook.setNotes(rs.getString("notes"));
+            userBook.setRating(rs.getInt("rating"));
+
+            Book book = new Book();
+            book.setBookId(rs.getInt("book_id"));
+            book.setTitle(rs.getString("title"));
+            book.setAuthor(rs.getString("author"));
+            book.setIsbn(rs.getString("isbn"));
+
+            userBook.setBook(book);
+            return userBook;
         };
     }
-
-    private UserBook mapRowToUserBook(ResultSet rs, int rowNum) throws SQLException {
-        UserBook userBook = new UserBook();
-    
-        userBook.setUserId(rs.getInt("user_id"));
-        userBook.setBookId(rs.getInt("book_id"));
-    
-        // ✅ correctly mapping these fields
-        userBook.setCurrentlyReading(rs.getBoolean("currently_reading"));
-        
-        // ✅ safely handle NULL dates
-        if (rs.getDate("date_started") != null) {
-            userBook.setDateStarted(rs.getDate("date_started").toLocalDate());
-        }
-    
-        if (rs.getDate("date_completed") != null) {
-            userBook.setDateFinished(rs.getDate("date_completed").toLocalDate());
-        }
-    
-        Book book = new Book();
-        book.setBookId(rs.getInt("book_id"));
-        book.setTitle(rs.getString("title"));
-        book.setAuthor(rs.getString("author"));
-        book.setIsbn(rs.getString("isbn"));
-    
-        userBook.setBook(book);
-    
-        return userBook;
-    }
-    
-
 }
