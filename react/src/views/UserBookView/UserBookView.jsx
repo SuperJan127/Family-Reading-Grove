@@ -103,9 +103,10 @@ export default function UserBookView() {
                             <div className={styles.bookDetails}>
                       
                             <div className={styles.bookRow}><strong>{userBook.book.title}</strong> by {userBook.book.author}</div>
-                            <div className={styles.bookRow}>📘 Currently Reading: {userBook.currentlyReading ? "Yes" : "No"}</div>
+                            
                             <div className={styles.bookRow}>📅 Start Date: {userBook.dateStarted || "N/A"}</div>
-                            <div className={styles.bookRow}> ✅ Date Finished: {userBook.dateFinished || "N/A"}</div>
+                            <div className={styles.bookRow}> ✅ Date Completed: {userBook.dateFinished || "N/A"}</div>
+                            <div className={styles.bookRow}>📘 Currently Reading: {userBook.currentlyReading ? "Yes" : "No"}</div>
                             </div>
                         </li>
                     ))}
@@ -119,7 +120,7 @@ export default function UserBookView() {
             {showForm && (
                 <form onSubmit={handleAddBook} className={styles.addBookForm}>
                     <div className={styles.formControl}>
-                        <label className={styles.formControlLabel}>Title:</label>
+                        <label className={styles.formControlLabel} required>*Title:</label>
                         <input
                             type="text"
                             className={styles.formControlInput}
@@ -130,7 +131,7 @@ export default function UserBookView() {
                         />
                     </div>
                     <div className={styles.formControl}>
-                        <label className={styles.formControlLabel}>Author:</label>
+                        <label className={styles.formControlLabel} required>*Author:</label>
                         <input
                             type="text"
                             className={styles.formControlInput}
@@ -140,7 +141,7 @@ export default function UserBookView() {
                         />
                     </div>
                     <div className={styles.formControl}>
-                        <label className={styles.formControlLabel}>ISBN:</label>
+                        <label className={styles.formControlLabel} required>*ISBN:</label>
                         <input
                             type="text"
                             className={styles.formControlInput}
@@ -150,22 +151,12 @@ export default function UserBookView() {
                         />
                     </div>
                     <div className={styles.formControl}>
-                        <label className={styles.formControlLabel}>Start Date:</label>
+                        <label className={styles.formControlLabel} required>*Start Date:</label>
                         <input
                             type="date"
                             className={styles.formControlInput}
                             value={newBook.dateStarted}
                             onChange={(e) => setNewBook({ ...newBook, dateStarted: e.target.value })}
-                        />
-                    </div>
-
-                    <div className={styles.formControl}>
-                        <label className={styles.formControlLabel}>Date Finished:</label>
-                        <input
-                            type="date"
-                            className={styles.formControlInput}
-                            value={newBook.dateFinished}
-                            onChange={(e) => setNewBook({ ...newBook, dateFinished: e.target.value })}
                         />
                     </div>
 

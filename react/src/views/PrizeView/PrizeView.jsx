@@ -1,9 +1,9 @@
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import styles from "./AddPrizeView.module.css";
+import styles from "./PrizeView.module.css";
 import { UserContext } from "../../context/UserContext";
 
-export default function AddPrizeView() {
+export default function PrizeView() {
     const { user } = useContext(UserContext);
     const [showForm, setShowForm] = useState(false);
     const [error, setError] = useState("");
