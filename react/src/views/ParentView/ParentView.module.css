@@ -143,19 +143,33 @@
   padding: 0.5rem 1rem;
   background-color: #f0a544;
   color: white;
+  font-size: 1rem;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
+  text-align: center;
   text-decoration: none;
+  display: inline-block;
   cursor: pointer;
-  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
-  text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.5);
+  transition: background-color 0.3s ease;
 }
-
 .buttonPrimary:hover {
   background-color: #d89a3b;
   transform: scale(1.05);
   transition: background-color 0.3s ease, transform 0.3s ease;
   cursor: pointer;
+}
+
+.editForm {
+  margin: 0.5rem 0 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.textInput {
+  flex: 1;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
 }
 
 .buttonGroup {
