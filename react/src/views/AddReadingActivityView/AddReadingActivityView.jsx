@@ -21,7 +21,7 @@ export default function AddReadingActivityView() {
   useEffect(() => {
     axios
       .get(`/users/${user.id}/books`)
-      .then((r) => setBooks(r.data))
+      .then((r) =>  setBooks(r.data))
       .catch((e) =>
         console.error("Failed to load this user's books", e)
       );
@@ -79,8 +79,8 @@ export default function AddReadingActivityView() {
               — Select a title —
             </option>
             {books.map(book => (
-              <option key={book.id} value={book.id}>
-                {book.title}
+              <option key={book.bookId} value={book.bookId}>
+                {book.book.title}
               </option>
             ))}
           </select>
