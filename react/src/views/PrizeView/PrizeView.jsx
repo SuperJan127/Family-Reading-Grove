@@ -76,9 +76,12 @@ export default function PrizeView() {
                 </ul>
             ) : <p>No prizes available for your family.</p>}
 
-            <button className={styles.btnPrimary} onClick={() => setShowForm(prev => !prev)}>
-                {showForm ? "Cancel" : "Add a Prize"}
-            </button><br /><br /><br />
+            {user?.role === "ROLE_PARENT" && (
+                <button className={styles.btnPrimary} onClick={() => setShowForm(prev => !prev)}>
+                    {showForm ? "Cancel" : "Add a Prize"}
+                </button>
+            )}
+            <br /><br /><br />
 
             {showForm && (
                 <form onSubmit={handleAddPrize} className={styles.addBookForm}>
