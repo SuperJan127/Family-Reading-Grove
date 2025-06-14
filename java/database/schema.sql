@@ -64,8 +64,10 @@ CREATE TABLE user_book (
     currently_reading BOOLEAN DEFAULT TRUE,
     date_started DATE DEFAULT CURRENT_DATE,
 	date_completed DATE DEFAULT null,
-
-    CONSTRAINT fk_users FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+	notes varchar(255) DEFAULT NULL,
+	rating int CHECK (rating >= 0 AND rating <= 5),
+	CONSTRAINT check_date_started CHECK (date_started <= CURRENT_DATE),
+	CONSTRAINT fk_users FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
     CONSTRAINT fk_books FOREIGN KEY (book_id) REFERENCES books(book_id) ON DELETE CASCADE,
     CONSTRAINT unique_user_book UNIQUE (user_id, book_id)
 );

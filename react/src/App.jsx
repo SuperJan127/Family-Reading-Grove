@@ -71,7 +71,7 @@ export default function App() {
         <UserContext.Provider value={{ user }}>
           <header id="app-header" className={styles.header}>
             <div id="app-info">
-              <h1>Family Reading Grove</h1>
+              <img src="/img/FamilyReadingGroveLogo3.png" className={styles.logo}/><h1>Family Reading Grove</h1>
             </div>
             <MainNav />
           </header>
