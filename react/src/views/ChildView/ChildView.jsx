@@ -15,6 +15,7 @@ export default function ChildView() {
     const [readingHistory, setReadingHistory] = useState([]);
     const [loadingHistory, setLoadingHistory] = useState(true);
     const [historyError, setHistoryError] = useState('');
+    const [familyName, setFamilyName] = useState('');
 
     // Completed‐books count from our hook
     const { count: completedCount, errorMessage: countError } =
@@ -33,17 +34,27 @@ export default function ChildView() {
 
         const headers = { Authorization: `Bearer ${token}` };
 
-        axios
-            .get(`/families/${familyId}/reading-activities`, { headers })
-            .then((resp) => setReadingHistory(resp.data))
-            .catch(() => setHistoryError('Failed to load reading history.'))
-            .finally(() => setLoadingHistory(false));
-    }, [user.familyId]);
+        const fetchReadingHistory = axios.get(`/families/${familyId}/reading-activities`, { headers });
+        const fetchFamilyInfo = axios.get(`/families/${familyId}`, { headers });
 
+        Promise.all([fetchReadingHistory, fetchFamilyInfo])
+        .then(([historyResp, familyResp]) => {
+            setReadingHistory(historyResp.data);               
+            setFamilyName(familyResp.data.familyName);          
+        })
+        .catch(() => {
+            setHistoryError('Failed to load reading history.');
+        })
+        .finally(() => {
+            setLoadingHistory(false);
+        });
+}, [user.familyId]);
 
     return (
         <>
-            <h2 className={styles.h2}>Family Activity</h2>
+             <h2 className={styles.h2}>
+                {familyName ? `${familyName} Family Reading Activity` : 'Family Reading Activity'}
+            </h2>
             {error && <p style={{ color: 'red' }}>{error}</p>}
 
             {/* Books Completed Table */}
