@@ -80,7 +80,7 @@ export default function AddReadingActivityView() {
             </option>
             {books.map(book => (
               <option key={book.id} value={book.id}>
-                {book.title}
+                {book.book.title}
               </option>
             ))}
           </select>

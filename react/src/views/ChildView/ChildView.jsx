@@ -120,9 +120,15 @@ export default function ChildView() {
                 </table>
             </div>
             <br />
-            <NavLink to="/addReading" className={styles.buttonPrimary}>
-                Add Book
-            </NavLink>
+            <div className={styles.buttonGroup}>
+                <NavLink to="/addReading" className={styles.buttonPrimary}>
+                    Add Book
+                </NavLink>
+
+                <NavLink to="/addPrize" className={styles.buttonPrimary}>
+                    View Prizes
+                </NavLink>
+            </div>
         </>
     );
 }

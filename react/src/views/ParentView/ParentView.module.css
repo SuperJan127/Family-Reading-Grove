@@ -19,6 +19,16 @@
     padding: 1rem;
     text-align: center;
   }
+
+  .table th:nth-child(1),
+.table td:nth-child(1) {
+  width: 60%; /* Username column */
+}
+
+.table th:nth-child(2),
+.table td:nth-child(2) {
+  width: 40%; /* Role column */
+}
   
   /* Style the table cells */
   .table td {
@@ -47,6 +57,19 @@
     font-family: 'Luckiest Guy', cursive;
     color: white;
     text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.5);
+}
+
+.memberSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;          
+  min-width: 500px; 
+}
+
+.singleButtonWrapper {
+  text-align: center;
 }
 
 .buttonPrimary {

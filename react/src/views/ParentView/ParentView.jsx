@@ -106,42 +106,45 @@ export default function ParentView() {
         </table>
 
 
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th colSpan="2">Family Members</th>
-            </tr>
-            <tr>
-              <th>Username</th>
-              <th>Role</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.length > 0 ? (
-              users.map((user) => (
-                <tr key={user.id}>
-                  <td>{user.username}</td>
-                  <td>{formatRole(user.role)}</td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="2">No members found.</td>
-              </tr>
-            )}
+        <div className={styles.memberSection}>
+  <table className={styles.table}>
+    <thead>
+      <tr>
+        <th colSpan="2">Family Members</th>
+      </tr>
+      <tr>
+        <th>Username</th>
+        <th>Role</th>
+      </tr>
+    </thead>
+    <tbody>
+      {users.length > 0 ? (
+        users.map((user) => (
+          <tr key={user.id}>
+            <td>{user.username}</td>
+            <td>{formatRole(user.role)}</td>
+          </tr>
+        ))
+      ) : (
+        <tr>
+          <td colSpan="2">No members found.</td>
+        </tr>
+      )}
+    </tbody>
+  </table>
 
-          </tbody>
-        </table>
-      </div><br /><br />
+  {isParent && (
+    <div className={styles.singleButtonWrapper}>
+      <NavLink to="/addMember" className={styles.buttonPrimary}>Add Family Member</NavLink>
+    </div>
+  )}
+</div>
+
+      </div> {/* end of .tableContainer */}
+      <br /><br />
 
       <div className={styles.buttonGroup}>
-        <NavLink to="/addMember" className={styles.buttonPrimary}>Add Family Member</NavLink>
-
-        {isParent && (                                         
-          <NavLink to="/addPrize" className={styles.buttonPrimary}>Add Prize</NavLink>
-        )}
-
-
+        <NavLink to="/addPrize" className={styles.buttonPrimary}>View Prizes</NavLink>
         <NavLink to="/addBook" className={styles.buttonPrimary}>Add Book</NavLink>
       </div>
 
