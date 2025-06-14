@@ -37,6 +37,30 @@ export default function ChildView() {
         const fetchReadingHistory = axios.get(`/families/${familyId}/reading-activities`, { headers });
         const fetchFamilyInfo = axios.get(`/families/${familyId}`, { headers });
 
+    // Gets Book Cover from Open Library, returns default image if none found
+    function BookCover({ isbn, alt }) {
+        const [src, setSrc] = useState("");
+        const [valid, setValid] = useState(true);
+      
+        useEffect(() => {
+          const url = `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;
+          fetch(url).then(res => {
+            if (res.ok && res.headers.get("content-type").startsWith("image/")) {
+              setSrc(url);
+            } else {
+              setValid(false);
+            }
+          }).catch(() => setValid(false));
+        }, [isbn]);
+      
+        return (
+          <img
+            src={valid ? src : "/img/MythicalBook.png"}
+            alt={alt}
+            style={{  width: "80px", height: "auto", borderRadius: "6px" }}
+          />
+        );
+      }
         Promise.all([fetchReadingHistory, fetchFamilyInfo])
         .then(([historyResp, familyResp]) => {
             setReadingHistory(historyResp.data);               
@@ -94,9 +118,10 @@ export default function ChildView() {
                 <table className={styles.table}>
                     <thead>
                         <tr>
-                            <th colSpan="4">Reading Tracking</th>
+                            <th colSpan="5">Reading Tracking</th>
                         </tr>
                         <tr>
+                            <th>Book Cover</th>
                             <th>Reader</th>
                             <th>Book Title</th>
                             <th>Author</th>
@@ -106,17 +131,18 @@ export default function ChildView() {
                     <tbody>
                         {loadingHistory ? (
                             <tr>
-                                <td colSpan="4">Loading Reading History...</td>
+                                <td colSpan="5">Loading Reading History...</td>
                             </tr>
                         ) : historyError ? (
                             <tr>
-                                <td colSpan="4" style={{ color: 'red' }}>
+                                <td colSpan="5" style={{ color: 'red' }}>
                                     {historyError}
                                 </td>
                             </tr>
                         ) : readingHistory.length > 0 ? (
                             readingHistory.map((entry) => (
                                 <tr key={entry.id}>
+                                    <td><BookCover isbn={entry.isbn} alt={`Cover for ${entry.title}`} /></td>
                                     <td>{entry.username}</td>
                                     <td>{entry.title}</td>
                                     <td>{entry.author}</td>
@@ -125,7 +151,7 @@ export default function ChildView() {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="4">No reading history yet.</td>
+                                <td colSpan="5">No reading history yet.</td>
                             </tr>
                         )}
                     </tbody>

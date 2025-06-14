@@ -69,6 +69,30 @@ export default function ParentView() {
       });
   }, []);
 
+   // Gets Book Cover from Open Library, returns default image if none found
+   function BookCover({ isbn, alt }) {
+    const [src, setSrc] = useState("");
+    const [valid, setValid] = useState(true);
+  
+    useEffect(() => {
+      const url = `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;
+      fetch(url).then(res => {
+        if (res.ok && res.headers.get("content-type").startsWith("image/")) {
+          setSrc(url);
+        } else {
+          setValid(false);
+        }
+      }).catch(() => setValid(false));
+    }, [isbn]);
+  
+    return (
+      <img
+        src={valid ? src : "/img/MythicalBook.png"}
+        alt={alt}
+        style={{  width: "80px", height: "auto", borderRadius: "6px" }}
+      />
+    );
+  }
   const handleUpdateFamilyName = (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
@@ -134,31 +158,45 @@ export default function ParentView() {
         </div>
 
         <div className={styles.largeTableWrapper}>
-          <table className={styles.table}>
-            <thead>
-              <tr><th colSpan="5">Reading Tracking</th></tr>
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th colSpan="6">Reading Tracking</th>
+            </tr>
+            <tr>
+              <th>Book Cover</th>
+              <th>Reader</th>
+              <th>Book Title</th>
+              <th>Author</th>
+              <th>Minutes Read</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            {loadingHistory ? (
               <tr>
-                <th>Reader</th><th>Book Title</th><th>Author</th>
-                <th>Minutes Read</th><th>Notes</th>
+                <td colSpan="5">Loading Reading History...</td>
               </tr>
-            </thead>
-            <tbody>
-              {loadingHistory ? (
-                <tr><td colSpan="5">Loading Reading History...</td></tr>
-              ) : historyError ? (
-                <tr><td colSpan="5" style={{ color: 'red' }}>{historyError}</td></tr>
-              ) : readingHistory.length ? (
-                readingHistory.map(entry => (
-                  <tr key={entry.id}>
-                    <td>{entry.username}</td>
-                    <td>{entry.title}</td>
-                    <td>{entry.author}</td>
-                    <td>{entry.minutes}</td>
-                    <td>{entry.notes}</td>
-                  </tr>
-                ))
-              ) : (
-                <tr><td colSpan="5">No reading history yet.</td></tr>
+            ) : historyError ? (
+              <tr>
+                <td colSpan="5" style={{ color: 'red' }}>{historyError}</td>
+              </tr>
+            ) : readingHistory.length > 0 ? (
+              readingHistory.map((entry) => (
+                <tr key={entry.id}>
+                  <td><BookCover isbn={entry.isbn} alt={`Cover for ${entry.title}`} /></td>
+                  <td>{entry.username}</td>   {/* reader’s username */}
+                  <td>{entry.title}</td>
+                  <td>{entry.author}</td>
+                  <td>{entry.minutes}</td>
+                  <td>{entry.notes}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5">No reading history yet.</td>
+              </tr>
+           
               )}
             </tbody>
           </table>
