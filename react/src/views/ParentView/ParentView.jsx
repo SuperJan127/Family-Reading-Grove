@@ -64,6 +64,31 @@ export default function ParentView() {
       });
   }, []);
 
+   // Gets Book Cover from Open Library, returns default image if none found
+   function BookCover({ isbn, alt }) {
+    const [src, setSrc] = useState("");
+    const [valid, setValid] = useState(true);
+  
+    useEffect(() => {
+      const url = `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;
+      fetch(url).then(res => {
+        if (res.ok && res.headers.get("content-type").startsWith("image/")) {
+          setSrc(url);
+        } else {
+          setValid(false);
+        }
+      }).catch(() => setValid(false));
+    }, [isbn]);
+  
+    return (
+      <img
+        src={valid ? src : "/img/MythicalBook.png"}
+        alt={alt}
+        style={{  width: "80px", height: "auto", borderRadius: "6px" }}
+      />
+    );
+  }
+
   return (
     <>
       <h2 className={styles.h2}>Family Activity</h2>
@@ -104,9 +129,10 @@ export default function ParentView() {
         <table className={styles.table}>
           <thead>
             <tr>
-              <th colSpan="5">Reading Tracking</th>
+              <th colSpan="6">Reading Tracking</th>
             </tr>
             <tr>
+              <th>Book Cover</th>
               <th>Reader</th>
               <th>Book Title</th>
               <th>Author</th>
@@ -117,15 +143,16 @@ export default function ParentView() {
           <tbody>
             {loadingHistory ? (
               <tr>
-                <td colSpan="4">Loading Reading History...</td>
+                <td colSpan="5">Loading Reading History...</td>
               </tr>
             ) : historyError ? (
               <tr>
-                <td colSpan="4" style={{ color: 'red' }}>{historyError}</td>
+                <td colSpan="5" style={{ color: 'red' }}>{historyError}</td>
               </tr>
             ) : readingHistory.length > 0 ? (
               readingHistory.map((entry) => (
                 <tr key={entry.id}>
+                  <td><BookCover isbn={entry.isbn} alt={`Cover for ${entry.title}`} /></td>
                   <td>{entry.username}</td>   {/* reader’s username */}
                   <td>{entry.title}</td>
                   <td>{entry.author}</td>
@@ -135,7 +162,7 @@ export default function ParentView() {
               ))
             ) : (
               <tr>
-                <td colSpan="4">No reading history yet.</td>
+                <td colSpan="5">No reading history yet.</td>
               </tr>
             )}
           </tbody>
