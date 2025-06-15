@@ -69,11 +69,11 @@ export default function ParentView() {
       });
   }, []);
 
-   // Gets Book Cover from Open Library, returns default image if none found
-   function BookCover({ isbn, alt }) {
+  // Gets Book Cover from Open Library, returns default image if none found
+  function BookCover({ isbn, alt }) {
     const [src, setSrc] = useState("");
     const [valid, setValid] = useState(true);
-  
+
     useEffect(() => {
       const url = `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;
       fetch(url).then(res => {
@@ -84,12 +84,12 @@ export default function ParentView() {
         }
       }).catch(() => setValid(false));
     }, [isbn]);
-  
+
     return (
       <img
         src={valid ? src : "/img/MythicalBook.png"}
         alt={alt}
-        style={{  width: "80px", height: "auto", borderRadius: "6px" }}
+        style={{ width: "80px", height: "auto", borderRadius: "6px" }}
       />
     );
   }
@@ -158,51 +158,61 @@ export default function ParentView() {
         </div>
 
         <div className={styles.largeTableWrapper}>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th colSpan="6">Reading Tracking</th>
-            </tr>
-            <tr>
-              <th>Book Cover</th>
-              <th>Reader</th>
-              <th>Book Title</th>
-              <th>Author</th>
-              <th>Minutes Read</th>
-              <th>Notes</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loadingHistory ? (
+          <table className={styles.table}>
+            <thead>
               <tr>
-                <td colSpan="5">Loading Reading History...</td>
+                <th colSpan="7">Reading Tracking</th>
               </tr>
-            ) : historyError ? (
               <tr>
-                <td colSpan="5" style={{ color: 'red' }}>{historyError}</td>
+                <th>Book Cover</th>
+                <th>Reader</th>
+                <th>Book Title</th>
+                <th>Author</th>
+                <th>Minutes Read</th>
+                <th>Date</th>
+                <th>Notes</th>
               </tr>
-            ) : readingHistory.length > 0 ? (
-              readingHistory.map((entry) => (
-                <tr key={entry.id}>
-                  <td><BookCover isbn={entry.isbn} alt={`Cover for ${entry.title}`} /></td>
-                  <td>{entry.username}</td>   {/* reader’s username */}
-                  <td>{entry.title}</td>
-                  <td>{entry.author}</td>
-                  <td>{entry.minutes}</td>
-                  <td>{entry.notes}</td>
+            </thead>
+            <tbody>
+              {loadingHistory ? (
+                <tr>
+                  <td colSpan="5">Loading Reading History...</td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="5">No reading history yet.</td>
-              </tr>
-           
+              ) : historyError ? (
+                <tr>
+                  <td colSpan="5" style={{ color: 'red' }}>{historyError}</td>
+                </tr>
+              ) : readingHistory.length > 0 ? (
+                readingHistory.map((entry) => (
+                  <tr key={entry.id}>
+                    <td><BookCover isbn={entry.isbn} alt={`Cover for ${entry.title}`} /></td>
+                    <td>{entry.username.charAt(0).toUpperCase() + entry.username.slice(1).toLowerCase()}</td>  {/* reader’s username */}
+                    <td>{entry.title}</td>
+                    <td>{entry.author}</td>
+                    <td>{entry.minutes}</td>
+                    <td>
+                      {entry.date ? new Date(entry.date).toLocaleDateString() : "No date"}
+                    </td>
+                    <td>{entry.notes}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5">No reading history yet.</td>
+                </tr>
+
               )}
             </tbody>
           </table>
         </div>
 
-        <div className={styles.memberSection}>
+      </div>
+
+      <br /><br />
+      <div className={styles.bottom}>
+        <div className={styles.familyContainer}>
+
+
           <table className={styles.familyTable}>
             <thead>
               <tr><th colSpan="2">Family Members</th></tr>
@@ -212,7 +222,8 @@ export default function ParentView() {
               {users.length ? (
                 users.map(u => (
                   <tr key={u.id}>
-                    <td>{u.username}</td>
+
+                    <td>{u.username.charAt(0).toUpperCase() + u.username.slice(1).toLowerCase()}</td>
                     <td>{formatRole(u.role)}</td>
                   </tr>
                 ))
@@ -221,36 +232,37 @@ export default function ParentView() {
               )}
             </tbody>
           </table>
-
-          {isParent && (
-            <>
-              <div className={styles.singleButtonWrapper}>
-                <NavLink to="/addMember" className={styles.buttonPrimary}>
-                  Add Family Member
-                </NavLink>
-              </div>
-
-              {!editingName && (
+          <div className={styles.familyButtons}>
+            {isParent && (
+              <>
                 <div className={styles.singleButtonWrapper}>
-                  <button
-                    className={styles.buttonPrimary}
-                    onClick={() => setEditingName(true)}
-                  >
-                    Edit Family Name
-                  </button>
+                  <NavLink to="/addMember" className={styles.buttonPrimary}>
+                    Add Family Member
+                  </NavLink>
                 </div>
-              )}
-            </>
-          )}
+
+                {!editingName && (
+                  <div className={styles.singleButtonWrapper}>
+                    <button
+                      className={styles.buttonPrimary}
+                      onClick={() => setEditingName(true)}
+                    >
+                      Edit Family Name
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+
+
+        <div className={styles.buttonGroup}>
+          <NavLink to="/prizes" className={styles.buttonPrimary}>View Prizes</NavLink>
+          <NavLink to="/userBooks" className={styles.buttonPrimary}>Add Book</NavLink>
         </div>
       </div>
 
-      <br /><br />
-
-      <div className={styles.buttonGroup}>
-        <NavLink to="/prizes" className={styles.buttonPrimary}>View Prizes</NavLink>
-        <NavLink to="/addBook" className={styles.buttonPrimary}>Add Book</NavLink>
-      </div>
     </>
   );
 }

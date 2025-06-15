@@ -17,6 +17,7 @@ export default function AddReadingActivityView() {
   const [loading, setLoading] = useState(false);
 
   const [books, setBooks] = useState([]); // Assuming you might want to fetch books later
+  const [date, setDate] = useState(""); // ISO format expected: 'YYYY-MM-DD'
 
   useEffect(() => {
     axios
@@ -38,7 +39,8 @@ export default function AddReadingActivityView() {
         bookId: parseInt(bookId, 10),
         format,
         minutes: parseInt(minutes, 10),
-        notes: notes || null
+        notes: notes || null,
+        date: date || null // This should be in 'YYYY-MM-DD' format
       });
 
       // Redirect exactly like AddBookView
@@ -128,6 +130,18 @@ export default function AddReadingActivityView() {
             onChange={e => setNotes(e.target.value)}
           />
         </div>
+
+        <div className={styles.formControl}>
+  <label htmlFor="date" className={styles.formControlLabel}>Date:</label>
+  <input
+    id="date"
+    type="date"
+    className={styles.formControlInput}
+    value={date}
+    onChange={e => setDate(e.target.value)}
+    required // Optional: only if you want to make date mandatory
+  />
+</div>
 
         <button
           type="submit"

@@ -20,18 +20,19 @@ public class JdbcReadingActivityDao implements ReadingActivityDao {
     /**
      * Persist a new reading session (minutes read) for a user.
      */
-    @Override
-    public void recordReadingTime(ReadingActivity activity) {
+        @Override
+        public void recordReadingTime(ReadingActivity activity) {
         final String sql = ""
-                + "INSERT INTO reading_activity (reader_id, book_id, format, minutes, notes) "
-                + "VALUES (?, ?, ?, ?, ?)";
+            + "INSERT INTO reading_activity (reader_id, book_id, format, minutes, notes, date) "
+            + "VALUES (?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql,
-                activity.getReaderId(),
-                activity.getBookId(),
-                activity.getFormat().name(),
-                activity.getMinutes(),
-                activity.getNotes());
-    }
+            activity.getReaderId(),
+            activity.getBookId(),
+            activity.getFormat().name(),
+            activity.getMinutes(),
+            activity.getNotes(),
+            activity.getDate() != null ? java.sql.Date.valueOf(activity.getDate()) : null); // convert LocalDate to SQL Date
+        }
 
     /**
      * Fetch the reading history (all sessions) for a given user.
@@ -39,7 +40,7 @@ public class JdbcReadingActivityDao implements ReadingActivityDao {
     @Override
     public List<ReadingActivity> getReadingHistory(long readerId) {
         final String sql = ""
-                + "SELECT id, reader_id, book_id, format, minutes, notes "
+                + "SELECT id, reader_id, book_id, format, minutes, notes, date "
                 + "FROM reading_activity "
                 + "WHERE reader_id = ? "
                 + "ORDER BY id";
@@ -52,6 +53,7 @@ public class JdbcReadingActivityDao implements ReadingActivityDao {
                     act.setFormat(Format.valueOf(rs.getString("format")));
                     act.setMinutes(rs.getInt("minutes"));
                     act.setNotes(rs.getString("notes"));
+                    act.setDate(rs.getDate("date").toLocalDate()); // convert SQL date to LocalDate
                     return act;
                 },
                 readerId);
@@ -72,7 +74,8 @@ public class JdbcReadingActivityDao implements ReadingActivityDao {
                 + "       b.isbn     AS book_isbn, " 
                 + "       ra.format, "
                 + "       ra.minutes, "
-                + "       ra.notes "
+                + "       ra.notes, "
+                + "       ra.date "
                 + "  FROM reading_activity ra "
                 + "  JOIN users u ON ra.reader_id = u.user_id "
                 + "  JOIN books b ON ra.book_id    = b.book_id "
@@ -110,6 +113,7 @@ public class JdbcReadingActivityDao implements ReadingActivityDao {
             ra.setFormat(Format.valueOf(rs.getString("format")));
             ra.setMinutes(rs.getInt("minutes"));
             ra.setNotes(rs.getString("notes"));
+            ra.setDate(rs.getDate("date").toLocalDate()); // convert SQL date to LocalDate
             
             return ra;
         };
@@ -131,6 +135,7 @@ public class JdbcReadingActivityDao implements ReadingActivityDao {
             ra.setFormat(Format.valueOf(rs.getString("format")));
             ra.setMinutes(rs.getInt("minutes"));
             ra.setNotes(rs.getString("notes"));
+            ra.setDate(rs.getDate("date").toLocalDate()); // convert SQL date to LocalDate
             
             return ra;
         };
