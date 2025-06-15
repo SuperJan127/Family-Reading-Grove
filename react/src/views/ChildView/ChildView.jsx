@@ -66,8 +66,11 @@ export default function ChildView() {
     
         Promise.all([fetchReadingHistory, fetchFamilyInfo])
         .then(([historyResp, familyResp]) => {
+            console.log(historyResp.data);
+            
             setReadingHistory(historyResp.data);               
-            setFamilyName(familyResp.data.familyName);          
+            setFamilyName(familyResp.data.familyName);  
+
         })
         .catch(() => {
             setHistoryError('Failed to load reading history.');

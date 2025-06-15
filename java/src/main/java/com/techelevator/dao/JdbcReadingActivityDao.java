@@ -69,6 +69,7 @@ public class JdbcReadingActivityDao implements ReadingActivityDao {
                 + "       ra.book_id, "
                 + "       b.title    AS book_title, "
                 + "       b.author   AS book_author, "
+                + "       b.isbn     AS book_isbn, " 
                 + "       ra.format, "
                 + "       ra.minutes, "
                 + "       ra.notes "
@@ -126,6 +127,7 @@ public class JdbcReadingActivityDao implements ReadingActivityDao {
             ra.setBookId(rs.getLong("book_id"));
             ra.setTitle(rs.getString("book_title"));
             ra.setAuthor(rs.getString("book_author"));
+            ra.setIsbn(rs.getString("book_isbn"));
             ra.setFormat(Format.valueOf(rs.getString("format")));
             ra.setMinutes(rs.getInt("minutes"));
             ra.setNotes(rs.getString("notes"));

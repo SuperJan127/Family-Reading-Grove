@@ -10,6 +10,7 @@ public class ReadingActivity {
     private long bookId;
     private String title;         // added: book title
     private String author;        // added: book author
+    private String isbn;         // added: book ISBN
     private Format format;
     private int minutes;
     private String notes;
@@ -80,6 +81,12 @@ public class ReadingActivity {
         this.notes = notes;
     }
 
+    public String getIsbn() {
+        return isbn;
+    }
 
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
 }
 
