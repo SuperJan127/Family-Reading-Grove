@@ -17,27 +17,12 @@ export default function ChildView() {
     const [historyError, setHistoryError] = useState('');
     const [familyName, setFamilyName] = useState('');
 
+
     // Completed‐books count from our hook
     const { count: completedCount, errorMessage: countError } =
         useCompletedCount(user.id);
 
-    // Fetch family reading history
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        const familyId = user.familyId;
-
-        if (!familyId) {
-            setError('Family ID not found.');
-            setLoadingHistory(false);
-            return;
-        }
-
-        const headers = { Authorization: `Bearer ${token}` };
-
-        const fetchReadingHistory = axios.get(`/families/${familyId}/reading-activities`, { headers });
-        const fetchFamilyInfo = axios.get(`/families/${familyId}`, { headers });
-
-    // Gets Book Cover from Open Library, returns default image if none found
+        // Gets Book Cover from Open Library, returns default image if none found
     function BookCover({ isbn, alt }) {
         const [src, setSrc] = useState("");
         const [valid, setValid] = useState(true);
@@ -61,6 +46,24 @@ export default function ChildView() {
           />
         );
       }
+
+    // Fetch family reading history
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const familyId = user.familyId;
+
+        if (!familyId) {
+            setError('Family ID not found.');
+            setLoadingHistory(false);
+            return;
+        }
+
+        const headers = { Authorization: `Bearer ${token}` };
+
+        const fetchReadingHistory = axios.get(`/families/${familyId}/reading-activities`, { headers });
+        const fetchFamilyInfo = axios.get(`/families/${familyId}`, { headers });
+
+    
         Promise.all([fetchReadingHistory, fetchFamilyInfo])
         .then(([historyResp, familyResp]) => {
             setReadingHistory(historyResp.data);               
