@@ -7,6 +7,32 @@ import styles from '../ParentView/ParentView.module.css';
 // Import your custom hook
 import useCompletedCount from '../../hooks/useCompletedCount';
 
+// Gets Book Cover from Open Library, returns default image if none found
+function BookCover({ isbn, alt }) {
+    const [src, setSrc] = useState("");
+    const [valid, setValid] = useState(true);
+
+    useEffect(() => {
+        const url = `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;
+        fetch(url).then(res => {
+            if (res.ok && res.headers.get("content-type").startsWith("image/")) {
+                setSrc(url);
+            } else {
+                setValid(false);
+            }
+        }).catch(() => setValid(false));
+    }, [isbn]);
+
+    return (
+        <img
+            src={valid ? src : "/img/MythicalBook.png"}
+            alt={alt}
+            style={{ width: "80px", height: "auto", borderRadius: "6px" }}
+        />
+    );
+}
+
+
 export default function ChildView() {
     const { user } = useContext(UserContext);
 
@@ -23,30 +49,7 @@ export default function ChildView() {
     const { count: completedCount, errorMessage: countError } =
         useCompletedCount(user.id);
 
-    // Gets Book Cover from Open Library, returns default image if none found
-    function BookCover({ isbn, alt }) {
-        const [src, setSrc] = useState("");
-        const [valid, setValid] = useState(true);
 
-        useEffect(() => {
-            const url = `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;
-            fetch(url).then(res => {
-                if (res.ok && res.headers.get("content-type").startsWith("image/")) {
-                    setSrc(url);
-                } else {
-                    setValid(false);
-                }
-            }).catch(() => setValid(false));
-        }, [isbn]);
-
-        return (
-            <img
-                src={valid ? src : "/img/MythicalBook.png"}
-                alt={alt}
-                style={{ width: "80px", height: "auto", borderRadius: "6px" }}
-            />
-        );
-    }
     // Load family reading minutes by user
     useEffect(() => {
         if (user.familyId) {
