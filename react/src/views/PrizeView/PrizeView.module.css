@@ -66,6 +66,39 @@
     transform: scale(1.05);
     transition: background-color 0.3s ease, transform 0.3s ease;
   }
+
+  .btnSecondary {
+    background-color: #0275d8;
+    color: white;
+    border: none;
+    padding: 0.5rem 0.9rem;
+    border-radius: 6px;
+    margin-right: 0.5rem;
+    cursor: pointer;
+  }
+  
+  .btnSecondary:hover {
+    background-color: #025aa5;
+  }
+
+  .btnSecondary:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(2, 117, 216, 0.5);
+  }
+  
+  .btnDanger {
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    padding: 0.5rem 0.9rem;
+    margin-top: 0.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  .btnDanger:hover {
+    background-color: #c9302c;
+  }
   
   .addBookForm {
     background-color: #ffffff;

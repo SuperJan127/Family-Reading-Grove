@@ -6,12 +6,38 @@ import { use } from "react";
 import { useContext } from "react";
 import { UserContext } from "../../context/UserContext";
 
+
+function BookCover({ isbn, alt }) {
+    const [src, setSrc] = useState("");
+    const [valid, setValid] = useState(true);
+
+    useEffect(() => {
+        const url = `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;
+        fetch(url).then(res => {
+            if (res.ok && res.headers.get("content-type").startsWith("image/")) {
+                setSrc(url);
+            } else {
+                setValid(false);
+            }
+        }).catch(() => setValid(false));
+    }, [isbn]);
+
+    return (
+        <img
+            src={valid ? src : "/img/MythicalBook.png"}
+            alt={alt}
+            style={{ width: "80px", height: "auto", borderRadius: "6px" }}
+        />
+    );
+}
+
 export default function UserBookView() {
 
     const [userBooks, setUserBooks] = useState([]);
     const [error, setError] = useState("");
     const { user } = useContext(UserContext);
     const [showForm, setShowForm] = useState(false);
+    const [modalData, setModalData] = useState({ show: false, bookId: null, notes: "", rating: 1 });
     const [newBook, setNewBook] = useState({
         title: '',
         author: '',
@@ -63,29 +89,16 @@ export default function UserBookView() {
             });
     };
 
-    function BookCover({ isbn, alt }) {
-        const [src, setSrc] = useState("");
-        const [valid, setValid] = useState(true);
+    const handleUpdateUserBook = (bookId, updates) => {
+        axios.put(`/users/${user.id}/books/${bookId}/update`, updates)
+            .then(() => axios.get(`/users/${user.id}/books`))
+            .then(resp => setUserBooks(resp.data))
+            .catch(err => {
+                console.error(err);
+                setError("Failed to update book.");
+            });
+    };
 
-        useEffect(() => {
-            const url = `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;
-            fetch(url).then(res => {
-                if (res.ok && res.headers.get("content-type").startsWith("image/")) {
-                    setSrc(url);
-                } else {
-                    setValid(false);
-                }
-            }).catch(() => setValid(false));
-        }, [isbn]);
-
-        return (
-            <img
-                src={valid ? src : "/img/MythicalBook.png"}
-                alt={alt}
-                style={{  width: "80px", height: "auto", borderRadius: "6px" }}
-            />
-        );
-    }
 
     if (!user) return <p>Loading user...</p>;
 
@@ -96,16 +109,50 @@ export default function UserBookView() {
             {userBooks.length > 0 ? (
                 <ul className={styles.bookList}>
                     {userBooks.map((userBook) => (
-                        
-                      
+
+
                         <li key={userBook.book.bookId} className={styles.bookItem}>
                             <BookCover isbn={userBook.book.isbn} alt={`Cover for ${userBook.book.title}`} />
                             <div className={styles.bookDetails}>
-                      
-                            <div className={styles.bookRow}><strong>{userBook.book.title}</strong> by {userBook.book.author}</div>
-                            <div className={styles.bookRow}>📘 Currently Reading: {userBook.currentlyReading ? "Yes" : "No"}</div>
-                            <div className={styles.bookRow}>📅 Start Date: {userBook.dateStarted || "N/A"}</div>
-                            <div className={styles.bookRow}> ✅ Date Finished: {userBook.dateFinished || "N/A"}</div>
+
+                                <div className={styles.bookRow}><strong>{userBook.book.title}</strong> by {userBook.book.author}</div>
+
+                                <div className={styles.bookRow}>📅 Start Date: {userBook.dateStarted || "N/A"}</div>
+                                <div className={styles.bookRow}> ✅ Date Completed: {userBook.dateFinished || "N/A"}</div>
+                                <div className={styles.bookRow}>
+                                    📘 Currently Reading:
+                                    <input
+                                        type="checkbox"
+                                        checked={userBook.currentlyReading}
+                                        onChange={(e) => handleUpdateUserBook(userBook.book.bookId, {
+                                            currentlyReading: e.target.checked,
+                                            dateFinished: userBook.dateFinished || null,
+                                            notes: userBook.notes || "",
+                                            rating: userBook.rating || 0
+                                        })}
+                                    />
+                                </div>
+                                <div className={styles.bookRow}>Notes: {userBook.notes || "No notes"}</div>
+                                <div className={styles.bookRow}>Rating: {userBook.rating ? `${userBook.rating} ⭐` : "No rating"}</div>
+                                {userBook.dateFinished ? (
+    <button className={styles.completeButton} disabled>
+        Completed
+    </button>
+) : (
+    <button
+        className={styles.completeButton}
+        onClick={() => {
+            setModalData({
+                show: true,
+                bookId: userBook.book.bookId,
+                notes: userBook.notes || "",
+                rating: userBook.rating || 0
+            });
+        }}
+    >
+        Mark as Completed
+    </button>
+)}
                             </div>
                         </li>
                     ))}
@@ -119,7 +166,7 @@ export default function UserBookView() {
             {showForm && (
                 <form onSubmit={handleAddBook} className={styles.addBookForm}>
                     <div className={styles.formControl}>
-                        <label className={styles.formControlLabel}>Title:</label>
+                        <label className={styles.formControlLabel} required>*Title:</label>
                         <input
                             type="text"
                             className={styles.formControlInput}
@@ -130,7 +177,7 @@ export default function UserBookView() {
                         />
                     </div>
                     <div className={styles.formControl}>
-                        <label className={styles.formControlLabel}>Author:</label>
+                        <label className={styles.formControlLabel} required>*Author:</label>
                         <input
                             type="text"
                             className={styles.formControlInput}
@@ -140,7 +187,7 @@ export default function UserBookView() {
                         />
                     </div>
                     <div className={styles.formControl}>
-                        <label className={styles.formControlLabel}>ISBN:</label>
+                        <label className={styles.formControlLabel} required>*ISBN:</label>
                         <input
                             type="text"
                             className={styles.formControlInput}
@@ -150,22 +197,12 @@ export default function UserBookView() {
                         />
                     </div>
                     <div className={styles.formControl}>
-                        <label className={styles.formControlLabel}>Start Date:</label>
+                        <label className={styles.formControlLabel} required>*Start Date:</label>
                         <input
                             type="date"
                             className={styles.formControlInput}
                             value={newBook.dateStarted}
                             onChange={(e) => setNewBook({ ...newBook, dateStarted: e.target.value })}
-                        />
-                    </div>
-
-                    <div className={styles.formControl}>
-                        <label className={styles.formControlLabel}>Date Finished:</label>
-                        <input
-                            type="date"
-                            className={styles.formControlInput}
-                            value={newBook.dateFinished}
-                            onChange={(e) => setNewBook({ ...newBook, dateFinished: e.target.value })}
                         />
                     </div>
 
@@ -181,7 +218,43 @@ export default function UserBookView() {
                     <button type="submit" className={styles.btnPrimary}>Add Book</button>
                 </form>
             )}
+            {modalData.show && (
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalContent}>
+                        <h3>Complete Book</h3>
+                        <label>
+                            Notes:
+                            <textarea
+                                value={modalData.notes}
+                                onChange={(e) => setModalData({ ...modalData, notes: e.target.value })}
+                            />
+                        </label>
+                        <label>
+                            Rating (1-5):
+                            <input
+                                type="number"
+                                min="1"
+                                max="5"
+                                value={modalData.rating}
+                                onChange={(e) => setModalData({ ...modalData, rating: parseInt(e.target.value) })}
+                            />
+                        </label>
+                        <button onClick={() => {
+                            const today = new Date().toISOString().split("T")[0];
+                            handleUpdateUserBook(modalData.bookId, {
+                                currentlyReading: false,
+                                dateFinished: today,
+                                notes: modalData.notes,
+                                rating: modalData.rating
+                            });
+                            setModalData({ show: false, bookId: null, notes: "", rating: 0 });
+                        }}>Save</button>
+                        <button onClick={() => setModalData({ show: false, bookId: null, notes: "", rating: 0 })}>Cancel</button>
+                    </div>
+                </div>
+            )}
 
         </div>
+
     );
 }

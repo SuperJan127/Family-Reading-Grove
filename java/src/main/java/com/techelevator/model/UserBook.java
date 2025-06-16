@@ -10,18 +10,24 @@ public class UserBook {
     private LocalDate dateFinished;
     private Book book;
     private int id;
+    private String notes;
+    private int rating;
 
-    public UserBook(int userId, int bookId, boolean currentlyReading, LocalDate dateStarted, LocalDate dateFinished) {
+    public UserBook(int userId, int bookId, boolean currentlyReading, LocalDate dateStarted, LocalDate dateFinished,
+            String notes, int rating) {
         this.userId = userId;
         this.bookId = bookId;
         this.currentlyReading = currentlyReading;
         this.dateStarted = dateStarted;
         this.dateFinished = dateFinished;
+        this.notes = notes;
+        this.rating = rating;
     }
 
     public UserBook() {
         // Default constructor
     }
+
     public int getUserId() {
         return userId;
     }
@@ -65,7 +71,7 @@ public class UserBook {
     public Book getBook() {
         return book;
     }
-    
+
     public void setBook(Book book) {
         this.book = book;
     }
@@ -73,8 +79,24 @@ public class UserBook {
     public int getId() {
         return id;
     }
-    
+
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 }
