@@ -2,16 +2,20 @@ import { Navigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { UserContext } from '../context/UserContext';
 
-export default function ProtectedRoute({ children }) {
+// This component checks if a user is logged in and optionally checks for a specific role.
+export default function ProtectedRoute({ children, requiredRole }) {
+  const { user } = useContext(UserContext);
 
-  // Get the user from the user context
-  const user = useContext(UserContext);
-
-  // If there's an authenticated user, continue to child route
-  if (user) {
-    return children;
+  // Not logged in → redirect to login
+  if (!user) {
+    return <Navigate to="/login" />;
   }
 
-  // Otherwise, send to login page
-  return <Navigate to="/login" />;
+  // If requiredRole is specified and doesn't match → redirect
+  if (requiredRole && user.role !== requiredRole) {
+    return <Navigate to="/" />;
+  }
+
+  // Authorized → show the child component
+  return children;
 }

@@ -1,13 +1,14 @@
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import styles from "./AddPrizeView.module.css";
+import styles from "./PrizeView.module.css";
 import { UserContext } from "../../context/UserContext";
 
-export default function AddPrizeView() {
+export default function PrizeView() {
     const { user } = useContext(UserContext);
     const [showForm, setShowForm] = useState(false);
     const [error, setError] = useState("");
     const [prizes, setPrizes] = useState([]);
+    const [editingPrize, setEditingPrize] = useState(null); // ✅ new state
     const [newPrize, setNewPrize] = useState({
         prizeName: '',
         description: '',
@@ -40,21 +41,70 @@ export default function AddPrizeView() {
         axios.post("/prizes", payload)
             .then(res => {
                 setPrizes(prev => [...prev, res.data]);
-                setNewPrize({
-                    prizeName: '',
-                    description: '',
-                    minutesRequired: '',
-                    prizesAvailable: '',
-                    startDate: '',
-                    endDate: '',
-                    userGroup: ''
-                });
-                setShowForm(false);
+                resetForm();
             })
             .catch(err => {
                 console.error(err);
                 setError("Failed to add prize.");
             });
+    };
+
+    const handleUpdatePrize = (e) => {
+        e.preventDefault();
+
+        axios.put(`/prizes/${editingPrize.prizeId}`, {
+            ...newPrize,
+            familyId: user.familyId
+        })
+            .then(res => {
+                setPrizes(prev => prev.map(p => p.prizeId === editingPrize.prizeId ? res.data : p));
+                resetForm();
+            })
+            .catch(err => {
+                console.error(err);
+                setError("Failed to update prize.");
+            });
+    };
+
+    const handleDeletePrize = (prizeId) => {
+        if (!window.confirm("Are you sure you want to delete this prize?")) return;
+
+        axios.delete(`/prizes/${prizeId}`)
+            .then(() => {
+                setPrizes(prev => prev.filter(p => p.prizeId !== prizeId));
+            })
+            .catch(err => {
+                console.error(err);
+                setError("Failed to delete prize.");
+            });
+    };
+
+    const handleEditClick = (prize) => {
+        setEditingPrize(prize);
+        setNewPrize({
+            prizeName: prize.prizeName,
+            description: prize.description,
+            minutesRequired: prize.minutesRequired,
+            prizesAvailable: prize.prizesAvailable,
+            startDate: prize.startDate,
+            endDate: prize.endDate,
+            userGroup: prize.userGroup
+        });
+        setShowForm(true);
+    };
+
+    const resetForm = () => {
+        setNewPrize({
+            prizeName: '',
+            description: '',
+            minutesRequired: '',
+            prizesAvailable: '',
+            startDate: '',
+            endDate: '',
+            userGroup: ''
+        });
+        setEditingPrize(null);
+        setShowForm(false);
     };
 
     return (
@@ -71,17 +121,44 @@ export default function AddPrizeView() {
                             <div className={styles.bookRow}>🎁 Available: {prize.prizesAvailable}</div>
                             <div className={styles.bookRow}>📅 {prize.startDate} → {prize.endDate}</div>
                             <div className={styles.bookRow}>👥 Group: {prize.userGroup}</div>
+
+                            {/* ✅ Parent-only edit/delete buttons */}
+                            {user?.role === "ROLE_PARENT" && (
+                                <div className={styles.buttonRow}>
+                                    <button
+                                        className={styles.btnSecondary}
+                                        onClick={() => handleEditClick(prize)}
+                                    >
+                                        Edit
+                                    </button>
+                                    <button
+                                        className={styles.btnDanger}
+                                        onClick={() => handleDeletePrize(prize.prizeId)}
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
+                            )}
                         </li>
                     ))}
                 </ul>
             ) : <p>No prizes available for your family.</p>}
 
-            <button className={styles.btnPrimary} onClick={() => setShowForm(prev => !prev)}>
-                {showForm ? "Cancel" : "Add a Prize"}
-            </button><br /><br /><br />
+            {user?.role === "ROLE_PARENT" && (
+                <button className={styles.btnPrimary} onClick={() => {
+                    resetForm();
+                    setShowForm(prev => !prev);
+                }}>
+                    {showForm ? "Cancel" : "Add a Prize"}
+                </button>
+            )}
+            <br /><br /><br />
 
             {showForm && (
-                <form onSubmit={handleAddPrize} className={styles.addBookForm}>
+                <form
+                    onSubmit={editingPrize ? handleUpdatePrize : handleAddPrize}
+                    className={styles.addBookForm}
+                >
                     {[
                         { label: "Prize Name", key: "prizeName" },
                         { label: "Description", key: "description" },
@@ -102,7 +179,9 @@ export default function AddPrizeView() {
                             />
                         </div>
                     ))}
-                    <button type="submit" className={styles.btnPrimary}>Add Prize</button>
+                    <button type="submit" className={styles.btnPrimary}>
+                        {editingPrize ? "Update Prize" : "Add Prize"}
+                    </button>
                 </form>
             )}
         </div>

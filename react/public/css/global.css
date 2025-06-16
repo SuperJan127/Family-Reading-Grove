@@ -44,7 +44,7 @@ main {
     grid-area: header;
     background-color: #ffffff;
     padding: 5px;
-    word-spacing: 20px;
+    word-spacing: 15px;
 
 }
 
@@ -226,3 +226,4 @@ body {
 .background-icon {
     color: #738a69; /* or any color */
   }
+  

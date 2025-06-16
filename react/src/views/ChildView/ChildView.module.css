@@ -6,8 +6,6 @@
     text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.5);
 }
 
-
-
 .image {
 
     width: 400px;
@@ -23,14 +21,147 @@
 }
 
 .table {
+    max-width: 100%;
     background-color: #b8d4b0;
-    border-radius: 15px;
     border: solid 6px #738a69;
+    border-radius: 15px;
     border-collapse: separate;
     border-spacing: 0;
-}
-
-.buttonPrimary {
+  }
+  
+  .familyTable {
+    max-width: 100%;
+    background-color: #b8d4b0;
+    border: solid 6px #738a69;
+    border-radius: 15px;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  .familyTable thead {
+    background-color: #d2e8ca;
+    /* lighter header background */
+  }
+  
+  .familyTable th {
+    font-size: 1.25rem;
+    /* Larger text */
+    font-weight: bold;
+    /* Bold text */
+    color: #333;
+    /* Darker text for contrast */
+    padding: .8rem;
+    text-align: center;
+  }
+  
+  .table thead {
+    background-color: #d2e8ca;
+    /* lighter header background */
+  }
+  
+  /* Style the table headers */
+  .table th {
+    font-size: 1.25rem;
+    /* Larger text */
+    font-weight: bold;
+    /* Bold text */
+    color: #333;
+    /* Darker text for contrast */
+    padding: 1rem;
+    text-align: center;
+  }
+  
+  .table th:nth-child(1),
+  .table td:nth-child(1) {
+    width: 60%;
+    /* Username column */
+  }
+  
+  .table th:nth-child(2),
+  .table td:nth-child(2) {
+    width: 40%;
+    /* Role column */
+  }
+  
+  /* Style the table cells */
+  .table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 1rem;
+    word-wrap: break-word;
+  }
+  
+  .table td:nth-child(5) {
+    text-align: left;
+    max-width: 250px;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+  }
+  
+  /* Make first column a fixed width for consistent layout */
+  .table th:first-child,
+  .table td:first-child {
+    width: 90px;
+  }
+  
+  /* Bold text for strong tags in table cells */
+  .table td strong {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #333;
+  }
+  
+  .table td:nth-child(1),
+  .table th:nth-child(1) {
+    width: 10%;
+    /* Reader */
+  }
+  
+  .table td:nth-child(2),
+  .table th:nth-child(2) {
+    width: 30%;
+    /* Book Title */
+  }
+  
+  .table td:nth-child(3),
+  .table th:nth-child(3) {
+    width: 20%;
+    /* Author */
+  }
+  
+  .table td:nth-child(4),
+  .table th:nth-child(4) {
+    width: 10%;
+    /* Minutes Read */
+  }
+  
+  .table td:nth-child(5),
+  .table th:nth-child(5) {
+    width: 30%;
+    /* Notes */
+  }
+  
+  .h2 {
+    background-color: #f0a544;
+    font-size: 48px;
+    font-family: 'Luckiest Guy', cursive;
+    color: white;
+    text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.5);
+  }
+  
+  .memberSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+    min-width: 500px;
+  }
+  
+  .singleButtonWrapper {
+    text-align: center;
+  }
+  
+  .buttonPrimary {
     padding: 0.5rem 1rem;
     background-color: #f0a544;
     color: white;
@@ -40,10 +171,54 @@
     cursor: pointer;
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
     text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.5);
-}
-.buttonPrimary:hover {
+  }
+  
+  .buttonPrimary:hover {
     background-color: #d89a3b;
     transform: scale(1.05);
     transition: background-color 0.3s ease, transform 0.3s ease;
     cursor: pointer;
-}
+  }
+  
+  .buttonGroup {
+  
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  .tableWrapper {
+    width: 100%;
+    overflow-x: auto;
+  }
+  
+  .smallTableWrapper {
+    flex: 1;
+    max-width: 180px;
+    min-width: 140px;
+    /* shrink this down */
+  }
+  
+  .largeTableWrapper {
+    flex: 3;
+    /* take up more horizontal space */
+    min-width: 600px;
+  }
+  
+  .tableContainer {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 2rem;
+  }
+  .tableContainer > * {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  
+  .image {
+    max-width: 20%;
+    height: auto;
+    border-radius: 30px;
+  }
+  
