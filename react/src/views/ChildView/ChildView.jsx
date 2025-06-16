@@ -111,7 +111,7 @@ export default function ChildView() {
                 />
                 <div className={styles.leftColumn}>
                     {/* Books Completed Table */}
-                    <table className={styles.completedTable}>
+                    <table className={styles.table}>
                         <thead>
                             <tr>
                                 <th>Books Completed</th>
