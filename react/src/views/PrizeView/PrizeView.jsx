@@ -35,9 +35,11 @@ export default function PrizeView() {
 
         const payload = {
             ...newPrize,
-            familyId: user.familyId
+            familyId: user.familyId,
+            minutesRequired: Number(newPrize.minutesRequired),
+            prizesAvailable: Number(newPrize.prizesAvailable)
         };
-
+        console.log("Adding prize:", payload);
         axios.post("/prizes", payload)
             .then(res => {
                 setPrizes(prev => [...prev, res.data]);

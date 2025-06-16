@@ -82,7 +82,7 @@ export default function BooksListView() {
             )
           }
           <div className={styles.buttonGroup}>
-            <NavLink to="/addBook" className={styles.buttonPrimary}>Add Book</NavLink>
+            
             <NavLink to="/userBooks" className={styles.buttonPrimary}>My Books</NavLink>
           </div>
         </div>
