@@ -38,6 +38,11 @@ export default function MainNav() {
               Books
             </NavLink>
           </div>
+          <div className="nav-link">
+            <NavLink to="/prizes">
+              Prize
+            </NavLink>
+          </div>
 
           <div className="nav-link">
             <Link to="/logout">
