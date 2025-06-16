@@ -6,6 +6,31 @@ import { use } from "react";
 import { useContext } from "react";
 import { UserContext } from "../../context/UserContext";
 
+
+function BookCover({ isbn, alt }) {
+    const [src, setSrc] = useState("");
+    const [valid, setValid] = useState(true);
+
+    useEffect(() => {
+        const url = `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;
+        fetch(url).then(res => {
+            if (res.ok && res.headers.get("content-type").startsWith("image/")) {
+                setSrc(url);
+            } else {
+                setValid(false);
+            }
+        }).catch(() => setValid(false));
+    }, [isbn]);
+
+    return (
+        <img
+            src={valid ? src : "/img/MythicalBook.png"}
+            alt={alt}
+            style={{ width: "80px", height: "auto", borderRadius: "6px" }}
+        />
+    );
+}
+
 export default function UserBookView() {
 
     const [userBooks, setUserBooks] = useState([]);
@@ -74,29 +99,6 @@ export default function UserBookView() {
             });
     };
 
-    function BookCover({ isbn, alt }) {
-        const [src, setSrc] = useState("");
-        const [valid, setValid] = useState(true);
-
-        useEffect(() => {
-            const url = `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;
-            fetch(url).then(res => {
-                if (res.ok && res.headers.get("content-type").startsWith("image/")) {
-                    setSrc(url);
-                } else {
-                    setValid(false);
-                }
-            }).catch(() => setValid(false));
-        }, [isbn]);
-
-        return (
-            <img
-                src={valid ? src : "/img/MythicalBook.png"}
-                alt={alt}
-                style={{ width: "80px", height: "auto", borderRadius: "6px" }}
-            />
-        );
-    }
 
     if (!user) return <p>Loading user...</p>;
 

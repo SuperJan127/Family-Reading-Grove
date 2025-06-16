@@ -15,8 +15,8 @@ export default function AddReadingActivityView() {
   const [notes, setNotes] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [children, setChildren] = useState([]);
-  const [selectedChildId, setSelectedChildId] = useState("");
+  const [familyMembers, setFamilyMembers] = useState([]);
+  const [selectedReaderId, setSelectedReaderId] = useState("");
   const [books, setBooks] = useState([]); // Assuming you might want to fetch books later
   const [date, setDate] = useState(""); // ISO format expected: 'YYYY-MM-DD'
 
@@ -35,8 +35,7 @@ export default function AddReadingActivityView() {
         .get(`/families/${user.familyId}/members`)
         .then((r) => {
           console.log("Family users:", r.data);
-          const children = r.data.filter(u => u.role === "ROLE_CHILD");
-          setChildren(children);
+          setFamilyMembers(r.data); 
         })
         .catch((e) =>
           console.error("Failed to load family users", e)
@@ -52,7 +51,7 @@ export default function AddReadingActivityView() {
 
     try {
       await axios.post("/reading-activities", {
-        readerId: user.role === "ROLE_PARENT" ? selectedChildId : user.id,
+        readerId: user.role === "ROLE_PARENT" ? selectedReaderId : user.id,
         bookId: parseInt(bookId, 10),
         format,
         minutes: parseInt(minutes, 10),
@@ -84,29 +83,27 @@ export default function AddReadingActivityView() {
       <form onSubmit={handleSubmit}>
         {user.role === "ROLE_PARENT" && (
           <div className={styles.formControl}>
-            <label htmlFor="child" className={styles.formControlLabel}>Child:</label>
-            <select
-              id="child"
-              className={styles.formControlInput}
-              value={selectedChildId}
-              onChange={e => setSelectedChildId(e.target.value)}
-              required
-            >
-              <option value="" disabled>
-                — Select a child —
-              </option>
-              {children.map((child) => {
-                if (!child.id) return null; // defensive check
+          <label htmlFor="reader" className={styles.formControlLabel}>Reader:</label>
+          <select
+            id="reader"
+            className={styles.formControlInput}
+            value={selectedReaderId}
+            onChange={e => setSelectedReaderId(e.target.value)}
+            required
+          >
+            <option value="" disabled>— Select a reader —</option>
+            {familyMembers.map(member => (
+              member.id && (
+                <option key={member.id} value={member.id}>
+                  {member.username.charAt(0).toUpperCase() + member.username.slice(1)}
+                  {member.role === "ROLE_PARENT" ? " (Parent)" : " (Child)"}
+                </option>
+              )
+            ))}
+          </select>
+        </div>
+      )}
 
-                return (
-                  <option key={child.id} value={child.id}>
-                    {child.username.charAt(0).toUpperCase() + child.username.slice(1)}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
-        )}
 
         <div className={styles.formControl}>
           <label htmlFor="book" className={styles.formControlLabel}>
