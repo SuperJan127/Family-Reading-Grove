@@ -2,14 +2,25 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import styles from "../ChildView/ChildView.module.css"; 
+import styles from "../ChildView/ChildView.module.css";
+import useCompletedCount from "../../hooks/useCompletedCount";
 
 export default function ReaderView() {
   const { readerId } = useParams();
+
+  // 📚 Books Completed count hook
+  const { count: completedCount, errorMessage: completedError } =
+    useCompletedCount(readerId);
+
+  // 🏷️ Reader’s display name
+  const [readerName, setReaderName] = useState("");
+
+  // 📊 This reader’s session data
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // 📝 Fetch the reader’s activities
   useEffect(() => {
     setLoading(true);
     axios
@@ -22,21 +33,79 @@ export default function ReaderView() {
       .finally(() => setLoading(false));
   }, [readerId]);
 
-  if (loading) return <p>Loading…</p>;
-  if (error)   return <p style={{ color: "red" }}>{error}</p>;
+  // 🙋‍♂️ Fetch the reader’s username (so we show it even if no sessions)
+  useEffect(() => {
+    if (!readerId) {
+      setReaderName(`User #${readerId}`);
+      return;
+    }
+    axios
+      .get(`/users/${readerId}`)
+      .then(res => {
+        const name = res.data.username;
+        setReaderName(
+          name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
+        );
+      })
+      .catch(() => {
+        setReaderName(`User #${readerId}`);
+      });
+  }, [readerId]);
 
-  const name = activities[0]?.username 
-    ? activities[0].username.charAt(0).toUpperCase() + activities[0].username.slice(1)
-    : `User #${readerId}`;
+  if (loading) return <p>Loading…</p>;
+  if (error) return <p style={{ color: "red" }}>{error}</p>;
+
+  // ⏱️ Compute total minutes read
+  const totalMinutes = activities.reduce((sum, a) => sum + a.minutes, 0);
 
   return (
     <>
-      <h2 className={styles.h2}>{name}’s Reading Activity</h2>
+      {/* —— Header —— */}
+      <h2 className={styles.h2}>{readerName}’s Reading Activity</h2>
+
+      {/* —— Summary Tables —— */}
+      <div style={{ display: "flex", gap: "2rem", margin: "1rem 0" }}>
+        {/* Books Completed */}
+        <table className={styles.table} style={{ width: 150 }}>
+          <thead>
+            <tr><th>Books Completed</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style={{ textAlign: "center" }}>
+                {completedError
+                  ? "—"
+                  : completedCount === null
+                  ? "…"
+                  : completedCount}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        {/* Total Minutes */}
+        <table className={styles.table} style={{ width: 150 }}>
+          <thead>
+            <tr><th>Total Minutes</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style={{ textAlign: "center" }}>{totalMinutes}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      {/* —— Detailed Activity Log —— */}
       <table className={styles.table}>
         <thead>
           <tr>
-            <th>Cover</th><th>Title</th><th>Author</th>
-            <th>Minutes</th><th>Date</th><th>Notes</th>
+            <th>Cover</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Minutes</th>
+            <th>Date</th>
+            <th>Notes</th>
           </tr>
         </thead>
         <tbody>
@@ -57,10 +126,14 @@ export default function ReaderView() {
             </tr>
           ))}
           {activities.length === 0 && (
-            <tr><td colSpan="6">No reading activity yet.</td></tr>
+            <tr>
+              <td colSpan="6">No reading activity yet.</td>
+            </tr>
           )}
         </tbody>
       </table>
     </>
   );
 }
+
+
