@@ -259,3 +259,31 @@
   align-items: flex-start;
   padding-bottom: 700px;  
 }
+
+.minutes{
+  width: 50%;
+  
+  text-align: center;
+  /* Center align text */
+}
+.tableRow {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 2rem;
+  flex-wrap: wrap; /* allows stacking on smaller screens */
+}
+
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  flex: 1;
+  min-width: 250px;
+}
+
+.rightColumn {
+  flex: 2;
+  min-width: 500px;
+}
+

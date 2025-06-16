@@ -13,7 +13,7 @@ export default function ParentView() {
   const [error, setError] = useState('');
   const { user: currentUser } = useContext(UserContext);
   const isParent = currentUser?.role === 'ROLE_PARENT';
-
+  const [familyMinutes, setFamilyMinutes] = useState([]);
   const [readingHistory, setReadingHistory] = useState([]);
   const [loadingHistory, setLoadingHistory] = useState(true);
   const [historyError, setHistoryError] = useState('');
@@ -36,6 +36,14 @@ export default function ParentView() {
         return role; // fallback in case a new role is added
     }
   }
+  // Load family reading minutes by user
+  useEffect(() => {
+    if (currentUser.familyId) {
+      axios.get(`/reading-activities/family/${currentUser.familyId}/minutes-by-user`)
+        .then(res => setFamilyMinutes(res.data))
+        .catch(err => console.error("Error loading family reading minutes", err));
+    }
+  }, [currentUser.familyId]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -107,7 +115,11 @@ export default function ParentView() {
         setError('Failed to update family name.');
       });
   };
-
+  console.log("familyMinutes:", familyMinutes);
+  const totalFamilyMinutes = familyMinutes.reduce(
+    (sum, user) => sum + user.totalMinutes,
+    0
+  );
   return (
     <>
 
@@ -137,73 +149,105 @@ export default function ParentView() {
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
-      <div className={styles.tableContainer}>
+      <div className={styles.tableRow}>
         <img src="src/img/FamilyActivity.png" alt="Family Activity" className={styles.image} />
 
-        <div className={styles.smallTableWrapper}>
-          <table className={styles.table}>
-            <thead>
-              <tr><th>Books Completed</th></tr>
-            </thead>
-            <tbody>
-              {countError ? (
-                <tr><td style={{ color: 'red' }}>{countError}</td></tr>
-              ) : completedCount === null ? (
-                <tr><td>Loading…</td></tr>
-              ) : (
-                <tr><td><strong>{completedCount}</strong></td></tr>
-              )}
-            </tbody>
-          </table>
+        <div className={styles.tableSection}>
+          <div className={styles.leftColumn}>
+            <table className={styles.table}>
+              <thead>
+                <tr><th>Books Completed</th></tr>
+              </thead>
+              <tbody>
+                {countError ? (
+                  <tr><td style={{ color: 'red' }}>{countError}</td></tr>
+                ) : completedCount === null ? (
+                  <tr><td>Loading…</td></tr>
+                ) : (
+                  <tr><td><strong>{completedCount}</strong></td></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+          <div className={styles.tableSection}>
+
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th colSpan="2">Family Reading Minutes</th>
+                </tr>
+                <tr>
+                  <th>Username</th>
+                  <th>Total Minutes</th>
+                </tr>
+              </thead>
+              <tbody>
+                {familyMinutes.map(currentUser => (
+                  <tr key={currentUser.id}>
+                    <td>{currentUser.username.charAt(0).toUpperCase() + currentUser.username.slice(1)}</td>
+                    <td>{currentUser.totalMinutes}</td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td><strong>Family Total</strong></td>
+                  <td><strong>{totalFamilyMinutes}</strong></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
         </div>
 
-        <div className={styles.largeTableWrapper}>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th colSpan="7">Reading Tracking</th>
-              </tr>
-              <tr>
-                <th>Book Cover</th>
-                <th>Reader</th>
-                <th>Book Title</th>
-                <th>Author</th>
-                <th>Minutes Read</th>
-                <th>Date</th>
-                <th>Notes</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loadingHistory ? (
+        <div className={styles.rightColumn}>
+          <div className={styles.tableSection}>
+            <table className={styles.table}>
+              <thead>
                 <tr>
-                  <td colSpan="5">Loading Reading History...</td>
+                  <th colSpan="7">Reading Tracking</th>
                 </tr>
-              ) : historyError ? (
                 <tr>
-                  <td colSpan="5" style={{ color: 'red' }}>{historyError}</td>
+                  <th>Book Cover</th>
+                  <th>Reader</th>
+                  <th>Book Title</th>
+                  <th>Author</th>
+                  <th>Minutes Read</th>
+                  <th>Date</th>
+                  <th>Notes</th>
                 </tr>
-              ) : readingHistory.length > 0 ? (
-                readingHistory.map((entry) => (
-                  <tr key={entry.id}>
-                    <td><BookCover isbn={entry.isbn} alt={`Cover for ${entry.title}`} /></td>
-                    <td>{entry.username.charAt(0).toUpperCase() + entry.username.slice(1).toLowerCase()}</td>  {/* reader’s username */}
-                    <td>{entry.title}</td>
-                    <td>{entry.author}</td>
-                    <td>{entry.minutes}</td>
-                    <td>
-                      {entry.date ? new Date(entry.date).toLocaleDateString() : "No date"}
-                    </td>
-                    <td>{entry.notes}</td>
+              </thead>
+              <tbody>
+                {loadingHistory ? (
+                  <tr>
+                    <td colSpan="5">Loading Reading History...</td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="5">No reading history yet.</td>
-                </tr>
+                ) : historyError ? (
+                  <tr>
+                    <td colSpan="5" style={{ color: 'red' }}>{historyError}</td>
+                  </tr>
+                ) : readingHistory.length > 0 ? (
+                  readingHistory.map((entry) => (
+                    <tr key={entry.id}>
+                      <td><BookCover isbn={entry.isbn} alt={`Cover for ${entry.title}`} /></td>
+                      <td>{entry.username.charAt(0).toUpperCase() + entry.username.slice(1).toLowerCase()}</td>  {/* reader’s username */}
+                      <td>{entry.title}</td>
+                      <td>{entry.author}</td>
+                      <td>{entry.minutes}</td>
+                      <td>
+                        {entry.date ? new Date(entry.date).toLocaleDateString() : "No date"}
+                      </td>
+                      <td>{entry.notes}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5">No reading history yet.</td>
+                  </tr>
 
-              )}
-            </tbody>
-          </table>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
 
       </div>
