@@ -2,6 +2,8 @@ package com.techelevator.dao;
 
 import com.techelevator.model.Format;
 import com.techelevator.model.ReadingActivity;
+import com.techelevator.model.UserMinutesDTO;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.RowMapper;
@@ -23,14 +25,16 @@ public class JdbcReadingActivityDao implements ReadingActivityDao {
     @Override
     public void recordReadingTime(ReadingActivity activity) {
         final String sql = ""
-                + "INSERT INTO reading_activity (reader_id, book_id, format, minutes, notes) "
-                + "VALUES (?, ?, ?, ?, ?)";
+                + "INSERT INTO reading_activity (reader_id, book_id, format, minutes, notes, date) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql,
                 activity.getReaderId(),
                 activity.getBookId(),
                 activity.getFormat().name(),
                 activity.getMinutes(),
-                activity.getNotes());
+                activity.getNotes(),
+                activity.getDate() != null ? java.sql.Date.valueOf(activity.getDate()) : null); // convert LocalDate to
+                                                                                                // SQL Date
     }
 
     /**
@@ -39,7 +43,7 @@ public class JdbcReadingActivityDao implements ReadingActivityDao {
     @Override
     public List<ReadingActivity> getReadingHistory(long readerId) {
         final String sql = ""
-                + "SELECT id, reader_id, book_id, format, minutes, notes "
+                + "SELECT id, reader_id, book_id, format, minutes, notes, date "
                 + "FROM reading_activity "
                 + "WHERE reader_id = ? "
                 + "ORDER BY id";
@@ -52,6 +56,7 @@ public class JdbcReadingActivityDao implements ReadingActivityDao {
                     act.setFormat(Format.valueOf(rs.getString("format")));
                     act.setMinutes(rs.getInt("minutes"));
                     act.setNotes(rs.getString("notes"));
+                    act.setDate(rs.getDate("date").toLocalDate()); // convert SQL date to LocalDate
                     return act;
                 },
                 readerId);
@@ -69,9 +74,11 @@ public class JdbcReadingActivityDao implements ReadingActivityDao {
                 + "       ra.book_id, "
                 + "       b.title    AS book_title, "
                 + "       b.author   AS book_author, "
+                + "       b.isbn     AS book_isbn, "
                 + "       ra.format, "
                 + "       ra.minutes, "
-                + "       ra.notes "
+                + "       ra.notes, "
+                + "       ra.date "
                 + "  FROM reading_activity ra "
                 + "  JOIN users u ON ra.reader_id = u.user_id "
                 + "  JOIN books b ON ra.book_id    = b.book_id "
@@ -89,13 +96,49 @@ public class JdbcReadingActivityDao implements ReadingActivityDao {
      */
     @Override
     public int getTotalMinutesByUserId(int userId) {
-        final String sql = ""
-                + "SELECT COALESCE(SUM(minutes), 0) AS total_minutes "
-                + "FROM reading_activity "
-                + "WHERE reader_id = ?";
-        Integer total = jdbcTemplate.queryForObject(sql, Integer.class, userId);
-        return (total != null ? total : 0);
+        final String sql = "SELECT COALESCE(SUM(minutes), 0) FROM reading_activity WHERE reader_id = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, userId);
     }
+
+    /**
+     * Calculate the total minutes read by all users in a family.
+     */
+    @Override
+    public int getTotalMinutesByFamilyId(int familyId) {
+        final String sql = """
+                    SELECT COALESCE(SUM(ra.minutes), 0)
+                    FROM reading_activity ra
+                    JOIN users u ON ra.reader_id = u.id
+                    WHERE u.family_id = ?
+                """;
+
+        return jdbcTemplate.queryForObject(sql, Integer.class, familyId);
+    }
+
+    @Override
+public List<UserMinutesDTO> getTotalMinutesByUserInFamily(int familyId) {
+    final String sql = """
+        SELECT 
+            u.user_id,
+            u.username,
+           
+            COALESCE(SUM(ra.minutes), 0) AS total_minutes
+        FROM users u
+        LEFT JOIN reading_activity ra ON u.user_id = ra.reader_id
+        WHERE u.family_id = ?
+        GROUP BY u.user_id, u.username 
+        ORDER BY u.username
+    """;
+
+    return jdbcTemplate.query(sql, (rs, rowNum) -> {
+        UserMinutesDTO dto = new UserMinutesDTO();
+        dto.setUserId(rs.getInt("user_id"));
+        dto.setUsername(rs.getString("username"));
+    
+        dto.setTotalMinutes(rs.getInt("total_minutes"));
+        return dto;
+    }, familyId);
+}
 
     /**
      * RowMapper for simple reading activity.
@@ -109,7 +152,8 @@ public class JdbcReadingActivityDao implements ReadingActivityDao {
             ra.setFormat(Format.valueOf(rs.getString("format")));
             ra.setMinutes(rs.getInt("minutes"));
             ra.setNotes(rs.getString("notes"));
-            
+            ra.setDate(rs.getDate("date").toLocalDate()); // convert SQL date to LocalDate
+
             return ra;
         };
     }
@@ -126,10 +170,12 @@ public class JdbcReadingActivityDao implements ReadingActivityDao {
             ra.setBookId(rs.getLong("book_id"));
             ra.setTitle(rs.getString("book_title"));
             ra.setAuthor(rs.getString("book_author"));
+            ra.setIsbn(rs.getString("book_isbn"));
             ra.setFormat(Format.valueOf(rs.getString("format")));
             ra.setMinutes(rs.getInt("minutes"));
             ra.setNotes(rs.getString("notes"));
-            
+            ra.setDate(rs.getDate("date").toLocalDate()); // convert SQL date to LocalDate
+
             return ra;
         };
     }

@@ -124,6 +124,7 @@
   font-family: 'Luckiest Guy', cursive;
   color: white;
   text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.5);
+  word-spacing: 14px;
 }
 
 .memberSection {
@@ -177,6 +178,9 @@
   display: flex;
   justify-content: center;
   gap: 1rem;
+  padding-right: 400px;
+  align-items: flex-start;
+  padding-bottom: 700px;
 }
 
 .tableWrapper {
@@ -211,5 +215,75 @@
 .image {
   max-width: 20%;
   height: auto;
+  box-shadow:  0 4px 10px rgba(0, 0, 0, 0.2);
+  border: solid 6px #738a69;
   border-radius: 30px;
 }
+
+.bottom{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  
+}
+
+.familyContainer {
+  display: flex;
+  
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+  min-width: 500px;
+  padding-bottom: 450px;
+  padding-left: 40px;
+}
+.familyButtons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.completedTable {
+  max-width: 50%;
+  background-color: #b8d4b0;
+  border: solid 6px #738a69;
+  border-radius: 15px;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.cButtonGroup{
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding-right: 210px;
+  align-items: flex-start;
+  padding-bottom: 700px;  
+}
+
+.minutes{
+  width: 50%;
+  
+  text-align: center;
+  /* Center align text */
+}
+.tableRow {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 2rem;
+  flex-wrap: wrap; /* allows stacking on smaller screens */
+}
+
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  flex: 1;
+  min-width: 250px;
+}
+
+.rightColumn {
+  flex: 2;
+  min-width: 500px;
+}
+

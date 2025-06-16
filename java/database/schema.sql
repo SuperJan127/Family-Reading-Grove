@@ -37,7 +37,8 @@ CREATE TABLE reading_activity (
     book_id INTEGER NOT NULL,          
     format VARCHAR(50) NOT NULL,       
     minutes INTEGER NOT NULL CHECK (minutes >= 0),  
-    notes TEXT,    
+    notes TEXT,  
+	date date not null DEFAULT CURRENT_DATE,  
 	CONSTRAINT FK_reader FOREIGN KEY (reader_id) REFERENCES users(user_id) ON DELETE CASCADE,
 	CONSTRAINT FK_book FOREIGN KEY (book_id) REFERENCES books(book_id) ON DELETE CASCADE                  
 );
