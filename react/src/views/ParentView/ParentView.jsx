@@ -171,6 +171,8 @@ export default function ParentView() {
           </div>
           <div className={styles.tableSection}>
 
+            {/* Family Reading Minutes Table */}
+
             <table className={styles.table}>
               <thead>
                 <tr>
@@ -199,6 +201,8 @@ export default function ParentView() {
           </div>
         </div>
 
+                    {/* Reading Tracking Table */}
+                  
         <div className={styles.rightColumn}>
           <div className={styles.tableSection}>
             <table className={styles.table}>
@@ -256,7 +260,7 @@ export default function ParentView() {
       <div className={styles.bottom}>
         <div className={styles.familyContainer}>
 
-
+                    {/* Family Members Table */}
           <table className={styles.familyTable}>
             <thead>
               <tr><th colSpan="2">Family Members</th></tr>
