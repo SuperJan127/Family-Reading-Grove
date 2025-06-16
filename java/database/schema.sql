@@ -47,7 +47,7 @@ CREATE TABLE reading_activity (
 
 Create table prizes(
 	prize_id SERIAL PRIMARY KEY,
-	prize_name varchar(100) NOT NULL UNIQUE,
+	prize_name varchar(100) NOT NULL ,
 	description varchar (255) NOT NULL,
 	minutes_required INTEGER NOT NULL,
 	prizes_available INTEGER NOT NULL DEFAULT 0,

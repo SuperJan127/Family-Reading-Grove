@@ -306,7 +306,7 @@ export default function ParentView() {
 
         <div className={styles.buttonGroup}>
           <NavLink to="/prizes" className={styles.buttonPrimary}>View Prizes</NavLink>
-          <NavLink to="/userBooks" className={styles.buttonPrimary}>Add Book</NavLink>
+          <NavLink to="/userBooks" className={styles.buttonPrimary}>My Books</NavLink>
         </div>
       </div>
 

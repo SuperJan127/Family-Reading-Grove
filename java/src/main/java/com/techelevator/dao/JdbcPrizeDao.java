@@ -77,6 +77,8 @@ public class JdbcPrizeDao implements PrizeDao {
     public void addPrize(Prize prize) {
         String sql = "INSERT INTO prizes (prize_name, description, minutes_required, prizes_available, start_date, end_date, user_group, family_id) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING prize_id";
+                     System.out.println("Start Date: " + prize.getStartDate());
+System.out.println("End Date: " + prize.getEndDate());
     
         try {
             Integer newId = jdbcTemplate.queryForObject(
