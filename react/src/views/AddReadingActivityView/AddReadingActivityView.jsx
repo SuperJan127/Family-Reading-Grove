@@ -23,7 +23,7 @@ export default function AddReadingActivityView() {
   useEffect(() => {
     axios
       .get(`/users/${user.id}/books`)
-      .then((r) => setBooks(r.data))
+      .then((r) =>  setBooks(r.data))
       .catch((e) =>
         console.error("Failed to load this user's books", e)
       );

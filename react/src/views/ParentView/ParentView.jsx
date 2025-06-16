@@ -261,7 +261,7 @@ export default function ParentView() {
       <div className={styles.bottom}>
         <div className={styles.familyContainer}>
 
-
+          {/* Family Members Table */}
           <table className={styles.familyTable}>
             <thead>
               <tr><th colSpan="2">Family Members</th></tr>
@@ -271,8 +271,22 @@ export default function ParentView() {
               {users.length ? (
                 users.map(u => (
                   <tr key={u.id}>
+                    <td>
+                      {isParent /* only parents get links */
+                        ? (
+                          <NavLink
+                            to={`/reader/${u.id}`}
+                            className={styles.readerLink}
+                          >
+                            {u.username.charAt(0).toUpperCase() + u.username.slice(1).toLowerCase()}
+                          </NavLink>
+                        ) : (
+                          /* children just see plain text */
+                          u.username.charAt(0).toUpperCase() + u.username.slice(1).toLowerCase()
+                        )
+                      }
+                    </td>
 
-                    <td>{u.username.charAt(0).toUpperCase() + u.username.slice(1).toLowerCase()}</td>
                     <td>{formatRole(u.role)}</td>
                   </tr>
                 ))
