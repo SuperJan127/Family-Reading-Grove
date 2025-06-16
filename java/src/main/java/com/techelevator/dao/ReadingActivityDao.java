@@ -1,6 +1,8 @@
 package com.techelevator.dao;
 
 import com.techelevator.model.ReadingActivity;
+import com.techelevator.model.UserMinutesDTO;
+
 import java.util.List;
 
 public interface ReadingActivityDao {
@@ -29,4 +31,20 @@ public interface ReadingActivityDao {
      * @return sum of minutes read by the user
      */
     int getTotalMinutesByUserId(int userId);
+
+    /**
+     * Calculate the total minutes read by all users in a family.
+     *
+     * @param familyId the ID of the family
+     * @return sum of minutes read by all users in the family
+     */
+    int getTotalMinutesByFamilyId(int familyId);
+
+    /**
+     * Get total reading minutes for each user in a family.
+     *
+     * @param familyId the ID of the family
+     * @return a list of UserMinutesDTO objects containing user IDs, usernames, and total minutes read
+     */
+    List<UserMinutesDTO> getTotalMinutesByUserInFamily(int familyId);
 }
