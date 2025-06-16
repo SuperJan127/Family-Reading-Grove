@@ -8,6 +8,32 @@ import { UserContext } from '../../context/UserContext';
 import useCompletedCount from '../../hooks/useCompletedCount';
 
 
+// Gets Book Cover from Open Library, returns default image if none found
+function BookCover({ isbn, alt }) {
+  const [src, setSrc] = useState("");
+  const [valid, setValid] = useState(true);
+
+  useEffect(() => {
+    const url = `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;
+    fetch(url).then(res => {
+      if (res.ok && res.headers.get("content-type").startsWith("image/")) {
+        setSrc(url);
+      } else {
+        setValid(false);
+      }
+    }).catch(() => setValid(false));
+  }, [isbn]);
+
+  return (
+    <img
+      src={valid ? src : "/img/MythicalBook.png"}
+      alt={alt}
+      style={{ width: "80px", height: "auto", borderRadius: "6px" }}
+    />
+  );
+}
+
+
 export default function ParentView() {
   const [users, setUsers] = useState([]);
   const [error, setError] = useState('');
@@ -77,30 +103,7 @@ export default function ParentView() {
       });
   }, []);
 
-  // Gets Book Cover from Open Library, returns default image if none found
-  function BookCover({ isbn, alt }) {
-    const [src, setSrc] = useState("");
-    const [valid, setValid] = useState(true);
 
-    useEffect(() => {
-      const url = `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;
-      fetch(url).then(res => {
-        if (res.ok && res.headers.get("content-type").startsWith("image/")) {
-          setSrc(url);
-        } else {
-          setValid(false);
-        }
-      }).catch(() => setValid(false));
-    }, [isbn]);
-
-    return (
-      <img
-        src={valid ? src : "/img/MythicalBook.png"}
-        alt={alt}
-        style={{ width: "80px", height: "auto", borderRadius: "6px" }}
-      />
-    );
-  }
   const handleUpdateFamilyName = (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
