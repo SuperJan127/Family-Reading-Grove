@@ -159,7 +159,7 @@ export default function ParentView() {
             <div className={styles.leftColumn}>
               <table className={styles.table}>
                 <thead>
-                  <tr><th>Books Completed</th></tr>
+                  <tr><th>Your Completed Book Count</th></tr>
                 </thead>
                 <tbody>
                   {countError ? (

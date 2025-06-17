@@ -117,7 +117,7 @@ export default function ChildView() {
                     <table className={styles.table}>
                         <thead>
                             <tr>
-                                <th>Books Completed</th>
+                                <th>Your Completed Book Count</th>
                             </tr>
                         </thead>
                         <tbody>
