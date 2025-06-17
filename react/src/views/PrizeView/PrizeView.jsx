@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import styles from "./PrizeView.module.css";
+import { Link } from "react-router-dom";
 import { UserContext } from "../../context/UserContext";
 
 export default function PrizeView() {
@@ -8,7 +9,9 @@ export default function PrizeView() {
     const [showForm, setShowForm] = useState(false);
     const [error, setError] = useState("");
     const [prizes, setPrizes] = useState([]);
-    const [editingPrize, setEditingPrize] = useState(null);
+    const [editingPrize, setEditingPrize] = useState(null); // ✅ new state
+    const [progressByPrizeId, setProgressByPrizeId] = useState({});
+
     const [newPrize, setNewPrize] = useState({
         prizeName: '',
         description: '',
@@ -19,33 +22,47 @@ export default function PrizeView() {
         userGroup: ''
     });
 
-    const fetchPrizes = () => {
-        fetch(`/prizes/family/${user.familyId}/grouped-progress`)
-            .then(res => res.json())
-            .then(data => setPrizes(data))
+    useEffect(() => {
+        if (!user?.familyId) return;
+
+        axios.get(`/prizes/family/${user.familyId}`)
+            .then(res => setPrizes(res.data))
             .catch(err => {
                 console.error(err);
-                setError("Failed to load prizes.");
+                setError("Failed to load family prizes.");
             });
-    };
+    }, [user]);
 
     useEffect(() => {
-        if (user?.familyId) {
-            fetchPrizes();
-        }
+        if (!user?.familyId) return;
+
+        axios.get(`/prizes/family/${user.familyId}/grouped-progress`, { withCredentials: true })
+            .then(res => {
+                const progressMap = {};
+                res.data.forEach(block => {
+                    progressMap[block.prize.prizeId] = block.userProgressList;
+                });
+                setProgressByPrizeId(progressMap);
+            })
+            .catch(err => {
+                console.error("Progress fetch failed", err);
+                setError("Failed to load progress.");
+            });
     }, [user]);
 
     const handleAddPrize = (e) => {
         e.preventDefault();
+
         const payload = {
             ...newPrize,
             familyId: user.familyId,
             minutesRequired: Number(newPrize.minutesRequired),
             prizesAvailable: Number(newPrize.prizesAvailable)
         };
+        console.log("Adding prize:", payload);
         axios.post("/prizes", payload)
-            .then(() => {
-                fetchPrizes();
+            .then(res => {
+                setPrizes(prev => [...prev, res.data]);
                 resetForm();
             })
             .catch(err => {
@@ -56,12 +73,13 @@ export default function PrizeView() {
 
     const handleUpdatePrize = (e) => {
         e.preventDefault();
+
         axios.put(`/prizes/${editingPrize.prizeId}`, {
             ...newPrize,
             familyId: user.familyId
         })
-            .then(() => {
-                fetchPrizes();
+            .then(res => {
+                setPrizes(prev => prev.map(p => p.prizeId === editingPrize.prizeId ? res.data : p));
                 resetForm();
             })
             .catch(err => {
@@ -72,9 +90,10 @@ export default function PrizeView() {
 
     const handleDeletePrize = (prizeId) => {
         if (!window.confirm("Are you sure you want to delete this prize?")) return;
+
         axios.delete(`/prizes/${prizeId}`)
             .then(() => {
-                fetchPrizes();
+                setPrizes(prev => prev.filter(p => p.prizeId !== prizeId));
             })
             .catch(err => {
                 console.error(err);
@@ -109,48 +128,65 @@ export default function PrizeView() {
         setEditingPrize(null);
         setShowForm(false);
     };
-
+    
     return (
         <div className={styles.container}>
             <h2 className={styles.h2}>Prizes for Your Family</h2>
 
             {prizes.length > 0 ? (
                 <ul className={styles.bookList}>
-                    {prizes.map(prizeBlock => (
-                        <li key={prizeBlock.prize.prizeId} className={styles.bookItem}>
-                            <div className={styles.bookRow}><strong>{prizeBlock.prize.prizeName}</strong></div>
-                            <div className={styles.bookRow}>{prizeBlock.prize.description}</div>
-                            <div className={styles.bookRow}>🎯 {prizeBlock.prize.minutesRequired} min</div>
-                            <div className={styles.bookRow}>🎁 Available: {prizeBlock.prize.prizesAvailable}</div>
-                            <div className={styles.bookRow}>📅 {prizeBlock.prize.startDate} → {prizeBlock.prize.endDate}</div>
-                            <div className={styles.bookRow}>👥 Group: {prizeBlock.prize.userGroup}</div>
+                    {prizes.map(prize => (
+                        <li key={prize.prizeId} className={styles.bookItem}>
+                            <div className={styles.bookRow}><strong>{prize.prizeName}</strong></div>
+                            <div className={styles.bookRow}>{prize.description}</div>
+                            <div className={styles.bookRow}>🎯 {prize.minutesRequired} min</div>
+                            <div className={styles.bookRow}>🎁 Available: {prize.prizesAvailable}</div>
+                            <div className={styles.bookRow}>📅 {prize.startDate} → {prize.endDate}</div>
+                            <div className={styles.bookRow}>👥 Group: {prize.userGroup}</div>
 
-                            {prizeBlock.userProgressList.length > 0 && (
+                            {/* 📈 User Progress Section */}
+                            <div className={styles.progressRow}>
+                            {progressByPrizeId[prize.prizeId]?.length > 0 && (
                                 <div className={styles.bookRow}>
                                     <strong>📈 Progress:</strong>
                                     <ul>
-                                        {prizeBlock.userProgressList.map(user => (
-                                            <li key={user.userId} className={styles.progressRow}>
-                                                <span className={styles.progressLabel}>{user.username}:</span>
-                                                <progress className={styles.progressBar} value={user.progress} max="1" />
-                                                <span style={{ marginLeft: "8px" }}>{Math.round(user.progress * 100)}%</span>
-                                            </li>
-                                        ))}
-                                    </ul>
+  {progressByPrizeId[prize.prizeId].map(user => {
+    const capitalizedName = user.username.charAt(0).toUpperCase() + user.username.slice(1);
+    const percentage = Math.round(user.progress * 100);
+    let progressColor;
+
+    if (percentage >= 80) progressColor = styles.progressGreen;
+    else if (percentage >= 50) progressColor = styles.progressYellow;
+    else progressColor = styles.progressRed;
+
+    return (
+      <li key={user.userId}>
+        {capitalizedName}: {percentage}%
+        <div className={styles.progressBarOuter}>
+          <div
+            className={`${styles.progressBarInner} ${progressColor}`}
+            style={{ width: `${percentage}%` }}
+          ></div>
+        </div>
+      </li>
+    );
+  })}
+</ul>
                                 </div>
                             )}
-
+                            </div>
+                            {/* ✅ Parent-only edit/delete buttons */}
                             {user?.role === "ROLE_PARENT" && (
                                 <div className={styles.buttonRow}>
                                     <button
                                         className={styles.btnSecondary}
-                                        onClick={() => handleEditClick(prizeBlock.prize)}
+                                        onClick={() => handleEditClick(prize)}
                                     >
                                         Edit
                                     </button>
                                     <button
                                         className={styles.btnDanger}
-                                        onClick={() => handleDeletePrize(prizeBlock.prize.prizeId)}
+                                        onClick={() => handleDeletePrize(prize.prizeId)}
                                     >
                                         Remove
                                     </button>
@@ -159,6 +195,7 @@ export default function PrizeView() {
                         </li>
                     ))}
                 </ul>
+
             ) : <p>No prizes available for your family.</p>}
 
             {user?.role === "ROLE_PARENT" && (
@@ -168,7 +205,22 @@ export default function PrizeView() {
                 }}>
                     {showForm ? "Cancel" : "Add a Prize"}
                 </button>
-            )}
+            )} <br />
+             <Link
+        to="/prizes/awarded"
+        className={styles.btnPrimary}
+        style={{
+            marginLeft: "1rem",
+            padding: "0.5rem 1rem",
+            display: "inline-block",
+            width: "auto",
+            textDecoration: "none",
+            textAlign: "center",
+          }}
+    >
+        🏆 View Awarded Prizes
+    </Link>
+            <br /><br /><br />
 
             {showForm && (
                 <form
@@ -184,16 +236,32 @@ export default function PrizeView() {
                         { label: "End Date", key: "endDate", type: "date" },
                         { label: "User Group", key: "userGroup" }
                     ].map(({ label, key, type = "text" }) => (
-                        <div key={key} className={styles.formControl}>
-                            <label className={styles.formControlLabel}>{label}:</label>
-                            <input
-                                type={type}
-                                className={styles.formControlInput}
-                                value={newPrize[key]}
-                                onChange={(e) => setNewPrize({ ...newPrize, [key]: e.target.value })}
-                                required
-                            />
-                        </div>
+                        key === "userGroup" ? (
+                            <div key={key} className={styles.formControl}>
+                                <label className={styles.formControlLabel}>{label}:</label>
+                                <select
+                                    className={styles.formControlInput}
+                                    value={newPrize[key]}
+                                    onChange={(e) => setNewPrize({ ...newPrize, [key]: e.target.value })}
+                                    required
+                                >
+                                    <option value="">-- Select Group --</option>
+                                    <option value="INDIVIDUAL">Individual</option>
+                                    <option value="FAMILY">Family</option>
+                                </select>
+                            </div>
+                        ) : (
+                            <div key={key} className={styles.formControl}>
+                                <label className={styles.formControlLabel}>{label}:</label>
+                                <input
+                                    type={type}
+                                    className={styles.formControlInput}
+                                    value={newPrize[key]}
+                                    onChange={(e) => setNewPrize({ ...newPrize, [key]: e.target.value })}
+                                    required
+                                />
+                            </div>
+                        )
                     ))}
                     <button type="submit" className={styles.btnPrimary}>
                         {editingPrize ? "Update Prize" : "Add Prize"}

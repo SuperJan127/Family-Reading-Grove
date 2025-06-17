@@ -12,10 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.techelevator.dao.JdbcPrizeDao;
+import com.techelevator.model.AwardedPrize;
 import com.techelevator.model.Prize;
 import com.techelevator.model.PrizeProgressDTO;
 import com.techelevator.model.PrizeWithUserProgressDTO;
+import com.techelevator.model.UserPrizeProgress;
 import com.techelevator.services.PrizeProgressService;
+import com.techelevator.dao.JdbcAwardedPrizeDao;
 
 import java.util.List;
 import org.springframework.web.server.ResponseStatusException;
@@ -31,10 +34,13 @@ public class PrizeController {
 
     private final PrizeProgressService prizeProgressService;
     private final JdbcPrizeDao jdbcPrizeDao;
+    private final JdbcAwardedPrizeDao jdbcAwardedPrizeDao;
 
-    public PrizeController(JdbcPrizeDao jdbcPrizeDao, PrizeProgressService prizeProgressService) {
+    public PrizeController(JdbcPrizeDao jdbcPrizeDao, PrizeProgressService prizeProgressService,
+            JdbcAwardedPrizeDao jdbcAwardedPrizeDao) {
         this.jdbcPrizeDao = jdbcPrizeDao;
         this.prizeProgressService = prizeProgressService;
+        this.jdbcAwardedPrizeDao = jdbcAwardedPrizeDao;
     }
 
     @GetMapping(path = "")
@@ -108,10 +114,15 @@ public class PrizeController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to fetch prize progress", e);
         }
     }
+
     @GetMapping(path = "/family/{familyId}/grouped-progress")
 public List<PrizeWithUserProgressDTO> getPrizeUserProgressByFamily(@PathVariable("familyId") int familyId) {
     try {
         List<Prize> prizes = jdbcPrizeDao.getPrizesByFamilyId(familyId);
+
+        // ✅ Automatically check and award prizes
+        prizeProgressService.checkAndAwardPrizes(prizes, familyId);
+
         return prizes.stream()
                      .map(prize -> prizeProgressService.calculateUserProgressByPrize(prize))
                      .toList();
@@ -120,4 +131,12 @@ public List<PrizeWithUserProgressDTO> getPrizeUserProgressByFamily(@PathVariable
     }
 }
 
+    @GetMapping("/family/{familyId}/awards")
+    public List<AwardedPrize> getAwardsForFamily(@PathVariable int familyId) {
+        try {
+            return jdbcAwardedPrizeDao.getAwardsByFamilyId(familyId);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to fetch awarded prizes", e);
+        }
+    }
 }

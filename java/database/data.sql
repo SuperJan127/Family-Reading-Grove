@@ -21,16 +21,23 @@ INSERT INTO books (title, author, isbn) VALUES ('The Cat in the Hat', 'Dr. Seuss
 
 insert into prizes (prize_name, description, minutes_required, prizes_available, start_date, end_date, user_group, family_id)
 VALUES 
-('Book Voucher', 'A voucher for a free book of your choice.', 120, 2, '2024-07-07', '2024-08-31', 'CHILD', 1),
-('Extra Screen Time', 'An additional hour of screen time.', 150, 3, '2024-06-06', '2024-07-31', 'CHILD', 1),
-('Family Game Night', 'A family game night with snacks.', 200, 1, '2024-01-01', '2024-12-31', 'BOTH', 1);
+('Book Voucher', 'A voucher for a free book of your choice.', 120, 2, '2025-02-07', '2025-08-31', 'INDIVIDUAL', 1),
+('Extra Screen Time', 'An additional hour of screen time.', 150, 3, '2025-04-06', '2025-07-31', 'INDIVIDUAL', 1),
+('Family Game Night', 'A family game night with snacks.', 200, 1, '2025-01-01', '2025-12-31', 'FAMILY', 1),
+('Book Voucher', 'A voucher for a free book of your choice.', 120, 2, '2025-07-07', '2025-08-31', 'INDIVIDUAL', 2),
+('Extra Screen Time', 'An additional hour of screen time.', 150, 3, '2025-04-06', '2025-07-31', 'INDIVIDUAL', 2),
+('Family Game Night', 'A family game night with snacks.', 200, 1, '2025-05-01', '2025-12-31', 'FAMILY', 2);
 
-INSERT INTO reading_activity (reader_id, book_id, format, minutes, notes, date) VALUES (4, 1, 'DIGITAL', 120, 'Great book on Java best practices', '2024-10-01');
-INSERT INTO reading_activity (reader_id, book_id, format, minutes, notes, date) VALUES (3, 2, 'PAPER', 90, 'Learned a lot about clean coding principles', '2024-10-02');
-INSERT INTO reading_activity (reader_id, book_id, format, minutes, notes, date) VALUES (3, 1, 'DIGITAL', 60, 'Interesting insights on Java concurrency', '2024-10-03');
-INSERT INTO reading_activity (reader_id, book_id, format, minutes, notes, date) VALUES (7, 3, 'PAPER', 30, 'Loved the illustrations', '2024-10-04');
-INSERT INTO reading_activity (reader_id, book_id, format, minutes, notes, date) VALUES (5, 4, 'PAPER', 45, 'A delightful story for children', '2024-10-05');
-INSERT INTO reading_activity (reader_id, book_id, format, minutes, notes, date) VALUES (7, 5, 'PAPER', 50, 'A classic childrens book', '2024-10-06');
+INSERT INTO reading_activity (reader_id, book_id, format, minutes, notes, date) VALUES (4, 1, 'DIGITAL', 120, 'Great book on Java best practices', '2025-05-01');
+INSERT INTO reading_activity (reader_id, book_id, format, minutes, notes, date) VALUES (3, 2, 'PAPER', 90, 'Learned a lot about clean coding principles', '2025-06-02');
+INSERT INTO reading_activity (reader_id, book_id, format, minutes, notes, date) VALUES (3, 1, 'DIGITAL', 60, 'Interesting insights on Java concurrency', '2025-06-03');
+INSERT INTO reading_activity (reader_id, book_id, format, minutes, notes, date) VALUES (7, 3, 'PAPER', 30, 'Loved the illustrations', '2025-06-04');
+INSERT INTO reading_activity (reader_id, book_id, format, minutes, notes, date) VALUES (5, 4, 'PAPER', 45, 'A delightful story for children', '2025-06-05');
+INSERT INTO reading_activity (reader_id, book_id, format, minutes, notes, date) VALUES (7, 5, 'PAPER', 50, 'A classic childrens book', '2025-03-06');
+insert into reading_activity (reader_id, book_id, format, minutes, notes, date) VALUES (8, 1, 'DIGITAL', 100, 'A must-read for Java developers', '2025-05-07');
+insert into reading_activity (reader_id, book_id, format, minutes, notes, date) VALUES (8, 2, 'PAPER', 80, 'Great tips on writing clean code', '2025-06-08');
+insert into reading_activity (reader_id, book_id, format, minutes, notes, date) VALUES (6, 3, 'DIGITAL', 70, 'A fun and engaging read for kids', '2025-07-09');
+
 
 INSERT INTO user_book (user_id, book_id) VALUES (4, 1);
 INSERT INTO user_book (user_id, book_id) VALUES (3, 2);
