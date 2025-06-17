@@ -8,7 +8,7 @@ export default function PrizeView() {
     const [showForm, setShowForm] = useState(false);
     const [error, setError] = useState("");
     const [prizes, setPrizes] = useState([]);
-    const [editingPrize, setEditingPrize] = useState(null); // ✅ new state
+    const [editingPrize, setEditingPrize] = useState(null);
     const [newPrize, setNewPrize] = useState({
         prizeName: '',
         description: '',
@@ -19,30 +19,33 @@ export default function PrizeView() {
         userGroup: ''
     });
 
-    useEffect(() => {
-        if (!user?.familyId) return;
-
-        axios.get(`/prizes/family/${user.familyId}`)
-            .then(res => setPrizes(res.data))
+    const fetchPrizes = () => {
+        fetch(`/prizes/family/${user.familyId}/grouped-progress`)
+            .then(res => res.json())
+            .then(data => setPrizes(data))
             .catch(err => {
                 console.error(err);
-                setError("Failed to load family prizes.");
+                setError("Failed to load prizes.");
             });
+    };
+
+    useEffect(() => {
+        if (user?.familyId) {
+            fetchPrizes();
+        }
     }, [user]);
 
     const handleAddPrize = (e) => {
         e.preventDefault();
-
         const payload = {
             ...newPrize,
             familyId: user.familyId,
             minutesRequired: Number(newPrize.minutesRequired),
             prizesAvailable: Number(newPrize.prizesAvailable)
         };
-        console.log("Adding prize:", payload);
         axios.post("/prizes", payload)
-            .then(res => {
-                setPrizes(prev => [...prev, res.data]);
+            .then(() => {
+                fetchPrizes();
                 resetForm();
             })
             .catch(err => {
@@ -53,13 +56,12 @@ export default function PrizeView() {
 
     const handleUpdatePrize = (e) => {
         e.preventDefault();
-
         axios.put(`/prizes/${editingPrize.prizeId}`, {
             ...newPrize,
             familyId: user.familyId
         })
-            .then(res => {
-                setPrizes(prev => prev.map(p => p.prizeId === editingPrize.prizeId ? res.data : p));
+            .then(() => {
+                fetchPrizes();
                 resetForm();
             })
             .catch(err => {
@@ -70,10 +72,9 @@ export default function PrizeView() {
 
     const handleDeletePrize = (prizeId) => {
         if (!window.confirm("Are you sure you want to delete this prize?")) return;
-
         axios.delete(`/prizes/${prizeId}`)
             .then(() => {
-                setPrizes(prev => prev.filter(p => p.prizeId !== prizeId));
+                fetchPrizes();
             })
             .catch(err => {
                 console.error(err);
@@ -115,27 +116,41 @@ export default function PrizeView() {
 
             {prizes.length > 0 ? (
                 <ul className={styles.bookList}>
-                    {prizes.map(prize => (
-                        <li key={prize.prizeId} className={styles.bookItem}>
-                            <div className={styles.bookRow}><strong>{prize.prizeName}</strong></div>
-                            <div className={styles.bookRow}>{prize.description}</div>
-                            <div className={styles.bookRow}>🎯 {prize.minutesRequired} min</div>
-                            <div className={styles.bookRow}>🎁 Available: {prize.prizesAvailable}</div>
-                            <div className={styles.bookRow}>📅 {prize.startDate} → {prize.endDate}</div>
-                            <div className={styles.bookRow}>👥 Group: {prize.userGroup}</div>
+                    {prizes.map(prizeBlock => (
+                        <li key={prizeBlock.prize.prizeId} className={styles.bookItem}>
+                            <div className={styles.bookRow}><strong>{prizeBlock.prize.prizeName}</strong></div>
+                            <div className={styles.bookRow}>{prizeBlock.prize.description}</div>
+                            <div className={styles.bookRow}>🎯 {prizeBlock.prize.minutesRequired} min</div>
+                            <div className={styles.bookRow}>🎁 Available: {prizeBlock.prize.prizesAvailable}</div>
+                            <div className={styles.bookRow}>📅 {prizeBlock.prize.startDate} → {prizeBlock.prize.endDate}</div>
+                            <div className={styles.bookRow}>👥 Group: {prizeBlock.prize.userGroup}</div>
 
-                            {/* ✅ Parent-only edit/delete buttons */}
+                            {prizeBlock.userProgressList.length > 0 && (
+                                <div className={styles.bookRow}>
+                                    <strong>📈 Progress:</strong>
+                                    <ul>
+                                        {prizeBlock.userProgressList.map(user => (
+                                            <li key={user.userId} className={styles.progressRow}>
+                                                <span className={styles.progressLabel}>{user.username}:</span>
+                                                <progress className={styles.progressBar} value={user.progress} max="1" />
+                                                <span style={{ marginLeft: "8px" }}>{Math.round(user.progress * 100)}%</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+
                             {user?.role === "ROLE_PARENT" && (
                                 <div className={styles.buttonRow}>
                                     <button
                                         className={styles.btnSecondary}
-                                        onClick={() => handleEditClick(prize)}
+                                        onClick={() => handleEditClick(prizeBlock.prize)}
                                     >
                                         Edit
                                     </button>
                                     <button
                                         className={styles.btnDanger}
-                                        onClick={() => handleDeletePrize(prize.prizeId)}
+                                        onClick={() => handleDeletePrize(prizeBlock.prize.prizeId)}
                                     >
                                         Remove
                                     </button>
@@ -154,7 +169,6 @@ export default function PrizeView() {
                     {showForm ? "Cancel" : "Add a Prize"}
                 </button>
             )}
-            <br /><br /><br />
 
             {showForm && (
                 <form

@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.techelevator.dao.JdbcPrizeDao;
 import com.techelevator.model.Prize;
+import com.techelevator.model.PrizeProgressDTO;
+import com.techelevator.model.PrizeWithUserProgressDTO;
+import com.techelevator.services.PrizeProgressService;
 
 import java.util.List;
 import org.springframework.web.server.ResponseStatusException;
@@ -26,10 +29,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @RequestMapping(path = "/prizes")
 public class PrizeController {
 
+    private final PrizeProgressService prizeProgressService;
     private final JdbcPrizeDao jdbcPrizeDao;
 
-    public PrizeController(JdbcPrizeDao jdbcPrizeDao) {
+    public PrizeController(JdbcPrizeDao jdbcPrizeDao, PrizeProgressService prizeProgressService) {
         this.jdbcPrizeDao = jdbcPrizeDao;
+        this.prizeProgressService = prizeProgressService;
     }
 
     @GetMapping(path = "")
@@ -91,5 +96,28 @@ public class PrizeController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to fetch prizes for family", e);
         }
     }
+
+    @GetMapping(path = "/family/{familyId}/progress")
+    public List<PrizeProgressDTO> getPrizeProgressByFamily(@PathVariable("familyId") int familyId) {
+        try {
+            List<Prize> prizes = jdbcPrizeDao.getPrizesByFamilyId(familyId);
+            return prizes.stream()
+                    .map(prize -> prizeProgressService.calculatePrizeProgress(prize))
+                    .toList();
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to fetch prize progress", e);
+        }
+    }
+    @GetMapping(path = "/family/{familyId}/grouped-progress")
+public List<PrizeWithUserProgressDTO> getPrizeUserProgressByFamily(@PathVariable("familyId") int familyId) {
+    try {
+        List<Prize> prizes = jdbcPrizeDao.getPrizesByFamilyId(familyId);
+        return prizes.stream()
+                     .map(prize -> prizeProgressService.calculateUserProgressByPrize(prize))
+                     .toList();
+    } catch (Exception e) {
+        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to fetch user-level prize progress", e);
+    }
+}
 
 }
