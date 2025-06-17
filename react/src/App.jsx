@@ -20,6 +20,7 @@ import styles from './App.module.css';
 import UserBookView from './views/UserBookView/UserBookView';
 import PrizeView from './views/PrizeView/PrizeView';
 import ReaderView from './views/ReaderView/ReaderView';
+import AwardedPrizeView from './views/AwardedPrizeView/AwardedPrizeView';
 
 
 export default function App() {
@@ -91,6 +92,7 @@ export default function App() {
               <Route path="/addReading" element={<AddReadingActivityView />} />
               <Route path="/userBooks" element={<UserBookView />} />
               <Route path="/prizes" element={<PrizeView />} />
+              <Route path="/prizes/awarded" element={<AwardedPrizeView />} />
 
               {/* Protected routes */}
 

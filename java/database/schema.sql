@@ -73,4 +73,14 @@ CREATE TABLE user_book (
     CONSTRAINT unique_user_book UNIQUE (user_id, book_id)
 );
 
+CREATE TABLE awarded_prizes (
+    award_id SERIAL PRIMARY KEY,
+    prize_id INT NOT NULL REFERENCES prizes(prize_id),
+    user_id INT REFERENCES users(user_id),         -- Nullable for family awards
+    family_id INT NOT NULL,                        -- Always required
+    awarded_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (prize_id, user_id),                    -- Prevent duplicate user awards
+    UNIQUE (prize_id, family_id, user_id)          -- Avoid duplicates across user+family
+);
+
 COMMIT TRANSACTION;
