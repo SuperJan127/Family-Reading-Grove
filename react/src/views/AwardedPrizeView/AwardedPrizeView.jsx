@@ -27,13 +27,19 @@ export default function AwardedPrizeView() {
                 <ul className={styles.awardList}>
                 {awards.map(a => (
                   <li key={a.awardId} className={styles.awardItem}>
-                  <strong>{a.prizeName}</strong>
-                  <span>
-                    {a.userId
-                      ? `🏅 Awarded to ${a.username.charAt(0).toUpperCase() + a.username.slice(1)}`
-                      : "👪 Awarded to the family"}
-                  </span>
-                  <span>📅 {new Date(a.awardedDate).toLocaleString()}</span>
+                  <div className={styles.fireworkWrapper}>
+                  <span className={styles.firework}>✨✨✨</span>
+                    <div className={styles.awardContent}>
+                      <strong>{a.prizeName}</strong>
+                      <span>
+                        {a.userId
+                          ? `🏅 Awarded to ${a.username.charAt(0).toUpperCase() + a.username.slice(1)}`
+                          : "👪 Awarded to the family"}
+                      </span>
+                      <span>📅 {new Date(a.awardedDate).toLocaleString()}</span>
+                    </div>
+                    <span className={styles.firework}>✨✨✨</span>
+                  </div>
                 </li>
                 ))}
               </ul>
