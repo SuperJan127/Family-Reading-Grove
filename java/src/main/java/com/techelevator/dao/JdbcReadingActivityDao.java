@@ -43,22 +43,27 @@ public class JdbcReadingActivityDao implements ReadingActivityDao {
     @Override
     public List<ReadingActivity> getReadingHistory(long readerId) {
         final String sql = ""
-                + "SELECT id, reader_id, book_id, format, minutes, notes, date "
-                + "FROM reading_activity "
-                + "WHERE reader_id = ? "
-                + "ORDER BY id";
-        return jdbcTemplate.query(sql,
-                (rs, rowNum) -> {
-                    ReadingActivity act = new ReadingActivity();
-                    act.setId(rs.getLong("id"));
-                    act.setReaderId(rs.getLong("reader_id"));
-                    act.setBookId(rs.getLong("book_id"));
-                    act.setFormat(Format.valueOf(rs.getString("format")));
-                    act.setMinutes(rs.getInt("minutes"));
-                    act.setNotes(rs.getString("notes"));
-                    act.setDate(rs.getDate("date").toLocalDate()); // convert SQL date to LocalDate
-                    return act;
-                },
+                + "SELECT "
+                + "  ra.id, "
+                + "  ra.reader_id, "
+                + "  u.username       AS reader_username, "
+                + "  ra.book_id, "
+                + "  b.isbn           AS book_isbn, "
+                + "  b.title          AS book_title, "
+                + "  b.author         AS book_author, "
+                + "  ra.format, "
+                + "  ra.minutes, "
+                + "  ra.notes, "
+                + "  ra.date "
+                + "FROM reading_activity ra "
+                + "JOIN users u ON ra.reader_id = u.user_id "
+                + "JOIN books b ON ra.book_id    = b.book_id "
+                + "WHERE ra.reader_id = ? "
+                + "ORDER BY ra.date DESC";
+
+        return jdbcTemplate.query(
+                sql,
+                mapRowToReadingActivityWithDetails(),
                 readerId);
     }
 
@@ -116,29 +121,29 @@ public class JdbcReadingActivityDao implements ReadingActivityDao {
     }
 
     @Override
-public List<UserMinutesDTO> getTotalMinutesByUserInFamily(int familyId) {
-    final String sql = """
-        SELECT 
-            u.user_id,
-            u.username,
-           
-            COALESCE(SUM(ra.minutes), 0) AS total_minutes
-        FROM users u
-        LEFT JOIN reading_activity ra ON u.user_id = ra.reader_id
-        WHERE u.family_id = ?
-        GROUP BY u.user_id, u.username 
-        ORDER BY u.username
-    """;
+    public List<UserMinutesDTO> getTotalMinutesByUserInFamily(int familyId) {
+        final String sql = """
+                    SELECT
+                        u.user_id,
+                        u.username,
 
-    return jdbcTemplate.query(sql, (rs, rowNum) -> {
-        UserMinutesDTO dto = new UserMinutesDTO();
-        dto.setUserId(rs.getInt("user_id"));
-        dto.setUsername(rs.getString("username"));
-    
-        dto.setTotalMinutes(rs.getInt("total_minutes"));
-        return dto;
-    }, familyId);
-}
+                        COALESCE(SUM(ra.minutes), 0) AS total_minutes
+                    FROM users u
+                    LEFT JOIN reading_activity ra ON u.user_id = ra.reader_id
+                    WHERE u.family_id = ?
+                    GROUP BY u.user_id, u.username
+                    ORDER BY u.username
+                """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            UserMinutesDTO dto = new UserMinutesDTO();
+            dto.setUserId(rs.getInt("user_id"));
+            dto.setUsername(rs.getString("username"));
+
+            dto.setTotalMinutes(rs.getInt("total_minutes"));
+            return dto;
+        }, familyId);
+    }
 
     /**
      * RowMapper for simple reading activity.

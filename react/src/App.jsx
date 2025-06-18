@@ -19,11 +19,13 @@ import AddReadingActivityView from './views/AddReadingActivityView/AddReadingAct
 import styles from './App.module.css';
 import UserBookView from './views/UserBookView/UserBookView';
 import PrizeView from './views/PrizeView/PrizeView';
+import ReaderView from './views/ReaderView/ReaderView';
+import AwardedPrizeView from './views/AwardedPrizeView/AwardedPrizeView';
 
 
 export default function App() {
   const [user, setUser] = useState(() => getTokenFromStorage());
-  
+
   function handleLogin(userData) {
     setUser(userData);
   }
@@ -72,7 +74,7 @@ export default function App() {
         <UserContext.Provider value={{ user }}>
           <header id="app-header" className={styles.header}>
             <div id="app-info">
-              <img src="/img/FamilyReadingGroveLogo3.png" className={styles.logo}/><h1>Family Reading Grove</h1>
+              <img src="/img/FamilyReadingGroveLogo3.png" className={styles.logo} /><h1>Family Reading Grove</h1>
             </div>
             <MainNav />
           </header>
@@ -84,21 +86,23 @@ export default function App() {
               <Route path="/register" element={<RegisterView />} />
               <Route path="/parent" element={<ParentView />} />
               <Route path="/child" element={<ChildView />} />
-              
+
               <Route path="/addBook" element={<AddBookView />} />
               <Route path="/books" element={<BooksListView />} />
               <Route path="/addReading" element={<AddReadingActivityView />} />
               <Route path="/userBooks" element={<UserBookView />} />
               <Route path="/prizes" element={<PrizeView />} />
+              <Route path="/prizes/awarded" element={<AwardedPrizeView />} />
+
               {/* Protected routes */}
 
-              <Route path="/addMember" 
-              element={
-              <ProtectedRoute requiredRole="ROLE_PARENT">
-                <AddMemberView />
-              </ProtectedRoute>}
+              <Route path="/addMember"
+                element={
+                  <ProtectedRoute requiredRole="ROLE_PARENT">
+                    <AddMemberView />
+                  </ProtectedRoute>}
               />
-              
+
               <Route
                 path="/userProfile"
                 element={
@@ -107,6 +111,17 @@ export default function App() {
                   </ProtectedRoute>
                 }
               />
+
+              {/** Reader detail: only parents can view any member’s activity */}
+              <Route
+                path="/reader/:readerId"
+                element={
+                  <ProtectedRoute requiredRole="ROLE_PARENT">
+                    <ReaderView />
+                  </ProtectedRoute>
+                }
+              />
+
             </Routes>
           </main>
         </UserContext.Provider>

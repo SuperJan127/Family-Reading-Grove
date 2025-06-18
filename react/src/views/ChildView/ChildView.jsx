@@ -117,7 +117,7 @@ export default function ChildView() {
                     <table className={styles.table}>
                         <thead>
                             <tr>
-                                <th>Books Completed</th>
+                                <th>Your Completed Book Count</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -171,13 +171,14 @@ export default function ChildView() {
                     <table className={styles.table}>
                         <thead>
                             <tr>
-                                <th colSpan="7">Reading Tracking</th>
+                                <th colSpan="8">Reading Tracking</th>
                             </tr>
                             <tr>
                                 <th>Book Cover</th>
                                 <th>Reader</th>
                                 <th>Book Title</th>
                                 <th>Author</th>
+                                <th>Reading Format</th>
                                 <th>Minutes Read</th>
                                 <th>Date</th>
                                 <th>Notes</th>
@@ -201,6 +202,7 @@ export default function ChildView() {
                                         <td>{entry.username.charAt(0).toUpperCase() + entry.username.slice(1).toLowerCase()}</td>  {/* reader’s username */}
                                         <td>{entry.title}</td>
                                         <td>{entry.author}</td>
+                                        <td>{entry.format}</td>
                                         <td>{entry.minutes}</td>
                                         <td>
                                             {entry.date ? new Date(entry.date).toLocaleDateString() : "No date"}
