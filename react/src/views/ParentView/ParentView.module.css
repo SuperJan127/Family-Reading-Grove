@@ -14,6 +14,7 @@
   border-radius: 15px;
   border-collapse: separate;
   border-spacing: 0;
+  
 }
 .familyTable thead {
   background-color: #d2e8ca;
@@ -286,4 +287,10 @@
   flex: 2;
   min-width: 500px;
 }
-
+.leftleftColumn{
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  flex: 1;
+  min-width: 250px;
+}
