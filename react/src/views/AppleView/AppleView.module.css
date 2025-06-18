@@ -1,0 +1,33 @@
+.container {
+    text-align: center;
+    padding: 2rem;
+    
+    min-height: 100vh;
+  }
+  
+  .header {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    background-color: antiquewhite;
+    border-radius: 10px;
+    border: solid 6px #738a69;
+    font-family: 'Luckiest Guy', cursive;
+    word-spacing: 8px;
+  }
+  
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    gap: 1rem;
+    justify-items: center;
+    align-items: center;
+  }
+  
+  .apple {
+    font-size: 2.5rem;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .apple:hover {
+    transform: scale(1.3) rotate(10deg);
+  }
