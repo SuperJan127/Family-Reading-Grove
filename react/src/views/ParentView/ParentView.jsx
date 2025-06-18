@@ -218,7 +218,7 @@ export default function ParentView() {
                 ) : completedCount === null ? (
                   <tr><td>Loading…</td></tr>
                 ) : (
-                  <tr><td><strong>{completedCount}</strong></td></tr>
+                  <tr><td><strong>{completedCount}<NavLink to="/apple" className={styles.appleLink}>🍎</NavLink></strong></td></tr>
                 )}
               </tbody>
             </table>

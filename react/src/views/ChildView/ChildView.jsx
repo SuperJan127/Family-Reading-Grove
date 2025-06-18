@@ -1,37 +1,11 @@
 import { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 // Use the same styles as ParentView for consistent look
 import styles from '../ParentView/ParentView.module.css';
-// Import your custom hook
+// Import custom hook
 import useCompletedCount from '../../hooks/useCompletedCount';
-
-// Gets Book Cover from Open Library, returns default image if none found
-function BookCover({ isbn, alt }) {
-    const [src, setSrc] = useState("");
-    const [valid, setValid] = useState(true);
-
-    useEffect(() => {
-        const url = `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;
-        fetch(url).then(res => {
-            if (res.ok && res.headers.get("content-type").startsWith("image/")) {
-                setSrc(url);
-            } else {
-                setValid(false);
-            }
-        }).catch(() => setValid(false));
-    }, [isbn]);
-
-    return (
-        <img
-            src={valid ? src : "/img/MythicalBook.png"}
-            alt={alt}
-            style={{ width: "80px", height: "auto", borderRadius: "6px" }}
-        />
-    );
-}
-
 
 export default function ChildView() {
     const { user } = useContext(UserContext);
@@ -49,7 +23,30 @@ export default function ChildView() {
     const { count: completedCount, errorMessage: countError } =
         useCompletedCount(user.id);
 
+    // Gets Book Cover from Open Library, returns default image if none found
+    function BookCover({ isbn, alt }) {
+        const [src, setSrc] = useState("");
+        const [valid, setValid] = useState(true);
 
+        useEffect(() => {
+            const url = `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;
+            fetch(url).then(res => {
+                if (res.ok && res.headers.get("content-type").startsWith("image/")) {
+                    setSrc(url);
+                } else {
+                    setValid(false);
+                }
+            }).catch(() => setValid(false));
+        }, [isbn]);
+
+        return (
+            <img
+                src={valid ? src : "/img/MythicalBook.png"}
+                alt={alt}
+                style={{ width: "80px", height: "auto", borderRadius: "6px" }}
+            />
+        );
+    }
     // Load family reading minutes by user
     useEffect(() => {
         if (user.familyId) {
@@ -117,7 +114,7 @@ export default function ChildView() {
                     <table className={styles.table}>
                         <thead>
                             <tr>
-                                <th>Your Completed Book Count</th>
+                                <th>Your Completed Book Count </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -132,7 +129,7 @@ export default function ChildView() {
                             ) : (
                                 <tr>
                                     <td>
-                                        <strong>{completedCount}</strong>
+                                        <strong>{completedCount}<NavLink to="/apple" className={styles.appleLink}>🍎</NavLink></strong>
                                     </td>
                                 </tr>
                             )}
@@ -171,14 +168,13 @@ export default function ChildView() {
                     <table className={styles.table}>
                         <thead>
                             <tr>
-                                <th colSpan="8">Reading Tracking</th>
+                                <th colSpan="7">Reading Tracking</th>
                             </tr>
                             <tr>
                                 <th>Book Cover</th>
                                 <th>Reader</th>
                                 <th>Book Title</th>
                                 <th>Author</th>
-                                <th>Reading Format</th>
                                 <th>Minutes Read</th>
                                 <th>Date</th>
                                 <th>Notes</th>
@@ -202,7 +198,6 @@ export default function ChildView() {
                                         <td>{entry.username.charAt(0).toUpperCase() + entry.username.slice(1).toLowerCase()}</td>  {/* reader’s username */}
                                         <td>{entry.title}</td>
                                         <td>{entry.author}</td>
-                                        <td>{entry.format}</td>
                                         <td>{entry.minutes}</td>
                                         <td>
                                             {entry.date ? new Date(entry.date).toLocaleDateString() : "No date"}
