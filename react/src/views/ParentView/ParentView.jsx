@@ -152,180 +152,144 @@ export default function ParentView() {
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
       
-        <div className={styles.tableRow}>
+      <div className={styles.tableRow}>
+        {/* ✅ New wrapper for image + members table */}
+        <div className={styles.imageAndFamily}>
           <img src="src/img/FamilyActivity.png" alt="Family Activity" className={styles.image} />
 
-          <div className={styles.tableSection}>
-            <div className={styles.leftColumn}>
-              <table className={styles.table}>
-                <thead>
-                  <tr><th>Your Completed Book Count</th></tr>
-                </thead>
-                <tbody>
-                  {countError ? (
-                    <tr><td style={{ color: 'red' }}>{countError}</td></tr>
-                  ) : completedCount === null ? (
-                    <tr><td>Loading…</td></tr>
-                  ) : (
-                    <tr><td><strong>{completedCount}<NavLink to="/apple" className={styles.appleLink}>🍎</NavLink></strong></td></tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-            <div className={styles.tableSection}>
-
-              <table className={styles.table}>
-                <thead>
-                  <tr>
-                    <th colSpan="2">Family Reading Minutes</th>
-                  </tr>
-                  <tr>
-                    <th>Username</th>
-                    <th>Total Minutes</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {familyMinutes.map(currentUser => (
-                    <tr key={currentUser.id}>
-                      <td>{currentUser.username.charAt(0).toUpperCase() + currentUser.username.slice(1)}</td>
-                      <td>{currentUser.totalMinutes}</td>
-                    </tr>
-                  ))}
-                </tbody>
-                <tfoot>
-                  <tr>
-                    <td><strong>Family Total</strong></td>
-                    <td><strong>{totalFamilyMinutes}</strong></td>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-          </div>
-
-          <div className={styles.rightColumn}>
-            <div className={styles.tableSection}>
-              <table className={styles.table}>
-                <thead>
-                  <tr>
-                    <th colSpan="8">Reading Tracking</th>
-                  </tr>
-                  <tr>
-                    <th>Book Cover</th>
-                    <th>Reader</th>
-                    <th>Book Title</th>
-                    <th>Author</th>
-                    <th>Reading Format</th>
-                    <th>Minutes Read</th>
-                    <th>Date</th>
-                    <th>Notes</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {loadingHistory ? (
-                    <tr>
-                      <td colSpan="5">Loading Reading History...</td>
-                    </tr>
-                  ) : historyError ? (
-                    <tr>
-                      <td colSpan="5" style={{ color: 'red' }}>{historyError}</td>
-                    </tr>
-                  ) : readingHistory.length > 0 ? (
-                    readingHistory.map((entry) => (
-                      <tr key={entry.id}>
-                        <td><BookCover isbn={entry.isbn} alt={`Cover for ${entry.title}`} /></td>
-                        <td>{entry.username.charAt(0).toUpperCase() + entry.username.slice(1).toLowerCase()}</td>  {/* reader’s username */}
-                        <td>{entry.title}</td>
-                        <td>{entry.author}</td>
-                        <td>{entry.format}</td>
-                        <td>{entry.minutes}</td>
-                        <td>
-                          {entry.date ? new Date(entry.date).toLocaleDateString() : "No date"}
-                        </td>
-                        <td>{entry.notes}</td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="5">No reading history yet.</td>
-                    </tr>
-
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-     
-
-      <br /><br />
-      <div className={styles.bottom}>
-        <div className={styles.familyContainer}>
-
-          {/* Family Members Table */}
-          <table className={styles.familyTable}>
-            <thead>
-              <tr><th colSpan="2">Family Members</th></tr>
-              <tr><th>Username</th><th>Role</th></tr>
-            </thead>
-            <tbody>
-              {users.length ? (
-                users.map(u => (
-                  <tr key={u.id}>
-                    <td>
-                      {isParent /* only parents get links */
-                        ? (
-                          <NavLink
-                            to={`/reader/${u.id}`}
-                            className={styles.readerLink}
-                          >
+          {/* 🔁 Moved family members table here */}
+          <div className={styles.familyContainer}>
+            <table className={styles.familyTable}>
+              <thead>
+                <tr><th colSpan="2">Family Members</th></tr>
+                <tr><th>Username</th><th>Role</th></tr>
+              </thead>
+              <tbody>
+                {users.length ? (
+                  users.map(u => (
+                    <tr key={u.id}>
+                      <td>
+                        {isParent ? (
+                          <NavLink to={`/reader/${u.id}`} className={styles.readerLink}>
                             {u.username.charAt(0).toUpperCase() + u.username.slice(1).toLowerCase()}
                           </NavLink>
                         ) : (
-                          /* children just see plain text */
                           u.username.charAt(0).toUpperCase() + u.username.slice(1).toLowerCase()
-                        )
-                      }
-                    </td>
-
-                    <td>{formatRole(u.role)}</td>
-                  </tr>
-                ))
-              ) : (
-                <tr><td colSpan="2">No members found.</td></tr>
-              )}
-            </tbody>
-          </table>
-          <div className={styles.familyButtons}>
-            {isParent && (
-              <>
-                <div className={styles.singleButtonWrapper}>
-                  <NavLink to="/addMember" className={styles.buttonPrimary}>
-                    Add Family Member
-                  </NavLink>
-                </div>
-
-                {!editingName && (
-                  <div className={styles.singleButtonWrapper}>
-                    <button
-                      className={styles.buttonPrimary}
-                      onClick={() => setEditingName(true)}
-                    >
-                      Edit Family Name
-                    </button>
-                  </div>
+                        )}
+                      </td>
+                      <td>{formatRole(u.role)}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr><td colSpan="2">No members found.</td></tr>
                 )}
-              </>
-            )}
+              </tbody>
+            </table>
+
+            <div className={styles.familyButtons}>
+              {isParent && (
+                <>
+                  <div className={styles.singleButtonWrapper}>
+                    <NavLink to="/addMember" className={styles.buttonPrimary}>Add Family Member</NavLink>
+                  </div>
+                  {!editingName && (
+                    <div className={styles.singleButtonWrapper}>
+                      <button
+                        className={styles.buttonPrimary}
+                        onClick={() => setEditingName(true)}
+                      >
+                        Edit Family Name
+                      </button>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
           </div>
         </div>
 
+        <div className={styles.tableSection}>
+          <div className={styles.leftColumn}>
+            <table className={styles.table}>
+              <thead><tr><th>Your Completed Book Count</th></tr></thead>
+              <tbody>
+                {countError ? (
+                  <tr><td style={{ color: 'red' }}>{countError}</td></tr>
+                ) : completedCount === null ? (
+                  <tr><td>Loading…</td></tr>
+                ) : (
+                  <tr><td><strong>{completedCount}<NavLink to="/apple" className={styles.appleLink}>🍎</NavLink></strong></td></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
 
-        <div className={styles.buttonGroup}>
-          <NavLink to="/prizes" className={styles.buttonPrimary}>View Prizes</NavLink>
-          <NavLink to="/userBooks" className={styles.buttonPrimary}>My Books</NavLink>
+          <div className={styles.tableSection}>
+            <table className={styles.table}>
+              <thead>
+                <tr><th colSpan="2">Family Reading Minutes</th></tr>
+                <tr><th>Username</th><th>Total Minutes</th></tr>
+              </thead>
+              <tbody>
+                {familyMinutes.map(user => (
+                  <tr key={user.id}>
+                    <td>{user.username.charAt(0).toUpperCase() + user.username.slice(1)}</td>
+                    <td>{user.totalMinutes}</td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td><strong>Family Total</strong></td>
+                  <td><strong>{totalFamilyMinutes}</strong></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        <div className={styles.rightColumn}>
+          <div className={styles.tableSection}>
+            <table className={styles.table}>
+              <thead>
+                <tr><th colSpan="8">Reading Tracking</th></tr>
+                <tr>
+                  <th>Book Cover</th><th>Reader</th><th>Book Title</th>
+                  <th>Author</th><th>Reading Format</th><th>Minutes Read</th>
+                  <th>Date</th><th>Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                {loadingHistory ? (
+                  <tr><td colSpan="8">Loading Reading History...</td></tr>
+                ) : historyError ? (
+                  <tr><td colSpan="8" style={{ color: 'red' }}>{historyError}</td></tr>
+                ) : readingHistory.length > 0 ? (
+                  readingHistory.map((entry) => (
+                    <tr key={entry.id}>
+                      <td><BookCover isbn={entry.isbn} alt={`Cover for ${entry.title}`} /></td>
+                      <td>{entry.username.charAt(0).toUpperCase() + entry.username.slice(1)}</td>
+                      <td>{entry.title}</td>
+                      <td>{entry.author}</td>
+                      <td>{entry.format}</td>
+                      <td>{entry.minutes}</td>
+                      <td>{entry.date ? new Date(entry.date).toLocaleDateString() : "No date"}</td>
+                      <td>{entry.notes}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr><td colSpan="8">No reading history yet.</td></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
+      <div className={styles.buttonGroup}>
+        <NavLink to="/prizes" className={styles.buttonPrimary}>View Prizes</NavLink>
+        <NavLink to="/userBooks" className={styles.buttonPrimary}>My Books</NavLink>
+      </div>
     </>
   );
 }
