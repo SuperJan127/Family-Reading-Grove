@@ -282,14 +282,15 @@ export default function ParentView() {
                 )}
               </tbody>
             </table>
+            <div className={styles.buttonGroup}>
+        <NavLink to="/prizes" className={styles.buttonPrimary}>View Prizes</NavLink>
+        <NavLink to="/userBooks" className={styles.buttonPrimary}>My Books</NavLink>
+      </div>
           </div>
         </div>
       </div>
 
-      <div className={styles.buttonGroup}>
-        <NavLink to="/prizes" className={styles.buttonPrimary}>View Prizes</NavLink>
-        <NavLink to="/userBooks" className={styles.buttonPrimary}>My Books</NavLink>
-      </div>
+      
     </>
   );
 }
