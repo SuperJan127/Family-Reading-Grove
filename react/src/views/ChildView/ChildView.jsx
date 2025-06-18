@@ -117,7 +117,7 @@ export default function ChildView() {
                     <table className={styles.table}>
                         <thead>
                             <tr>
-                                <th>Your Completed Book Count</th>
+                                <th>Your Completed Book Count </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -132,7 +132,7 @@ export default function ChildView() {
                             ) : (
                                 <tr>
                                     <td>
-                                        <strong>{completedCount}</strong>
+                                        <strong>{completedCount}<NavLink to="/apple" className={styles.appleLink}>🍎</NavLink></strong>
                                     </td>
                                 </tr>
                             )}
